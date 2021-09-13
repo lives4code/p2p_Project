@@ -7,3 +7,5 @@ To compile programs in Java
 running the client and server
 1. run the client
 2. open a new terminal run the server.
+3. https://www.geeksforgeeks.org/socket-programming-in-java/
+
