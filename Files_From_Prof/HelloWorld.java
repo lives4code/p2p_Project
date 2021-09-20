@@ -20,6 +20,11 @@ public class HelloWorld {
         System.out.println(bytes.toString());
         //bytes
         //File.WriteAllBytes("input.txt", StringToByteArray(hexString));
-        System.out.println("Hello, World!");
+        //obviously this is the absolute path and will need to be replaced with the relative path.
+        File file = new File("input.txt");
+        try(OutputStream outputStream = new FileOutputStream("input.txt")){
+            outputStream.write(bytes);
+        }
+
     }
 }
