@@ -28,6 +28,9 @@ public class SampleClient {
             try{
                 input = new FileInputStream("input.txt");
             }
+            catch(exception e){
+                System.out.println("error");
+            }
             BufferedReader bufferedReader = new BufferedReader(input);
             //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             while(true)
