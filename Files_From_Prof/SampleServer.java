@@ -93,6 +93,38 @@ public class SampleServer {
 		}
 	}
 
+	
+	private void handleMessage(byte[] msg){
+		byte[] msgLength  = new byte[4];
+		System.arraycopy(msg, 0, msgLength, 4, 4);
+		int mLength = ByteBuffer.wrap(msgLength).getInt();
+
+		byte[] msgType = new byte[1];
+		System.arraycopy(msg, 4, msgType, 5, 1);		
+		int mType = ByteBuffer.wrap(msgType).getInt();
+
+		byte[] msgPayload = new byte[mLength];
+		System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
+
+		switch(mType){
+			case 0:
+			//choke
+			case 1:
+			//unchoke
+			case 2:
+			//interested
+			case 3:
+			//not intrested
+			case 4:
+			//have
+			case 5:
+			//bitfield
+			case 6:
+			//request
+			case 7:
+			//piece
+		}
+	}
     }
 
 }
