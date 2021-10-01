@@ -19,6 +19,8 @@ public class peer {
 
 	//main goes here
 	public static void main(String[] args) throws Exception {
+		byte[] handshake = new byte[32];
+		handshake = createHandshake();
 		System.out.println("Peer is running."); 
         	ServerSocket listener = new ServerSocket(lPort);
 		int clientNum = 1;
