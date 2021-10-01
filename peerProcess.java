@@ -155,7 +155,7 @@ public class peer {
 		//obviously this is the absolute path and will need to be replaced with the relative path.
 
 		try {
-			File info = new File("./project_config_file_large/project_config_file_large/PeerInfo.cfg");
+			File info = new File("./src/Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
 			Scanner myReader = new Scanner(info);
 			if (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
