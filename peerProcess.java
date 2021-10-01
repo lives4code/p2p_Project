@@ -1,0 +1,140 @@
+import java.net.*;
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.util.*;
+
+public class peer {
+	private static final int peerID;
+	private static final String hostname;
+	private static final int lPort;
+	private static final boolean hasFile;
+	public peer(int ID, String name, int port, boolean has){
+		this.peerID = ID;
+		this.hostname = name;
+		this.lPort = port;
+		this.hasFile = has;
+	}
+
+	//main goes here
+	public static void main(String[] args) throws Exception {
+		System.out.println("Peer is running."); 
+        	ServerSocket listener = new ServerSocket(lPort);
+		int clientNum = 1;
+        	try {
+            		while(true) {
+                		new Handler(listener.accept(),clientNum).start();
+				System.out.println("Client "  + clientNum + " is connected!");
+				clientNum++;
+            			}
+        	} finally {
+            		listener.close();
+        	} 
+ 
+    	}
+
+	//handler thread class. handleers are spawned from the listening
+	//loop and are responsible for dealing with a single client's
+	//requests
+	    	private static class Handler extends Thread {
+        	private String message;    //message received from the client
+		private Socket connection;	//wait on a connection from client
+        	private ObjectInputStream in;	//stream read from the socket
+        	private ObjectOutputStream out;    //stream write to the socket
+		private int no;		//The index number of the client
+
+        	public Handler(Socket connection, int no) {
+            		this.connection = connection;
+	    		this.no = no;
+        	}
+
+        public void run() {
+ 		try{
+			//initialize Input and Output streams
+			out = new ObjectOutputStream(connection.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(connection.getInputStream());
+			try{
+				//preform handshake here to validate connection
+				while(true)
+				{
+					//receive the message sent from the client
+					message = (String)in.readObject();
+					//debug message to user
+					System.out.println("Receive message: " + message + " from client " + no);
+					//send MESSAGE back to the client
+					//this is where we will handle the message
+					//switch
+					//test message
+					String MESSAGE = "recived"
+					sendMessage(MESSAGE);
+				}
+			}
+			catch(ClassNotFoundException classnot){
+					System.err.println("Data received in unknown format");
+				}
+		}
+		catch(IOException ioException){
+			System.out.println("Disconnect with Client " + no);
+		}
+		finally{
+			//Close connections
+			try{
+				in.close();
+				out.close();
+				connection.close();
+			}
+			catch(IOException ioException){
+				System.out.println("Disconnect with Client " + no);
+			}
+		}
+	}
+
+	//send a message to the output stream
+	public void sendMessage(String msg)
+	{
+		try{
+			out.writeObject(msg);
+			out.flush();
+			System.out.println("Send message: " + msg + " to Client " + no);
+		}
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+	}
+
+
+	private void handleMessage(byte[] msg){
+		byte[] msgLength  = new byte[4];
+		System.arraycopy(msg, 0, msgLength, 4, 4);
+		int mLength = ByteBuffer.wrap(msgLength).getInt();
+
+		byte[] msgType = new byte[1];
+		System.arraycopy(msg, 4, msgType, 5, 1);
+		int mType = ByteBuffer.wrap(msgType).getInt();
+
+		byte[] msgPayload = new byte[mLength];
+		System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
+
+		switch(mType){
+			case 0:
+			//choke
+			case 1:
+			//unchoke
+			case 2:
+			//interested
+			case 3:
+			//not intrested
+			case 4:
+			//have
+			case 5:
+			//bitfield
+			case 6:
+			//request
+			case 7:
+			//piece
+		}
+	}
+    }
+
+}
