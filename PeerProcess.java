@@ -4,13 +4,12 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 
-public class peer {
-	public static byte[] createHandshake ();
-	private static final int peerID;
-	private static final String hostname;
-	private static final int lPort;
-	private static final boolean hasFile;
-	public peer(int ID, String name, int port, boolean has){
+public class PeerProcess {
+	private static int peerID;
+	private static String hostname;
+	private static int lPort;
+	private static boolean hasFile;
+	public PeerProcess(int ID, String name, int port, boolean has){
 		this.peerID = ID;
 		this.hostname = name;
 		this.lPort = port;
@@ -69,7 +68,7 @@ public class peer {
 					//this is where we will handle the message
 					//switch
 					//test message
-					String MESSAGE = "recived"
+					String MESSAGE = "recived";
 					sendMessage(MESSAGE);
 				}
 			}
@@ -157,7 +156,7 @@ public class peer {
 		//obviously this is the absolute path and will need to be replaced with the relative path.
 
 		try {
-			File info = new File("./src/Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
+			File info = new File("./Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
 			Scanner myReader = new Scanner(info);
 			if (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
