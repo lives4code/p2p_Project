@@ -4,7 +4,7 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 
-public class SampleClient {
+public class HandshakeAttemptClient {
     Socket requestSocket;           //socket connect to the server
     ObjectOutputStream out;         //stream write to the socket
     ObjectInputStream in;          //stream read from the socket
@@ -28,7 +28,7 @@ public class SampleClient {
             try{
                 input = new FileInputStream("input.txt");
             }
-            catch(exception e){
+            catch(IOException e){
                 System.out.println("error");
             }
             BufferedReader bufferedReader = new BufferedReader(input);
