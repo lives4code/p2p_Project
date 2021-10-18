@@ -9,15 +9,20 @@ public class PeerProcess {
 	private static String hostname;
 	private static int lPort;
 	private static boolean hasFile;
-
-	public PeerProcess(int ID, String name, int port, boolean has) {
-		this.peerID = ID;
-		this.hostname = name;
-		this.lPort = port;
-		this.hasFile = has;
-	}
+	public ObjectInputStream in;		//stream read from the scocket
+	public ObjectOutputStream out;    	//stream write to the socket
+	
 
 	public static void main(String[] args) throws Exception {
+		//if (args.length < 4) {
+		//	System.out.println("Invalid: Format should contain arguments peerID, hostName, port, file");
+		//}
+		//peerID = Integer.valueOf(args[0]);
+		//hostname = args[1];
+
+		lPort = Integer.valueOf(args[2]);
+		hasFile = Integer.valueOf(args[3]) == 1;
+
 		byte[] handshake = new byte[32];
 		handshake = createHandshake();
 		System.out.println("Peer is running."); 
@@ -41,8 +46,6 @@ public class PeerProcess {
 	private static class Server extends Thread {
 		private String message;    		//message received from the client
 		private Socket connection;		//wait on a connection from client
-		private ObjectInputStream in;		//stream read from the socket
-		private ObjectOutputStream out;    	//stream write to the socket
 		private int no;				//The index number of the client
 
 		public Server(Socket connection, int no) {
@@ -72,7 +75,7 @@ public class PeerProcess {
 						String MESSAGE = "recived";
 						sendMessage(MESSAGE);
 					}
-		 ,		}
+				}
 				catch(ClassNotFoundException classnot){
 					System.err.println("Data received in unknown format");
 				}
@@ -96,8 +99,6 @@ public class PeerProcess {
         private static class Client extends Thread {
 
 		private Socket requestSocket;           //socket connect to the server
-		private ObjectOutputStream out;         //stream write to the socket
- 		private ObjectInputStream in;          //stream read from the socket
 		private String message;                //message send to the server
 		private String MESSAGE;                //capitalized message read from the server
 	
@@ -155,7 +156,7 @@ public class PeerProcess {
 	}
 	
 	//send a message to the output stream
-	void sendMessage(String msg)
+	public void sendMessage(String msg)
 	{
 		try{
 			//stream write the message
