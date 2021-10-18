@@ -38,14 +38,14 @@ public class PeerProcess {
 	//handler thread class. handleers are spawned from the listening
 	//loop and are responsible for dealing with a single client's
 	//requests
-	private static class Handler extends Thread {
-		private String message;    //message received from the client
-		private Socket connection;	//wait on a connection from client
-		private ObjectInputStream in;	//stream read from the socket
-		private ObjectOutputStream out;    //stream write to the socket
-		private int no;		//The index number of the client
+	private static class Server extends Thread {
+		private String message;    		//message received from the client
+		private Socket connection;		//wait on a connection from client
+		private ObjectInputStream in;		//stream read from the socket
+		private ObjectOutputStream out;    	//stream write to the socket
+		private int no;				//The index number of the client
 
-		public Handler(Socket connection, int no) {
+		public Server(Socket connection, int no) {
 			this.connection = connection;
 			this.no = no;
 		}
@@ -72,7 +72,7 @@ public class PeerProcess {
 						String MESSAGE = "recived";
 						sendMessage(MESSAGE);
 					}
-				}
+		 ,		}
 				catch(ClassNotFoundException classnot){
 					System.err.println("Data received in unknown format");
 				}
@@ -93,52 +93,111 @@ public class PeerProcess {
 			}
 		}
 
-		//send a message to the output stream
-		public void sendMessage(String msg)
-		{
-			try {
-				out.writeObject(msg);
-				out.flush();
-				System.out.println("Send message: " + msg + " to Client " + no);
+        private static class Client extends Thread {
+
+		private Socket requestSocket;           //socket connect to the server
+		private ObjectOutputStream out;         //stream write to the socket
+ 		private ObjectInputStream in;          //stream read from the socket
+		private String message;                //message send to the server
+		private String MESSAGE;                //capitalized message read from the server
+	
+                public Client() {}
+
+	void run()
+	{
+		try{
+			//create a socket to connect to the server
+			requestSocket = new Socket("localhost", 8000);
+			System.out.println("Connected to localhost in port 8000");
+			//initialize inputStream and outputStream
+			out = new ObjectOutputStream(requestSocket.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(requestSocket.getInputStream());
+			
+			//get Input from standard input
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+			while(true)
+			{
+				System.out.print("Hello, please input a sentence: ");
+				//read a sentence from the standard input
+				message = bufferedReader.readLine();
+				//Send the sentence to the server
+				sendMessage(message);
+				//Receive the upperCase sentence from the server
+				MESSAGE = (String)in.readObject();
+				//show the message to the user
+				System.out.println("Receive message: " + MESSAGE);
 			}
-			catch(IOException ioException) {
+		}
+		catch (ConnectException e) {
+    			System.err.println("Connection refused. You need to initiate a server first.");
+		} 
+		catch ( ClassNotFoundException e ) {
+            		System.err.println("Class not found");
+        	} 
+		catch(UnknownHostException unknownHost){
+			System.err.println("You are trying to connect to an unknown host!");
+		}
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+		finally{
+			//Close connections
+			try{
+				in.close();
+				out.close();
+				requestSocket.close();
+			}
+			catch(IOException ioException){
 				ioException.printStackTrace();
 			}
 		}
-
-
-		private void handleMessage(byte[] msg) {
-			byte[] msgLength  = new byte[4];
-			System.arraycopy(msg, 0, msgLength, 4, 4);
-			int mLength = ByteBuffer.wrap(msgLength).getInt();
-
-			byte[] msgType = new byte[1];
-			System.arraycopy(msg, 4, msgType, 5, 1);
-			int mType = ByteBuffer.wrap(msgType).getInt();
-
-			byte[] msgPayload = new byte[mLength];
-			System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
-
-			switch(mType){
-				case 0:
-				//choke
-				case 1:
-				//unchoke
-				case 2:
-				//interested
-				case 3:
-				//not intrested
-				case 4:
-				//have
-				case 5:
-				//bitfield
-				case 6:
-				//request
-				case 7:
-				//piece
-			}
+	}
+	
+	//send a message to the output stream
+	void sendMessage(String msg)
+	{
+		try{
+			//stream write the message
+			out.writeObject(msg);
+			out.flush();
 		}
-    }
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+	}
+
+	private void handleMessage(byte[] msg) {
+		byte[] msgLength  = new byte[4];
+		System.arraycopy(msg, 0, msgLength, 4, 4);
+		int mLength = ByteBuffer.wrap(msgLength).getInt();
+
+		byte[] msgType = new byte[1];
+		System.arraycopy(msg, 4, msgType, 5, 1);
+		int mType = ByteBuffer.wrap(msgType).getInt();
+
+		byte[] msgPayload = new byte[mLength];
+		System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
+
+		switch(mType){
+			case 0:
+			//choke
+			case 1:
+			//unchoke
+			case 2:
+			//interested
+			case 3:
+			//not intrested
+			case 4:
+			//have
+			case 5:
+			//bitfield
+			case 6:
+			//request
+			case 7:
+			//piece
+		}
+	}
 
 	public static byte[] createHandshake() {
 		byte[] bytes = new byte[32];
