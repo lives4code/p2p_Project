@@ -7,7 +7,7 @@ import java.util.*;
 public class PeerProcess {
 	private static int peerID;
 	private static String hostname;
-	private static int lPort;
+	private static int lPort = 8000;	//listen on this port
 	private static boolean hasFile;
 	public ObjectInputStream in;		//stream read from the scocket
 	public ObjectOutputStream out;    	//stream write to the socket
@@ -30,7 +30,7 @@ public class PeerProcess {
 		int clientNum = 1;
 		try {
 			while(true) {
-				new Handler(listener.accept(),clientNum).start();
+				new Server(listener.accept(),clientNum).start();
 				System.out.println("Client "  + clientNum + " is connected!");
 				clientNum++;
 			}
