@@ -9,14 +9,57 @@ public class PeerProcess {
 	private static int lPort;
 	private static boolean hasFile;
 
+	// Common cfg variables
+	private static int numPrefNeighbors;
+	private static int unchokeInterval;
+	private static int optUnchokeInterval;
+	private static String fileName;
+	private static long fileSize;
+	private static long pieceSize;
+
 	public static void main(String[] args) throws Exception {
-		if (args.length < 4) {
-			System.out.println("Invalid: Format should contain arguments peerID, hostName, port, file");
+//		if (args.length < 4) {
+//			System.out.println("Invalid: Format should contain arguments peerID, hostName, port, file");
+//		}
+//		peerID = Integer.valueOf(args[0]);
+//		hostname = args[1];
+//		lPort = Integer.valueOf(args[2]);
+//		hasFile = Integer.valueOf(args[3]) == 1;
+
+		// Read Common Config
+		try {
+			File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/Common.cfg");
+			Scanner fileReader = new Scanner(myObj);
+			while (fileReader.hasNextLine()) {
+				// Number of Preferred Neighbors
+				String data = fileReader.next(); data = fileReader.next();
+				numPrefNeighbors = Integer.valueOf(data);
+
+				// Unchoking Interval
+				data = fileReader.next(); data = fileReader.next();
+				unchokeInterval = Integer.valueOf(data);
+
+				// Optimistic Unchoking Interval
+				data = fileReader.next(); data = fileReader.next();
+				optUnchokeInterval = Integer.valueOf(data);
+
+				// File Name
+				data = fileReader.next(); data = fileReader.next();
+				fileName = data;
+
+				// File Size
+				data = fileReader.next(); data = fileReader.next();
+				fileSize = Long.valueOf(data);
+
+				// Piece Size
+				data = fileReader.next(); data = fileReader.next();
+				pieceSize = Long.valueOf(data);
+			}
+			fileReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
 		}
-		peerID = Integer.valueOf(args[0]);
-		hostname = args[1];
-		lPort = Integer.valueOf(args[2]);
-		hasFile = Integer.valueOf(args[3]) == 1;
 
 		byte[] handshake = new byte[32];
 		handshake = createHandshake();
@@ -154,7 +197,7 @@ public class PeerProcess {
 		//File.WriteAllBytes("input.txt", StringToByteArray(hexString));
 		//obviously this is the absolute path and will need to be replaced with the relative path.
 		try {
-			File info = new File("./Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
+			File info = new File("../Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
 			Scanner myReader = new Scanner(info);
 			if (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
