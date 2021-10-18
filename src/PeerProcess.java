@@ -1,7 +1,6 @@
 import java.net.*;
 import java.io.*;
 import java.nio.*;
-import java.nio.channels.*;
 import java.util.*;
 
 public class PeerProcess {
@@ -10,14 +9,15 @@ public class PeerProcess {
 	private static int lPort;
 	private static boolean hasFile;
 
-	public PeerProcess(int ID, String name, int port, boolean has) {
-		this.peerID = ID;
-		this.hostname = name;
-		this.lPort = port;
-		this.hasFile = has;
-	}
-
 	public static void main(String[] args) throws Exception {
+		if (args.length < 4) {
+			System.out.println("Invalid: Format should contain arguments peerID, hostName, port, file");
+		}
+		peerID = Integer.valueOf(args[0]);
+		hostname = args[1];
+		lPort = Integer.valueOf(args[2]);
+		hasFile = Integer.valueOf(args[3]) == 1;
+
 		byte[] handshake = new byte[32];
 		handshake = createHandshake();
 		System.out.println("Peer is running."); 
@@ -35,7 +35,7 @@ public class PeerProcess {
 		}
 	}
 
-	//handler thread class. handleers are spawned from the listening
+	//handler thread class. handlers are spawned from the listening
 	//loop and are responsible for dealing with a single client's
 	//requests
 	private static class Handler extends Thread {
@@ -105,7 +105,6 @@ public class PeerProcess {
 				ioException.printStackTrace();
 			}
 		}
-
 
 		private void handleMessage(byte[] msg) {
 			byte[] msgLength  = new byte[4];
