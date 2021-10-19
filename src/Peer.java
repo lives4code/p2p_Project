@@ -1,8 +1,18 @@
+import java.util.ArrayList;
+
 public class Peer {
+    // From Peer Info Cfg
     private int peerId;
     private String hostName;
     int port;
     boolean hasFile;
+
+    // Other
+    boolean isInterested;
+    Bitfield bitfield;
+    ArrayList<byte[]> piecesNeeded;
+    float downloadRate;
+    boolean choked;
 
     public Peer() {
 
