@@ -1,8 +1,12 @@
 public class Peer {
-    int peerId;
-    String hostName;
+    private int peerId;
+    private String hostName;
     int port;
     boolean hasFile;
+
+    public Peer() {
+
+    }
 
     public Peer(int peerId, String hostName, int port, boolean hasFile) {
         this.peerId = peerId;

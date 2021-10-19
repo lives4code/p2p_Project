@@ -4,59 +4,43 @@ import java.nio.*;
 import java.util.*;
 
 public class PeerProcess {
-	private static int peerID;
-	private static String hostname;
-	private static int lPort;
-	private static boolean hasFile;
-
-	// Common cfg variables
-	private static int numPrefNeighbors;
-	private static int unchokeInterval;
-	private static int optUnchokeInterval;
-	private static String fileName;
-	private static long fileSize;
-	private static long pieceSize;
-
-	// Peer Info cfg information
-	private static List<Peer> peers = new ArrayList<>();
 
 	public static void main(String[] args) throws Exception {
-//		if (args.length < 4) {
-//			System.out.println("Invalid: Format should contain arguments peerID, hostName, port, file");
-//		}
-//		peerID = Integer.valueOf(args[0]);
-//		hostname = args[1];
-//		lPort = Integer.valueOf(args[2]);
-//		hasFile = Integer.valueOf(args[3]) == 1;
+		// Don't actually need this info because first peer is always me
+		// However, this parameter is required by specs
+		if (args.length < 1) {
+			System.out.println("Invalid: Must include peerID parameter");
+		}
 
-		// Read Common Config
+		// Processes
+		Peer myProcess = new Peer();
+		List<Peer> peers = new ArrayList<>();
+
+		// Common variables
+		int numPrefNeighbors;
+		int unchokeInterval;
+		int optUnchokeInterval;
+		String fileName;
+		long fileSize;
+		long pieceSize;
+
+		// Read Peer Info Cfg
 		try {
-			File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/Common.cfg");
+			File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/PeerInfo.cfg");
 			Scanner fileReader = new Scanner(myObj);
-			while (fileReader.hasNextLine()) {
-				// Number of Preferred Neighbors
-				String data = fileReader.next(); data = fileReader.next();
-				numPrefNeighbors = Integer.valueOf(data);
-
-				// Unchoking Interval
-				data = fileReader.next(); data = fileReader.next();
-				unchokeInterval = Integer.valueOf(data);
-
-				// Optimistic Unchoking Interval
-				data = fileReader.next(); data = fileReader.next();
-				optUnchokeInterval = Integer.valueOf(data);
-
-				// File Name
-				data = fileReader.next(); data = fileReader.next();
-				fileName = data;
-
-				// File Size
-				data = fileReader.next(); data = fileReader.next();
-				fileSize = Long.valueOf(data);
-
-				// Piece Size
-				data = fileReader.next(); data = fileReader.next();
-				pieceSize = Long.valueOf(data);
+			boolean isMe = true; // First peer is always me
+			while (fileReader.hasNext()) {
+				int peerId = Integer.valueOf(fileReader.next());
+				String hostName = fileReader.next();
+				int port = Integer.valueOf(fileReader.next());
+				boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
+				if (isMe) {
+					myProcess = new Peer(peerId, hostName, port, hasFile);
+					isMe = false;
+				}
+				else {
+					peers.add(new Peer(peerId, hostName, port, hasFile));
+				}
 			}
 			fileReader.close();
 		} catch (FileNotFoundException e) {
@@ -64,16 +48,29 @@ public class PeerProcess {
 			e.printStackTrace();
 		}
 
-		// Read Peer Info Cfg
+		// Read Common Config
 		try {
-			File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/PeerInfo.cfg");
+			File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/Common.cfg");
 			Scanner fileReader = new Scanner(myObj);
-			while (fileReader.hasNext()) {
-				int peerId = Integer.valueOf(fileReader.next());
-				String hostName = fileReader.next();
-				int port = Integer.valueOf(fileReader.next());
-				boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
-				peers.add(new Peer(peerId, hostName, port, hasFile));
+			while (fileReader.hasNextLine()) {
+				// Number of Preferred Neighbors
+				fileReader.next();
+				numPrefNeighbors = Integer.valueOf(fileReader.next());
+				// Unchoking Interval
+				fileReader.next();
+				unchokeInterval = Integer.valueOf(fileReader.next());
+				// Optimistic Unchoking Interval
+				fileReader.next();
+				optUnchokeInterval = Integer.valueOf(fileReader.next());
+				// File Name
+				fileReader.next();
+				fileName = fileReader.next();
+				// File Size
+				fileReader.next();
+				fileSize = Long.valueOf(fileReader.next());
+				// Piece Size
+				fileReader.next();
+				pieceSize = Long.valueOf(fileReader.next());
 			}
 			fileReader.close();
 		} catch (FileNotFoundException e) {
@@ -84,7 +81,7 @@ public class PeerProcess {
 		byte[] handshake = new byte[32];
 		handshake = createHandshake();
 		System.out.println("Peer is running."); 
-		ServerSocket listener = new ServerSocket(lPort);
+		ServerSocket listener = new ServerSocket(myProcess.port);
 		int clientNum = 1;
 		try {
 			while(true) {
@@ -103,10 +100,10 @@ public class PeerProcess {
 	//requests
 	private static class Handler extends Thread {
 		private String message;    //message received from the client
-		private Socket connection;	//wait on a connection from client
+		private final Socket connection;	//wait on a connection from client
 		private ObjectInputStream in;	//stream read from the socket
 		private ObjectOutputStream out;    //stream write to the socket
-		private int no;		//The index number of the client
+		private final int no;		//The index number of the client
 
 		public Handler(Socket connection, int no) {
 			this.connection = connection;
