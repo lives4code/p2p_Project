@@ -17,6 +17,9 @@ public class PeerProcess {
 	private static long fileSize;
 	private static long pieceSize;
 
+	// Peer Info cfg information
+	private static List<Peer> peers = new ArrayList<>();
+
 	public static void main(String[] args) throws Exception {
 //		if (args.length < 4) {
 //			System.out.println("Invalid: Format should contain arguments peerID, hostName, port, file");
@@ -54,6 +57,23 @@ public class PeerProcess {
 				// Piece Size
 				data = fileReader.next(); data = fileReader.next();
 				pieceSize = Long.valueOf(data);
+			}
+			fileReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+
+		// Read Peer Info Cfg
+		try {
+			File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/PeerInfo.cfg");
+			Scanner fileReader = new Scanner(myObj);
+			while (fileReader.hasNext()) {
+				int peerId = Integer.valueOf(fileReader.next());
+				String hostName = fileReader.next();
+				int port = Integer.valueOf(fileReader.next());
+				boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
+				peers.add(new Peer(peerId, hostName, port, hasFile));
 			}
 			fileReader.close();
 		} catch (FileNotFoundException e) {
