@@ -86,41 +86,13 @@ public class Client extends Thread {
         for (int i = 0; i < byteString.length; i++) {
             bytes[i] = byteString[i];
         }
-        for (int i = 18; i < 27; i++) {
+        for (int i = 18; i < 28; i++) {
             bytes[i] = 0x00;
         }
         bytes[28] = (byte) (peerID >> 24);
         bytes[29] = (byte) (peerID >> 16);
         bytes[30] = (byte) (peerID >> 8);
         bytes[31] = (byte) (peerID /*>> 0*/);
-
-
-        //File.WriteAllBytes("input.txt", StringToByteArray(hexString));
-        /*
-        try {
-            File info = new File("../Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
-            Scanner myReader = new Scanner(info);
-            if (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                for (int i = 0; i < 4; ++i) {
-                    byte l = (byte) Character.getNumericValue(data.charAt(i));
-                    System.out.println("data:" + data.charAt(i));
-                    bytes[28 + i] = l;
-                }
-            }
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                System.out.println(data);
-            }
-            myReader.close();
-
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("error");
-            e.printStackTrace();
-        }
-
-         */
         return bytes;
     }
 }
