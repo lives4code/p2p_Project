@@ -89,10 +89,11 @@ public class Client extends Thread {
         for (int i = 18; i < 28; i++) {
             bytes[i] = 0x00;
         }
-        bytes[28] = (byte) (peerID >> 24);
-        bytes[29] = (byte) (peerID >> 16);
-        bytes[30] = (byte) (peerID >> 8);
-        bytes[31] = (byte) (peerID /*>> 0*/);
+
+        byte[] peer_id = ByteBuffer.allocate(4).putInt(peerID).array();
+        for ( int i = 0; i < 4; i++){
+            bytes[28 + i] = peer_id[i];
+        }
         return bytes;
     }
 }
