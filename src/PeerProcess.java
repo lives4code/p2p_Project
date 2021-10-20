@@ -21,7 +21,7 @@ public class PeerProcess {
 		}
 
 		// Processes
-		MyProcess myProcess = new MyProcess();
+		MyProcess myProcess = new MyProcess(Integer.valueOf(args[0]));
 		myProcess.start();
 	}
 }

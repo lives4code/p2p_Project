@@ -25,7 +25,8 @@ public class MyProcess {
     long fileSize;
     long pieceSize;
 
-    public MyProcess() {
+    public MyProcess(int peerId) {
+        myId = peerId;
         peers = new ArrayList<>();
         loadPeerInfo();
         loadCommonConfig();
@@ -54,18 +55,15 @@ public class MyProcess {
         try {
             File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/PeerInfo.cfg");
             Scanner fileReader = new Scanner(myObj);
-            boolean isMe = true; // First peer is always me
             while (fileReader.hasNext()) {
                 int peerId = Integer.valueOf(fileReader.next());
                 String hostName = fileReader.next();
                 int port = Integer.valueOf(fileReader.next());
                 boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
-                if (isMe) {
-                    this.myId = peerId;
+                if (peerId == myId) {
                     this.myHostName = hostName;
                     this.port = port;
                     this.hasFile = hasFile;
-                    isMe = false;
                 } else {
                     peers.add(new Peer(peerId, hostName, port, hasFile));
                 }
