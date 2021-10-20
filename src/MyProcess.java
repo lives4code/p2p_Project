@@ -1,9 +1,13 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static java.lang.System.in;
 
 public class MyProcess {
     // From Peer Info Cfg
@@ -50,6 +54,28 @@ public class MyProcess {
 
         // Start client
     }
+    /*
+    public void loadTheFile(){
+        try{
+            int numPieces = (int) Math.ceil(fileSize / pieceSize);
+
+            FileInputStream in = new FileInputStream("../Files_From_Prof/project_config_file_small/1001/thefile");
+            int counter = 0;
+            while (counter < fileSize){
+                in.
+
+            }
+
+        }
+        catch (FileNotFoundException e){
+            System.out.println("An error occured.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+     */
 
     public void loadPeerInfo() {
         try {

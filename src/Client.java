@@ -79,7 +79,7 @@ public class Client extends Thread {
         }
     }
 
-    private static byte[] createHandshake() {
+    private static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
         String hexString = "P2PFILESHARINGPROJ";
         byte[] byteString = hexString.getBytes();
@@ -89,8 +89,14 @@ public class Client extends Thread {
         for (int i = 18; i < 27; i++) {
             bytes[i] = 0x00;
         }
+        bytes[28] = (byte) (peerID >> 24);
+        bytes[29] = (byte) (peerID >> 16);
+        bytes[30] = (byte) (peerID >> 8);
+        bytes[31] = (byte) (peerID /*>> 0*/);
+
 
         //File.WriteAllBytes("input.txt", StringToByteArray(hexString));
+        /*
         try {
             File info = new File("../Files_From_Prof/project_config_file_large/project_config_file_large/PeerInfo.cfg");
             Scanner myReader = new Scanner(info);
@@ -113,6 +119,8 @@ public class Client extends Thread {
             System.out.println("error");
             e.printStackTrace();
         }
+
+         */
         return bytes;
     }
 }
