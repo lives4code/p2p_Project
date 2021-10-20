@@ -14,10 +14,6 @@ public class Peer {
     float downloadRate;
     boolean choked;
 
-    public Peer() {
-
-    }
-
     public Peer(int peerId, String hostName, int port, boolean hasFile) {
         this.peerId = peerId;
         this.hostName = hostName;
