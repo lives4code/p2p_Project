@@ -64,6 +64,7 @@ public class MyProcess {
             byte[] pieceContent = new byte[(int)pieceSize];
             Piece[] pieceArray = new Piece[numPieces];
 
+            //could be an error here is there like a more relative way to read the file?
             FileInputStream in = new FileInputStream("../Files_From_Prof/project_config_file_small/1001/thefile");
             int counter = 0;
             //this goes up until the last piece because I don't want to deal with the end of file exception breaking stuff.
@@ -72,7 +73,21 @@ public class MyProcess {
                 pieceArray[counter] = new Piece(intToByte((int) counter), pieceContent, (int)pieceSize);
 
             }
+            //the last piece will be the rest of the fill followed by leading zeros
+            int finalPieceSize = (int) ((fileSize - ((numPieces - 1)) * (int) pieceSize));
+            byte[] finalPiece = new byte[finalPieceSize];
+            in.read(finalPiece);
+            //just read the final piece now I want to put it into an array of the same size as the others and fill it with zeros.
+            for(int i = 0; i < finalPieceSize; i++){
+                pieceContent[i] = finalPiece[i];
+            }
+            for(int i = finalPieceSize; i < (int) pieceSize; i++){
+                pieceContent[i] = 0x00;
+            }
+            //put it into the piece.
+            pieceArray[counter + 1] = new Piece(intToByte(counter), pieceContent, (int)pieceSize);
 
+            Bitfield b = new Bitfield(numPieces, pieceArray);
 
         }
         catch (FileNotFoundException e){
