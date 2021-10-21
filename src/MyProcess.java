@@ -58,6 +58,7 @@ public class MyProcess {
         byte[] bytes = ByteBuffer.allocate(4).putInt(input).array();
         return bytes;
     }
+    // this should probably return a bitmap object.
     public void loadTheFile(){
         try{
             int numPieces = (int) Math.ceil(fileSize / pieceSize);
