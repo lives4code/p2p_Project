@@ -39,7 +39,8 @@ public class MyProcess {
 
     public void start() throws Exception {
         System.out.println("Peer is running.");
-
+        // Start client
+        new ClientSpawn().start();
         // Start Server
         ServerSocket listener = new ServerSocket(port);
         int clientNum = 1;
@@ -52,8 +53,6 @@ public class MyProcess {
         } finally {
             listener.close();
         }
-
-        // Start client
     }
     public byte[] intToByte(int input){
         byte[] bytes = ByteBuffer.allocate(4).putInt(input).array();

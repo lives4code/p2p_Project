@@ -13,14 +13,38 @@ public class Client extends Thread {
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
 
-    public Client() {}
+    private static int port = 80;
+    private String host;
+    private boolean connected = false;
+
+    public Client(String host) {
+        this.host = host;
+    }
 
     public void run()
     {
         try{
             //create a socket to connect to the server
-            requestSocket = new Socket("localhost", 8000);
+            while(!connected) {
+                connected = true;
+                try {
+                    requestSocket = new Socket(host, port);
+                } catch (ConnectException e) {
+                    System.err.println("Connection refused. You need to initiate a server first.");
+                    connected = false;
+                    continue;
+                } catch(UnknownHostException unknownHost){
+                    System.err.println("You are trying to connect to an unknown host!");
+                    connected = false;
+                    continue;
+                } catch(IOException ioException){
+                    ioException.printStackTrace();
+                    connected = false;
+                    continue;
+                }
+            }
             System.out.println("Connected to localhost in port 8000");
+
             //initialize inputStream and outputStream
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();
@@ -40,9 +64,6 @@ public class Client extends Thread {
                 //show the message to the user
                 System.out.println("Receive message: " + MESSAGE);
             }
-        }
-        catch (ConnectException e) {
-            System.err.println("Connection refused. You need to initiate a server first.");
         }
         catch ( ClassNotFoundException e ) {
             System.err.println("Class not found");
