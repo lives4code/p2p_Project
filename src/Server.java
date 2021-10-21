@@ -10,6 +10,7 @@ import java.util.Arrays;
 //loop and are responsible for dealing with a single client's
 //requests
 public class Server extends Thread {
+
     private String message;            //message received from the client
     private Socket connection;        //wait on a connection from client
     private int no;                //The index number of the client
@@ -38,8 +39,9 @@ public class Server extends Thread {
                     System.out.println("Receive message: " + message + " from client " + no);
                     //this is where we will handle the message
                     handleMessage(message.getBytes());
-                    //test message
-                    sendMessage("received");
+                    //not needed
+//                    //test message
+//                    sendMessage("received");
                 }
             } catch (ClassNotFoundException classnot) {
                 System.err.println("Data received in unknown format");
@@ -58,6 +60,7 @@ public class Server extends Thread {
         }
     }
 
+    //validate handshake
     private boolean validateHandshake(byte[] msg) {
         byte[] header = ("P2PFILESHARINGPROJ").getBytes();
         // Check for appropriate header
@@ -74,6 +77,7 @@ public class Server extends Thread {
         return true;
     }
 
+    //handle message
     private void handleMessage(byte[] msg) {
         byte[] msgLength  = new byte[4];
         System.arraycopy(msg, 0, msgLength, 4, 4);
@@ -106,16 +110,17 @@ public class Server extends Thread {
         }
     }
 
-    //send a message to the output stream
-    private void sendMessage(String msg)
-    {
-        try{
-            //stream write the message
-            out.writeObject(msg);
-            out.flush();
-        }
-        catch(IOException ioException){
-            ioException.printStackTrace();
-        }
-    }
+    //not used
+//    //send a message to the output stream
+//    private void sendMessage(String msg)
+//    {
+//        try{
+//            //stream write the message
+//            out.writeObject(msg);
+//            out.flush();
+//        }
+//        catch(IOException ioException){
+//            ioException.printStackTrace();
+//        }
+//    }
 }

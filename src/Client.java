@@ -8,14 +8,14 @@ import java.util.Scanner;
 public class Client extends Thread {
 
     private Socket requestSocket;           //socket connect to the server
+    //not needed
     private String message;                //message send to the server
     private String MESSAGE;                //capitalized message read from the server
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
 
-    private static int port = 80;
+    private static int port = 8001;
     private String host;
-    private boolean connected = false;
 
     public Client(String host) {
         this.host = host;
@@ -25,25 +25,9 @@ public class Client extends Thread {
     {
         try{
             //create a socket to connect to the server
-            while(!connected) {
-                connected = true;
-                try {
-                    requestSocket = new Socket(host, port);
-                } catch (ConnectException e) {
-                    System.err.println("Connection refused. You need to initiate a server first.");
-                    connected = false;
-                    continue;
-                } catch(UnknownHostException unknownHost){
-                    System.err.println("You are trying to connect to an unknown host!");
-                    connected = false;
-                    continue;
-                } catch(IOException ioException){
-                    ioException.printStackTrace();
-                    connected = false;
-                    continue;
-                }
-            }
-            System.out.println("Connected to localhost in port 8000");
+            System.out.println("attempt to connect to server");
+            requestSocket = new Socket(host, port);
+            System.out.println("Connected to localhost in port" + port);
 
             //initialize inputStream and outputStream
             out = new ObjectOutputStream(requestSocket.getOutputStream());
@@ -54,19 +38,24 @@ public class Client extends Thread {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             while(true)
             {
-                System.out.print("Hello, please input a sentence: ");
-                //read a sentence from the standard input
-                message = bufferedReader.readLine();
-                //Send the sentence to the server
-                sendMessage(message);
-                //Receive the upperCase sentence from the server
-                MESSAGE = (String)in.readObject();
-                //show the message to the user
-                System.out.println("Receive message: " + MESSAGE);
+                //not needed
+//                System.out.print("Hello, please input a sentence: ");
+//                //read a sentence from the standard input
+//                message = bufferedReader.readLine();
+//                //Send the sentence to the server
+//                sendMessage(message);
+//                //Receive the upperCase sentence from the server
+//                MESSAGE = (String)in.readObject();
+//                //show the message to the user
+//                System.out.println("Receive message: " + MESSAGE);
             }
         }
-        catch ( ClassNotFoundException e ) {
-            System.err.println("Class not found");
+        //not needed
+//        catch ( ClassNotFoundException e ) {
+//            System.err.println("Class not found");
+//        }
+        catch (ConnectException e) {
+            System.err.println("Connection refused. You need to initiate a server first.");
         }
         catch(UnknownHostException unknownHost){
             System.err.println("You are trying to connect to an unknown host!");
@@ -87,19 +76,21 @@ public class Client extends Thread {
         }
     }
 
+    //not needed
     //send a message to the output stream
-    private void sendMessage(String msg)
-    {
-        try{
-            //stream write the message
-            out.writeObject(msg);
-            out.flush();
-        }
-        catch(IOException ioException){
-            ioException.printStackTrace();
-        }
-    }
+//    private void sendMessage(String msg)
+//    {
+//        try{
+//            //stream write the message
+//            out.writeObject(msg);
+//            out.flush();
+//        }
+//        catch(IOException ioException){
+//            ioException.printStackTrace();
+//        }
+//    }
 
+    //create handshake
     private static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
         String hexString = "P2PFILESHARINGPROJ";
