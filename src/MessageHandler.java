@@ -1,6 +1,7 @@
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -55,6 +56,6 @@ public class MessageHandler {
                 return -1;
         }
         // If valid, return peer id
-        return (msg[28]*1000) + (msg[29]*100) + (msg[30]*10) + msg[31];
+        return ByteBuffer.wrap(Arrays.copyOfRange(msg, 28, 32)).getInt();
     }
 }

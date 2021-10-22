@@ -14,7 +14,7 @@ public class MyProcess {
     // From Peer Info Cfg
     private int myId;
     // put your ip and port no
-    private String myHostName = "192.168.56.1";
+    private String myHostName = "10.136.40.191";
     int port = 8001;
 
     boolean hasFile;
