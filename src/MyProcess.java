@@ -39,7 +39,7 @@ public class MyProcess {
     //TODO write that we are no longer looking for this piece.
     public void writePiece(byte[] pieceIndex, byte[] piece){
         try {
-            RandomAccessFile file = new RandomAccessFile("theFile", "rw");
+            RandomAccessFile file = new RandomAccessFile("theFile", "w");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
             file.skipBytes(skip);
@@ -50,6 +50,22 @@ public class MyProcess {
         catch (Exception e){
             System.out.println("error occured");
         }
+    }
+    //TODO fix error that can occur at the last byte of the file.
+    public byte[] readPiece(byte[] pieceIndex ){
+        byte[] ret = new byte[(int)pieceSize];
+        try {
+            RandomAccessFile file = new RandomAccessFile("theFile", "r");
+            int index = ByteBuffer.wrap(pieceIndex).getInt();
+            int skip = (int)pieceSize * index;
+            file.skipBytes(skip);
+            file.read(ret);
+            file.close();
+        }
+        catch (Exception e){
+            System.out.println("error occured while reading piece");
+        }
+        return ret;
     }
 
     public void start() throws Exception {
