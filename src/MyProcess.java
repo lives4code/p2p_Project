@@ -75,6 +75,7 @@ public class MyProcess {
 
     public void loadPeerInfo() {
         try {
+            int numPieces = (int) Math.ceil(fileSize / pieceSize);
             File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/PeerInfo.cfg");
             Scanner fileReader = new Scanner(myObj);
             while (fileReader.hasNext()) {
@@ -90,6 +91,7 @@ public class MyProcess {
                     peers.add(new Peer(peerId, hostName, port, hasFile));
                 }
             }
+            b = new Bitfield(numPieces, hasFile);
             if(this.hasFile == false){
                 File theFile = new File("theFile");
                 if (theFile.createNewFile()) {
@@ -142,8 +144,6 @@ public class MyProcess {
                 pieceSize = Long.valueOf(fileReader.next());
             }
             fileReader.close();
-            int numPieces = (int) Math.ceil(fileSize / pieceSize);
-            b = new Bitfield(numPieces);
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

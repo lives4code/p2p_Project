@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
  */
 
+//create constructor for case that file already exists.
 
 public class Bitfield {
     int pieceNum;
@@ -18,6 +19,19 @@ public class Bitfield {
     }
 
     //initialize bitfield to false;
+    Bitfield(int _pieceNum, boolean hasFile){
+        this.pieceNum = _pieceNum;
+        this.hasPiece = new byte[pieceNum];
+        for(int i = 0; i < pieceNum; i++) {
+            if (!hasFile) {
+                this.hasPiece[i] = 0;
+            }
+            else {
+                this.hasPiece[i] = 1;
+            }
+        }
+
+    }
     Bitfield(int _pieceNum) {
         this.pieceNum = _pieceNum;
         this.hasPiece = new byte[pieceNum];
