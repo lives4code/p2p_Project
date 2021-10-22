@@ -89,23 +89,4 @@ public class Client extends Thread {
 //            ioException.printStackTrace();
 //        }
 //    }
-
-    //create handshake
-    private static byte[] createHandshake(int peerID) {
-        byte[] bytes = new byte[32];
-        String hexString = "P2PFILESHARINGPROJ";
-        byte[] byteString = hexString.getBytes();
-        for (int i = 0; i < byteString.length; i++) {
-            bytes[i] = byteString[i];
-        }
-        for (int i = 18; i < 28; i++) {
-            bytes[i] = 0x00;
-        }
-
-        byte[] peer_id = ByteBuffer.allocate(4).putInt(peerID).array();
-        for ( int i = 0; i < 4; i++){
-            bytes[28 + i] = peer_id[i];
-        }
-        return bytes;
-    }
 }

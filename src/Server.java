@@ -61,23 +61,6 @@ public class Server extends Thread {
         }
     }
 
-    //validate handshake
-    private boolean validateHandshake(byte[] msg) {
-        byte[] header = ("P2PFILESHARINGPROJ").getBytes();
-        // Check for appropriate header
-        if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {
-            return false;
-        }
-        // Check for zeros
-        for (int i = 18; i < 28; i++) {
-            if (msg[i] != 0x00)
-                return false;
-        }
-        // Check for peer id
-        this.peerId = (msg[28]*1000) + (msg[29]*100) + (msg[30]*10) + msg[31];
-        return true;
-    }
-
     //handle message
     private void handleMessage(byte[] msg) {
         byte[] msgLength  = new byte[4];
