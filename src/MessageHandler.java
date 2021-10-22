@@ -1,4 +1,5 @@
 import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -7,12 +8,21 @@ public class MessageHandler {
 
     public static void sendMessage(DataOutputStream out, byte[] msg) {
         try{
-            out.write(msg);
+            out.write(msg, 0, msg.length);
             out.flush();
         }
         catch(IOException ioException){
             ioException.printStackTrace();
         }
+    }
+    public static byte[] receiveMessage(DataInputStream in, byte[] msg) {
+        try{
+            in.read(msg);
+        }
+        catch(IOException ioException){
+            ioException.printStackTrace();
+        }
+        return msg;
     }
 
     public static byte[] createHandshake(int peerID) {
@@ -33,7 +43,7 @@ public class MessageHandler {
         return bytes;
     }
 
-    private int validateHandshake(byte[] msg) {
+    public static int validateHandshake(byte[] msg) {
         byte[] header = ("P2PFILESHARINGPROJ").getBytes();
         // Check for appropriate header
         if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {

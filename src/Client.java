@@ -9,13 +9,18 @@ public class Client extends Thread {
 
     private Socket requestSocket;           //socket connect to the server
     //not needed
-    private String message;                //message send to the server
+    private byte[] message;                //message send to the server
     private String MESSAGE;                //capitalized message read from the server
     private DataInputStream in;	//stream read from the socket
     private DataOutputStream out;    //stream write to the socket
 
-    private static int port = 8001;
+    private static int port = 8000;
     private String host;
+    private int peerId = 1000;
+
+    //debug
+    private int test;
+
 
     public Client(String host) {
         this.host = host;
@@ -25,7 +30,7 @@ public class Client extends Thread {
     {
         try{
             //create a socket to connect to the server
-            System.out.println("attempt to connect to server");
+            System.out.println("attempt to connect to " + host + " on port " + port);
             requestSocket = new Socket(host, port);
             System.out.println("Connected to localhost in port" + port);
 
@@ -34,8 +39,24 @@ public class Client extends Thread {
             out.flush();
             in = new DataInputStream(requestSocket.getInputStream());
 
+            //preform handshake here to validate connection
+            //preform handshake here to validate connection
+            System.out.println("CLIENT: Creating and sending handshake to peer");
+            message = MessageHandler.createHandshake(peerId);
+            MessageHandler.sendMessage(out, message);
+            System.out.println("CLIENT: sent handshake to peer");
+
+            //receive handshake and validate
+            System.out.println("CLIENT: reading handshake from peer");
+            message = MessageHandler.receiveMessage(in, message);
+            System.out.println("CLIENT: handshake read from peer");
+
+            //validate handshake
+            test = MessageHandler.validateHandshake(message);
+            System.out.println("CLIENT: validation result: " + test);
+
             //get Input from standard input
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             while(true)
             {
                 //not needed
