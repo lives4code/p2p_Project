@@ -13,8 +13,10 @@ import static java.lang.System.in;
 public class MyProcess {
     // From Peer Info Cfg
     private int myId;
+    // put your ip and port no
     private String myHostName;
     int port;
+
     boolean hasFile;
 
     // Handle client, server, and peers
@@ -40,9 +42,10 @@ public class MyProcess {
     public void start() throws Exception {
         System.out.println("Peer is running.");
         // Start client
-        new ClientSpawn().start();
+        new Client(myHostName).start();
+        //new ClientSpawn().start();
         // Start Server
-        ServerSocket listener = new ServerSocket(port);
+        ServerSocket listener = new ServerSocket(8001);
         int clientNum = 1;
         try {
             while (true) {

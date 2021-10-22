@@ -32,6 +32,7 @@ public class Server extends Thread {
 
             try {
                 //preform handshake here to validate connection
+
                 while (true) {
                     //receive the message sent from the client
                     message = (String) in.readObject();
