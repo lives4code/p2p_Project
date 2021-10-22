@@ -70,7 +70,11 @@ public class Server extends Thread {
                 return false;
         }
         // Check for peer id
-        this.peerId = (msg[28]*1000) + (msg[29]*100) + (msg[30]*10) + msg[31];
+        byte[] b = new byte[4];
+        for (int i = 0; i < 4; i++){
+            b[i] = msg[i + 27];
+        }
+        this.peerId = ByteBuffer.wrap(b).getInt();;
         return true;
     }
 

@@ -36,6 +36,7 @@ public class MyProcess {
         loadCommonConfig();
         loadPeerInfo();
     }
+    //TODO write that we are no longer looking for this piece.
     public void writePiece(byte[] pieceIndex, byte[] piece){
         try {
             RandomAccessFile file = new RandomAccessFile("theFile", "rw");
