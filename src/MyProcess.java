@@ -16,6 +16,7 @@ public class MyProcess {
     private String myHostName;
     int port;
     boolean hasFile;
+    Bitfield b;
 
     // Handle client, server, and peers
     Client client;
@@ -29,6 +30,8 @@ public class MyProcess {
     String fileName;
     long fileSize;
     long pieceSize;
+    Piece[] pieceArray;
+    //initialize piece array
 
     public MyProcess(int peerId) {
         myId = peerId;
@@ -58,12 +61,19 @@ public class MyProcess {
         byte[] bytes = ByteBuffer.allocate(4).putInt(input).array();
         return bytes;
     }
+
+    public void addPiece(Piece p, int index){
+        b.hasPiece[index] = 1;
+        pieceArray[index] = p;
+
+    }
     // this should probably return a bitmap object.
-    public void loadTheFile(){
+    public void loadTheFile( Piece[] pieceArray, Bitfield b){
         try{
             int numPieces = (int) Math.ceil(fileSize / pieceSize);
             byte[] pieceContent = new byte[(int)pieceSize];
-            Piece[] pieceArray = new Piece[numPieces];
+            b = new Bitfield(numPieces);
+            //Piece[] pieceArray = new Piece[numPieces];
 
             //could be an error here is there like a more relative way to read the file?
             FileInputStream in = new FileInputStream("../Files_From_Prof/project_config_file_small/1001/thefile");
@@ -71,7 +81,8 @@ public class MyProcess {
             //this goes up until the last piece because I don't want to deal with the end of file exception breaking stuff.
             while (counter < numPieces - 1){
                 in.read(pieceContent);
-                pieceArray[counter] = new Piece(intToByte((int) counter), pieceContent, (int)pieceSize);
+                addPiece(new Piece(intToByte((int) counter), pieceContent, (int)pieceSize), counter);
+                counter++;
 
             }
             //the last piece will be the rest of the fill followed by leading zeros
@@ -86,9 +97,7 @@ public class MyProcess {
                 pieceContent[i] = 0x00;
             }
             //put it into the piece.
-            pieceArray[counter + 1] = new Piece(intToByte(counter), pieceContent, (int)pieceSize);
-
-            Bitfield b = new Bitfield(numPieces, pieceArray);
+            addPiece(new Piece(intToByte((int) counter), pieceContent, (int)pieceSize), counter + 1);
 
         }
         catch (FileNotFoundException e){
@@ -150,6 +159,9 @@ public class MyProcess {
                 pieceSize = Long.valueOf(fileReader.next());
             }
             fileReader.close();
+            int numPieces = (int) Math.ceil(fileSize / pieceSize);
+            pieceArray = new Piece[numPieces];
+            b = new Bitfield(numPieces);
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
