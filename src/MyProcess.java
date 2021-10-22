@@ -10,8 +10,10 @@ import static java.lang.System.in;
 public class MyProcess {
     // From Peer Info Cfg
     private int myId;
-    private String myHostName;
-    int port;
+    // put your ip and port no
+    private String myHostName = "192.168.56.1";
+    int port = 8001;
+
     boolean hasFile;
     Bitfield b;
 
@@ -52,18 +54,22 @@ public class MyProcess {
     }
 
     public void start() throws Exception {
-        System.out.println("Peer is running.");
+        System.out.println("Peer is running");
         // Start client
-        new ClientSpawn().start();
+        new Client(myHostName).start();
+        System.out.println("debug 1");
+        //new ClientSpawn().start();
         // Start Server
-        ServerSocket listener = new ServerSocket(port);
+        ServerSocket listener = new ServerSocket(8000);
         int clientNum = 1;
         try {
-            while (true) {
+            //while (true) {
+                System.out.println("debug 2");
                 new Server(listener.accept(), clientNum).start();
                 System.out.println("Client " + clientNum + " is connected!");
                 clientNum++;
-            }
+                System.out.println("debug 3");
+            //}
         } finally {
             listener.close();
         }
@@ -85,7 +91,7 @@ public class MyProcess {
                 boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
                 if (peerId == myId) {
                     this.myHostName = hostName;
-                    this.port = port;
+                    //this.port = port;
                     this.hasFile = hasFile;
                 } else {
                     peers.add(new Peer(peerId, hostName, port, hasFile));

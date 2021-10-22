@@ -8,14 +8,19 @@ import java.util.Scanner;
 public class Client extends Thread {
 
     private Socket requestSocket;           //socket connect to the server
-    private String message;                //message send to the server
+    //not needed
+    private byte[] message;                //message send to the server
     private String MESSAGE;                //capitalized message read from the server
-    private ObjectInputStream in;	//stream read from the socket
-    private ObjectOutputStream out;    //stream write to the socket
+    private DataInputStream in;	//stream read from the socket
+    private DataOutputStream out;    //stream write to the socket
 
-    private static int port = 80;
+    private static int port = 8000;
     private String host;
-    private boolean connected = false;
+    private int peerId = 1000;
+
+    //debug
+    private int test;
+
 
     public Client(String host) {
         this.host = host;
@@ -25,48 +30,53 @@ public class Client extends Thread {
     {
         try{
             //create a socket to connect to the server
-            while(!connected) {
-                connected = true;
-                try {
-                    requestSocket = new Socket(host, port);
-                } catch (ConnectException e) {
-                    System.err.println("Connection refused. You need to initiate a server first.");
-                    connected = false;
-                    continue;
-                } catch(UnknownHostException unknownHost){
-                    System.err.println("You are trying to connect to an unknown host!");
-                    connected = false;
-                    continue;
-                } catch(IOException ioException){
-                    ioException.printStackTrace();
-                    connected = false;
-                    continue;
-                }
-            }
-            System.out.println("Connected to localhost in port 8000");
+            System.out.println("attempt to connect to " + host + " on port " + port);
+            requestSocket = new Socket(host, port);
+            System.out.println("Connected to localhost in port" + port);
 
             //initialize inputStream and outputStream
-            out = new ObjectOutputStream(requestSocket.getOutputStream());
+            out = new DataOutputStream(requestSocket.getOutputStream());
             out.flush();
-            in = new ObjectInputStream(requestSocket.getInputStream());
+            in = new DataInputStream(requestSocket.getInputStream());
+
+            //preform handshake here to validate connection
+            //preform handshake here to validate connection
+            System.out.println("CLIENT: Creating and sending handshake to peer");
+            message = MessageHandler.createHandshake(peerId);
+            MessageHandler.sendMessage(out, message);
+            System.out.println("CLIENT: sent handshake to peer");
+
+            //receive handshake and validate
+            System.out.println("CLIENT: reading handshake from peer");
+            message = MessageHandler.receiveMessage(in, message);
+            System.out.println("CLIENT: handshake read from peer");
+
+            //validate handshake
+            test = MessageHandler.validateHandshake(message);
+            System.out.println("CLIENT: validation result: " + test);
 
             //get Input from standard input
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             while(true)
             {
-                System.out.print("Hello, please input a sentence: ");
-                //read a sentence from the standard input
-                message = bufferedReader.readLine();
-                //Send the sentence to the server
-                sendMessage(message);
-                //Receive the upperCase sentence from the server
-                MESSAGE = (String)in.readObject();
-                //show the message to the user
-                System.out.println("Receive message: " + MESSAGE);
+                //not needed
+//                System.out.print("Hello, please input a sentence: ");
+//                //read a sentence from the standard input
+//                message = bufferedReader.readLine();
+//                //Send the sentence to the server
+//                sendMessage(message);
+//                //Receive the upperCase sentence from the server
+//                MESSAGE = (String)in.readObject();
+//                //show the message to the user
+//                System.out.println("Receive message: " + MESSAGE);
             }
         }
-        catch ( ClassNotFoundException e ) {
-            System.err.println("Class not found");
+        //not needed
+//        catch ( ClassNotFoundException e ) {
+//            System.err.println("Class not found");
+//        }
+        catch (ConnectException e) {
+            System.err.println("Connection refused. You need to initiate a server first.");
         }
         catch(UnknownHostException unknownHost){
             System.err.println("You are trying to connect to an unknown host!");
@@ -87,34 +97,17 @@ public class Client extends Thread {
         }
     }
 
+    //not needed
     //send a message to the output stream
-    private void sendMessage(String msg)
-    {
-        try{
-            //stream write the message
-            out.writeObject(msg);
-            out.flush();
-        }
-        catch(IOException ioException){
-            ioException.printStackTrace();
-        }
-    }
-
-    private static byte[] createHandshake(int peerID) {
-        byte[] bytes = new byte[32];
-        String hexString = "P2PFILESHARINGPROJ";
-        byte[] byteString = hexString.getBytes();
-        for (int i = 0; i < byteString.length; i++) {
-            bytes[i] = byteString[i];
-        }
-        for (int i = 18; i < 28; i++) {
-            bytes[i] = 0x00;
-        }
-
-        byte[] peer_id = ByteBuffer.allocate(4).putInt(peerID).array();
-        for ( int i = 0; i < 4; i++){
-            bytes[28 + i] = peer_id[i];
-        }
-        return bytes;
-    }
+//    private void sendMessage(String msg)
+//    {
+//        try{
+//            //stream write the message
+//            out.writeObject(msg);
+//            out.flush();
+//        }
+//        catch(IOException ioException){
+//            ioException.printStackTrace();
+//        }
+//    }
 }
