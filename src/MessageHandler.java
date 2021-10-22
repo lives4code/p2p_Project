@@ -1,7 +1,19 @@
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class MessageHandler {
+
+    public static void sendMessage(DataOutputStream out, byte[] msg) {
+        try{
+            out.write(msg);
+            out.flush();
+        }
+        catch(IOException ioException){
+            ioException.printStackTrace();
+        }
+    }
 
     public static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];

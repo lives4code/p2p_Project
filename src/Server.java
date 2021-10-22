@@ -1,6 +1,4 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -11,11 +9,11 @@ import java.util.Arrays;
 //requests
 public class Server extends Thread {
 
-    private String message;            //message received from the client
+    private byte[] message;            //message received from the client
     private Socket connection;        //wait on a connection from client
     private int no;                //The index number of the client
-    private ObjectInputStream in;	//stream read from the socket
-    private ObjectOutputStream out;    //stream write to the socket
+    private DataInputStream in;	//stream read from the socket
+    private DataOutputStream out;    //stream write to the socket
     private int peerId;
 
     public Server(Socket connection, int no) {
@@ -26,25 +24,25 @@ public class Server extends Thread {
     public void run() {
         try {
             //initialize Input and Output streams
-            out = new ObjectOutputStream(connection.getOutputStream());
+            out = new DataOutputStream(connection.getOutputStream());
             out.flush();
-            in = new ObjectInputStream(connection.getInputStream());
+            in = new DataInputStream(connection.getInputStream());
 
             try {
                 //preform handshake here to validate connection
 
                 while (true) {
                     //receive the message sent from the client
-                    message = (String) in.readObject();
+                    in.read(message);
                     //debug message to user
                     System.out.println("Receive message: " + message + " from client " + no);
                     //this is where we will handle the message
-                    handleMessage(message.getBytes());
+                    handleMessage(message);
                     //not needed
 //                    //test message
 //                    sendMessage("received");
                 }
-            } catch (ClassNotFoundException classnot) {
+            } catch (Exception exception) {
                 System.err.println("Data received in unknown format");
             }
         } catch (IOException ioException) {
@@ -92,6 +90,16 @@ public class Server extends Thread {
             case 7:
                 //piece
         }
+    }
+
+    private void choke() {
+        byte[] bytes = new byte[5];
+        byte[] messageLength = ByteBuffer.allocate(4).putInt(0).array();
+        for ( int i = 0; i < 4; i++){
+            bytes[i] = messageLength[i];
+        }
+        bytes[4] = 0;
+        MessageHandler.sendMessage(out, bytes);
     }
 
     //not used

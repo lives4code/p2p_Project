@@ -11,8 +11,8 @@ public class Client extends Thread {
     //not needed
     private String message;                //message send to the server
     private String MESSAGE;                //capitalized message read from the server
-    private ObjectInputStream in;	//stream read from the socket
-    private ObjectOutputStream out;    //stream write to the socket
+    private DataInputStream in;	//stream read from the socket
+    private DataOutputStream out;    //stream write to the socket
 
     private static int port = 8001;
     private String host;
@@ -30,9 +30,9 @@ public class Client extends Thread {
             System.out.println("Connected to localhost in port" + port);
 
             //initialize inputStream and outputStream
-            out = new ObjectOutputStream(requestSocket.getOutputStream());
+            out = new DataOutputStream(requestSocket.getOutputStream());
             out.flush();
-            in = new ObjectInputStream(requestSocket.getInputStream());
+            in = new DataInputStream(requestSocket.getInputStream());
 
             //get Input from standard input
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
