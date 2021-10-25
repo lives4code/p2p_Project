@@ -3,6 +3,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Client extends Thread {
@@ -14,12 +15,12 @@ public class Client extends Thread {
     private DataInputStream in;	//stream read from the socket
     private DataOutputStream out;    //stream write to the socket
 
-    private static int port = 8000;
+    private static int port = 8001;
     private String host;
     private int peerId = 1000;
 
     //debug
-    private int test;
+    private boolean test;
 
 
     public Client(String host) {
@@ -41,7 +42,7 @@ public class Client extends Thread {
 
             //preform handshake here to validate connection
             //preform handshake here to validate connection
-            System.out.println("CLIENT: Creating and sending handshake to peer");
+            System.out.println("CLIENT: Creating and sending handshake to peer with ID: " + peerId);
             message = MessageHandler.createHandshake(peerId);
             MessageHandler.sendMessage(out, message);
             System.out.println("CLIENT: sent handshake to peer");
@@ -52,7 +53,7 @@ public class Client extends Thread {
             System.out.println("CLIENT: handshake read from peer");
 
             //validate handshake
-            test = MessageHandler.validateHandshake(message);
+            test = MessageHandler.validateHandshake(message, peerId);
             System.out.println("CLIENT: validation result: " + test);
 
             //get Input from standard input

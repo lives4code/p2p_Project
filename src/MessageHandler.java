@@ -40,21 +40,39 @@ public class MessageHandler {
         for ( int i = 0; i < 4; i++){
             bytes[28 + i] = peer_id[i];
         }
+
+        System.out.println("CREATE HANDSHAKE DEBUG: ");
+        for (byte b : bytes) {
+            System.out.format("0x%x ", b);
+        }
+
         return bytes;
     }
 
-    public static int validateHandshake(byte[] msg) {
+    public static boolean validateHandshake(byte[] msg, int peerId) {
         byte[] header = ("P2PFILESHARINGPROJ").getBytes();
         // Check for appropriate header
         if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {
-            return -1;
+            return false;
         }
         // Check for zeros
         for (int i = 18; i < 28; i++) {
             if (msg[i] != 0x00)
-                return -1;
+                return false;
         }
-        // If valid, return peer id
-        return (msg[28]*1000) + (msg[29]*100) + (msg[30]*10) + msg[31];
+        // Check for peer id
+        byte[] b = new byte[4];
+        for (int i = 0; i < 4; i++){
+            b[i] = msg[i + 28];
+        }
+
+//        System.out.println("SERVER DEBUG: msg id :" + ByteBuffer.wrap(b).getInt());
+//        System.out.println("SERVER DEBUG: msg id :" +
+//                Byte.toUnsignedInt(b[0]) +
+//                Byte.toUnsignedInt(b[1]) +
+//                Byte.toUnsignedInt(b[2]) +
+//                Byte.toUnsignedInt(b[3]));
+
+        return ByteBuffer.wrap(b).getInt() == peerId;
     }
 }

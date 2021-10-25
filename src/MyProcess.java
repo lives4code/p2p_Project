@@ -11,7 +11,7 @@ public class MyProcess {
     // From Peer Info Cfg
     private int myId;
     // put your ip and port no
-    private String myHostName = "192.168.56.1";
+    private String myHostName = "192.168.0.215";
     int port = 8001;
 
     boolean hasFile;
@@ -77,7 +77,7 @@ public class MyProcess {
         System.out.println("debug 1");
         //new ClientSpawn().start();
         // Start Server
-        ServerSocket listener = new ServerSocket(8000);
+        ServerSocket listener = new ServerSocket(port);
         int clientNum = 1;
         try {
             //while (true) {
@@ -107,7 +107,7 @@ public class MyProcess {
                 int port = Integer.valueOf(fileReader.next());
                 boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
                 if (peerId == myId) {
-                    this.myHostName = hostName;
+                    //this.myHostName = hostName;
                     //this.port = port;
                     this.hasFile = hasFile;
                 } else {

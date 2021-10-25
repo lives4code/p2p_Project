@@ -16,7 +16,7 @@ public class Server extends Thread {
     private DataOutputStream out;    //stream write to the socket
     private int peerId = 1000;
 
-    private int test;
+    private boolean test;
 
     public Server(Socket connection, int no) {
         this.connection = connection;
@@ -35,7 +35,7 @@ public class Server extends Thread {
             try {
                 //preform handshake here to validate connection
                 //preform handshake here to validate connection
-                System.out.println("SERVER: Creating and sending handshake to peer");
+                System.out.println("SERVER: Creating and sending handshake to peer with ID: " + peerId);
                 message = MessageHandler.createHandshake(peerId);
                 MessageHandler.sendMessage(out, message);
                 System.out.println("SERVER: sent handshake to peer");
@@ -46,7 +46,7 @@ public class Server extends Thread {
                 System.out.println("SERVER: handshake read from peer");
 
                 //validate handshake
-                test = MessageHandler.validateHandshake(message);
+                test = MessageHandler.validateHandshake(message, peerId);
                 System.out.println("SERVER: validation result: " + test);
 
 
@@ -78,30 +78,8 @@ public class Server extends Thread {
         }
     }
 
-<<<<<<< HEAD
-    //handle message
-=======
-    private boolean validateHandshake(byte[] msg) {
-        byte[] header = ("P2PFILESHARINGPROJ").getBytes();
-        // Check for appropriate header
-        if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {
-            return false;
-        }
-        // Check for zeros
-        for (int i = 18; i < 28; i++) {
-            if (msg[i] != 0x00)
-                return false;
-        }
-        // Check for peer id
-        byte[] b = new byte[4];
-        for (int i = 0; i < 4; i++){
-            b[i] = msg[i + 27];
-        }
-        this.peerId = ByteBuffer.wrap(b).getInt();;
-        return true;
-    }
 
->>>>>>> ae547ed6e9f50f6dbc4b61216de347f9ee8f89ac
+    //handle message
     private void handleMessage(byte[] msg) {
         byte[] msgLength  = new byte[4];
         System.arraycopy(msg, 0, msgLength, 4, 4);
