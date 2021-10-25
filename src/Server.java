@@ -78,7 +78,30 @@ public class Server extends Thread {
         }
     }
 
+<<<<<<< HEAD
     //handle message
+=======
+    private boolean validateHandshake(byte[] msg) {
+        byte[] header = ("P2PFILESHARINGPROJ").getBytes();
+        // Check for appropriate header
+        if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {
+            return false;
+        }
+        // Check for zeros
+        for (int i = 18; i < 28; i++) {
+            if (msg[i] != 0x00)
+                return false;
+        }
+        // Check for peer id
+        byte[] b = new byte[4];
+        for (int i = 0; i < 4; i++){
+            b[i] = msg[i + 27];
+        }
+        this.peerId = ByteBuffer.wrap(b).getInt();;
+        return true;
+    }
+
+>>>>>>> ae547ed6e9f50f6dbc4b61216de347f9ee8f89ac
     private void handleMessage(byte[] msg) {
         byte[] msgLength  = new byte[4];
         System.arraycopy(msg, 0, msgLength, 4, 4);
