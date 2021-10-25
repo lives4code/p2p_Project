@@ -121,6 +121,16 @@ public class Server extends Thread {
         MessageHandler.sendMessage(out, bytes);
     }
 
+    private void unchoke() {
+        byte[] bytes = new byte[5];
+        byte[] messageLength = ByteBuffer.allocate(4).putInt(0).array();
+        for ( int i = 0; i < 4; i++){
+            bytes[i] = messageLength[i];
+        }
+        bytes[4] = 1;
+        MessageHandler.sendMessage(out, bytes);
+    }
+
     //not used
 //    //send a message to the output stream
 //    private void sendMessage(String msg)

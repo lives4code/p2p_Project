@@ -97,6 +97,26 @@ public class Client extends Thread {
         }
     }
 
+    private void interested() {
+        byte[] bytes = new byte[5];
+        byte[] messageLength = ByteBuffer.allocate(4).putInt(0).array();
+        for ( int i = 0; i < 4; i++){
+            bytes[i] = messageLength[i];
+        }
+        bytes[4] = 2;
+        MessageHandler.sendMessage(out, bytes);
+    }
+
+    private void uninterested() {
+        byte[] bytes = new byte[5];
+        byte[] messageLength = ByteBuffer.allocate(4).putInt(0).array();
+        for ( int i = 0; i < 4; i++){
+            bytes[i] = messageLength[i];
+        }
+        bytes[4] = 3;
+        MessageHandler.sendMessage(out, bytes);
+    }
+
     //not needed
     //send a message to the output stream
 //    private void sendMessage(String msg)
