@@ -20,5 +20,14 @@ public class Peer {
         this.port = port;
         this.hasFile = hasFile;
     }
+    public int getPeerId(){
+        return this.peerId;
+    }
+    public String getHostName(){
+        return this.hostName;
+    }
+    public  int getPort(){
+        return this.port;
+    }
 
 }

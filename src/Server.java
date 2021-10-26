@@ -14,13 +14,14 @@ public class Server extends Thread {
     private int no;                //The index number of the client
     private DataInputStream in;	//stream read from the socket
     private DataOutputStream out;    //stream write to the socket
-    private int peerId = 1000;
+    private int peerId;
 
     private boolean test;
 
-    public Server(Socket connection, int no) {
+    public Server(Socket connection, int no, int peerId) {
         this.connection = connection;
         this.no = no;
+        this.peerId = peerId;
 
         //debug
     }
@@ -35,19 +36,19 @@ public class Server extends Thread {
             try {
                 //preform handshake here to validate connection
                 //preform handshake here to validate connection
-                System.out.println("SERVER: Creating and sending handshake to peer with ID: " + peerId);
+                System.out.println("SERVER " + peerId + ": Creating and sending handshake to peer with ID: " + peerId);
                 message = MessageHandler.createHandshake(peerId);
                 MessageHandler.sendMessage(out, message);
-                System.out.println("SERVER: sent handshake to peer");
+                System.out.println("SERVER " + peerId + ": sent handshake to peer");
 
                 //receive handshake and validate
-                System.out.println("SERVER: reading handshake from peer");
+                System.out.println("SERVER " + peerId + ": reading handshake from peer");
                 message = MessageHandler.receiveMessage(in, message);
-                System.out.println("SERVER: handshake read from peer");
+                System.out.println("SERVER " + peerId + ": handshake read from peer");
 
                 //validate handshake
                 test = MessageHandler.validateHandshake(message, peerId);
-                System.out.println("SERVER: validation result: " + test);
+                System.out.println("SERVER " + peerId + ": validation result: " + test);
 
 
                 while (true) {

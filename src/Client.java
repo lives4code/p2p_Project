@@ -15,25 +15,27 @@ public class Client extends Thread {
     private DataInputStream in;	//stream read from the socket
     private DataOutputStream out;    //stream write to the socket
 
-    private static int port = 8001;
+    private int port = 8001;
     private String host;
-    private int peerId = 1000;
+    private int peerId;
 
     //debug
     private boolean test;
 
 
-    public Client(String host) {
+    public Client(int peerId, String host, int port) {
+        this.peerId = peerId;
         this.host = host;
+        this.port = port;
     }
 
     public void run()
     {
         try{
             //create a socket to connect to the server
-            System.out.println("attempt to connect to " + host + " on port " + port);
+            System.out.println("CLIENT " + peerId + ":attempt to connect to " + host + " on port " + port);
             requestSocket = new Socket(host, port);
-            System.out.println("Connected to localhost in port" + port);
+            System.out.println("CLIENT " + peerId + ":connected to " + host + " on port " + port);
 
             //initialize inputStream and outputStream
             out = new DataOutputStream(requestSocket.getOutputStream());
@@ -42,19 +44,19 @@ public class Client extends Thread {
 
             //preform handshake here to validate connection
             //preform handshake here to validate connection
-            System.out.println("CLIENT: Creating and sending handshake to peer with ID: " + peerId);
+            System.out.println("CLIENT " + peerId + ": Creating and sending handshake to peer with ID: " + peerId);
             message = MessageHandler.createHandshake(peerId);
             MessageHandler.sendMessage(out, message);
-            System.out.println("CLIENT: sent handshake to peer");
+            System.out.println("CLIENT " + peerId + ": sent handshake to peer");
 
             //receive handshake and validate
-            System.out.println("CLIENT: reading handshake from peer");
+            System.out.println("CLIENT " + peerId + ": reading handshake from peer");
             message = MessageHandler.receiveMessage(in, message);
-            System.out.println("CLIENT: handshake read from peer");
+            System.out.println("CLIENT " + peerId + ": handshake read from peer");
 
             //validate handshake
             test = MessageHandler.validateHandshake(message, peerId);
-            System.out.println("CLIENT: validation result: " + test);
+            System.out.println("CLIENT " + peerId + ": validation result: " + test);
 
             //get Input from standard input
             //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));

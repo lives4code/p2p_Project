@@ -11,8 +11,8 @@ public class MyProcess {
     // From Peer Info Cfg
     private int myId;
     // put your ip and port no
-    private String myHostName = "192.168.0.215";
-    int port = 8001;
+    private String myHostName;
+    int port;
 
     boolean hasFile;
     Bitfield b;
@@ -71,21 +71,26 @@ public class MyProcess {
     }
 
     public void start() throws Exception {
-        System.out.println("Peer is running");
+        System.out.println("PEER " + myId + ": Peer is running");
         // Start client
-        new Client(myHostName).start();
-        System.out.println("debug 1");
+        for (Peer peer: peers){
+            if (peer.getPeerId() != myId) {
+                new Client(peer.getPeerId(), peer.getHostName(), peer.getPort()).start();
+            }
+        }
+
+        //System.out.println("debug 1");
         //new ClientSpawn().start();
         // Start Server
         ServerSocket listener = new ServerSocket(port);
         int clientNum = 1;
         try {
             //while (true) {
-                System.out.println("debug 2");
-                new Server(listener.accept(), clientNum).start();
-                System.out.println("Client " + clientNum + " is connected!");
+                //System.out.println("debug 2");
+                new Server(listener.accept(), clientNum, myId).start();
+                System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                 clientNum++;
-                System.out.println("debug 3");
+                //System.out.println("debug 3");
             //}
         } finally {
             listener.close();
@@ -107,8 +112,8 @@ public class MyProcess {
                 int port = Integer.valueOf(fileReader.next());
                 boolean hasFile = Integer.valueOf(fileReader.next()) == 1;
                 if (peerId == myId) {
-                    //this.myHostName = hostName;
-                    //this.port = port;
+                    this.myHostName = hostName;
+                    this.port = port;
                     this.hasFile = hasFile;
                 } else {
                     peers.add(new Peer(peerId, hostName, port, hasFile));

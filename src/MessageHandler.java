@@ -41,10 +41,10 @@ public class MessageHandler {
             bytes[28 + i] = peer_id[i];
         }
 
-        System.out.println("CREATE HANDSHAKE DEBUG: ");
-        for (byte b : bytes) {
-            System.out.format("0x%x ", b);
-        }
+//        System.out.println("CREATE HANDSHAKE DEBUG: ");
+//        for (byte b : bytes) {
+//            System.out.format("0x%x ", b);
+//        }
 
         return bytes;
     }
