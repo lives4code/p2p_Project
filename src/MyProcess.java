@@ -16,7 +16,6 @@ public class MyProcess {
     int port;
 
     boolean hasFile;
-    Bitfield b;
     static BitSet bitField;
 
     // Handle client, server, and peers
@@ -31,7 +30,6 @@ public class MyProcess {
     String fileName;
     long fileSize;
     long pieceSize;
-    long numOfPieces;
     Piece[] pieceArray;
     //initialize piece array
 
@@ -43,28 +41,15 @@ public class MyProcess {
         loadCommonConfig();
         loadPeerInfo();
 
-        //calculate number of pieces and round up
-        numOfPieces = fileSize / pieceSize;
-        if(fileSize % pieceSize != 0){
-            numOfPieces++;
-        }
-
         //debug
         System.out.println("PEER: piece size: " + pieceSize);
         System.out.println("PEER: file size: " + fileSize);
-        System.out.println("PEER: num of pieces: " + numOfPieces);
-
-        //bitfield
-        bitField = new BitSet((int)numOfPieces);
-        if (hasFile){
-            bitField.set(0,(int)numOfPieces - 1);
-        } else {
-            bitField.set(0, (int)numOfPieces - 1, false);
-        }
 
     }
 
     //TODO write that we are no longer looking for this piece.
+    //wrote code to flip index.
+    //talk to nick make sure this is right.
     public void writePiece(byte[] pieceIndex, byte[] piece){
         try {
             RandomAccessFile file = new RandomAccessFile("theFile", "w");
@@ -72,7 +57,7 @@ public class MyProcess {
             int skip = (int)pieceSize * index;
             file.skipBytes(skip);
             file.write(piece);
-            b.hasPiece[index] = 1;
+            bitField.flip(index);
             file.close();
         }
         catch (Exception e){
@@ -80,14 +65,29 @@ public class MyProcess {
         }
     }
     //TODO fix error that can occur at the last byte of the file.
+    //fixed talk with group before pushing.
     public byte[] readPiece(byte[] pieceIndex ){
         byte[] ret = new byte[(int)pieceSize];
+        int numPieces = (int) Math.ceil(fileSize/pieceSize);
         try {
             RandomAccessFile file = new RandomAccessFile("theFile", "r");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
             file.skipBytes(skip);
-            file.read(ret);
+            if(index == numPieces){
+                int lastPieces = (int) (fileSize - (Math.floor(fileSize/pieceSize) * pieceSize));
+                byte[] lastPiece = new byte[lastPieces];
+                file.read(lastPiece);
+                for(int i = 0; i < lastPieces; i++){
+                    ret[i] = lastPiece[i];
+                }
+                for(int i = lastPieces; i < (int) pieceSize; i++){
+                    ret[i] = 0;
+                }
+            }
+            else {
+                file.read(ret);
+            }
             file.close();
         }
         catch (Exception e){
@@ -147,7 +147,13 @@ public class MyProcess {
                     peers.add(new Peer(peerId, hostName, port, hasFile));
                 }
             }
-            b = new Bitfield(numPieces, hasFile);
+            //bitfield is initialized to false by default if the file is present set all the values to true.
+            bitField = new BitSet(numPieces);
+            if(hasFile){
+                for(int i = 0; i < bitField.size(); i++){
+                        bitField.flip(i);
+                }
+            }
             if(this.hasFile == false){
                 File theFile = new File("theFile");
                 if (theFile.createNewFile()) {
@@ -174,6 +180,7 @@ public class MyProcess {
             e.printStackTrace();
         }
     }
+
 
     public void loadCommonConfig() {
         try {
