@@ -65,6 +65,10 @@ public class MessageHandler {
         for (int i = 0; i < 4; i++){
             b[i] = msg[i + 28];
         }
+        int id = ByteBuffer.wrap(b).getInt();
+        //so I'm thinking of maybe jsut seeing if it's one of the legal cases 1001 - 1008
+        // and returning the result of it just being one of the possible values.
+        //the alternative is to get the ip adress from the packet and use a map to compate whether the key value pairs are equal.
 
 //        System.out.println("SERVER DEBUG: msg id :" + ByteBuffer.wrap(b).getInt());
 //        System.out.println("SERVER DEBUG: msg id :" +
@@ -73,7 +77,9 @@ public class MessageHandler {
 //                Byte.toUnsignedInt(b[2]) +
 //                Byte.toUnsignedInt(b[3]));
 
-        return ByteBuffer.wrap(b).getInt() == peerId;
+        return true;
+
+        // this doesn't work. return ByteBuffer.wrap(b).getInt() == peerId;
     }
 
     public static byte[] createMsg(int mType, byte[] payload){
