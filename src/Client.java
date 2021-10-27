@@ -52,7 +52,7 @@ public class Client extends Thread {
 
             //receive handshake and validate
             System.out.println("CLIENT " + peerId + ": reading handshake from peer");
-            message = MessageHandler.receiveMessage(in, message);
+            MessageHandler.receiveHandshake(in, message);
             System.out.println("CLIENT " + peerId + ": handshake read from peer");
 
             //validate handshake
@@ -76,7 +76,7 @@ public class Client extends Thread {
             System.out.println("CLIENT " + peerId + ": sent bitField message");
 
             //receive bitfield
-            message = MessageHandler.receiveMessage(in, message);
+            message = MessageHandler.handleMessage(in);
             System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: ");
             s = "";
             for (byte b : message) {

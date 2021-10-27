@@ -15,14 +15,13 @@ public class MessageHandler {
             ioException.printStackTrace();
         }
     }
-    public static byte[] receiveMessage(DataInputStream in, byte[] msg) {
+    public static void receiveHandshake(DataInputStream in, byte[] msg) {
         try{
-            in.read(msg);
+            in.read(msg, 0, 32);
         }
         catch(IOException ioException){
             ioException.printStackTrace();
         }
-        return msg;
     }
 
     public static byte[] createHandshake(int peerID) {
@@ -100,35 +99,52 @@ public class MessageHandler {
     }
 
     //handle message
-    public static void handleMessage(byte[] msg) {
-        byte[] msgLength  = new byte[4];
-        System.arraycopy(msg, 0, msgLength, 4, 4);
-        int mLength = ByteBuffer.wrap(msgLength).getInt();
+    public static byte[] handleMessage(DataInputStream in) {
 
-        byte[] msgType = new byte[1];
-        System.arraycopy(msg, 4, msgType, 5, 1);
-        int mType = ByteBuffer.wrap(msgType).getInt();
+        byte[] msg = null;
+        byte[] sizeB = new byte[4];
+        int type = -1; // <- wut
+        try{
 
-        byte[] msgPayload = new byte[mLength];
-        System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
+            in.read(sizeB);
+            int size = ByteBuffer.wrap(sizeB).getInt();
+            msg = new byte[size];
+            type = in.read();
+            in.read(msg);
+        }
+        catch(IOException ioException){
+            ioException.printStackTrace();
+        }
 
-        switch(mType){
+        switch(type){
             case 0:
                 //choke
+                break;
             case 1:
                 //unchoke
+                break;
             case 2:
                 //interested
+                break;
             case 3:
                 //not intrested
+                break;
             case 4:
+                break;
                 //have
             case 5:
+                break;
                 //bitfield
             case 6:
+                break;
                 //request
             case 7:
                 //piece
+                break;
+            default:
+                System.out.println("invalid type " + type);
+                break;
         }
+        return msg;
     }
 }
