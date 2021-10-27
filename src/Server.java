@@ -58,6 +58,13 @@ public class Server extends Thread {
 
                 //send bitfield
                 System.out.println("SERVER " + peerId + ": creating and sending bitField message");
+                s = "";
+                for (byte b : MyProcess.bitField.toByteArray()) {
+                    s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+                }
+
+                System.out.println("SERVER " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length+ " DEBUG: " + s);
+
                 message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
                 MessageHandler.sendMessage(out, message);
                 System.out.println("SERVER " + peerId + ": sent bitField message");
