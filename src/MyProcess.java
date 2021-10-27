@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class MyProcess {
 
     boolean hasFile;
     Bitfield b;
+    static BitSet bitField;
 
     // Handle client, server, and peers
     Client client;
@@ -29,15 +31,39 @@ public class MyProcess {
     String fileName;
     long fileSize;
     long pieceSize;
+    long numOfPieces;
     Piece[] pieceArray;
     //initialize piece array
+
+    static int test = 0;
 
     public MyProcess(int peerId) {
         myId = peerId;
         peers = new ArrayList<>();
         loadCommonConfig();
         loadPeerInfo();
+
+        //calculate number of pieces and round up
+        numOfPieces = fileSize / pieceSize;
+        if(fileSize % pieceSize != 0){
+            numOfPieces++;
+        }
+
+        //debug
+        System.out.println("PEER: piece size: " + pieceSize);
+        System.out.println("PEER: file size: " + fileSize);
+        System.out.println("PEER: num of pieces: " + numOfPieces);
+
+        //bitfield
+        bitField = new BitSet((int)numOfPieces);
+        if (hasFile){
+            bitField.set(0,(int)numOfPieces - 1);
+        } else {
+            bitField.set(0, (int)numOfPieces - 1, false);
+        }
+
     }
+
     //TODO write that we are no longer looking for this piece.
     public void writePiece(byte[] pieceIndex, byte[] piece){
         try {
@@ -85,13 +111,15 @@ public class MyProcess {
         ServerSocket listener = new ServerSocket(port);
         int clientNum = 1;
         try {
-            //while (true) {
+            while (true) {
                 //System.out.println("debug 2");
                 new Server(listener.accept(), clientNum, myId).start();
                 System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                 clientNum++;
-                //System.out.println("debug 3");
-            //}
+                //System.out.println("debug ");
+
+                //System.out.println("debug " + test);
+            }
         } finally {
             listener.close();
         }

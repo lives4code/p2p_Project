@@ -75,4 +75,54 @@ public class MessageHandler {
 
         return ByteBuffer.wrap(b).getInt() == peerId;
     }
+
+    public static byte[] createMsg(int mType, byte[] payload){
+        byte[] bytes = new byte[5 + payload.length];
+        byte[] messageLength = ByteBuffer.allocate(4).putInt(payload.length).array();
+
+        //message length
+        for(int i = 0; i < 4; i++){
+            bytes[i] = messageLength[i];
+        }
+        //message type
+        bytes[4] = (byte)mType;
+        //message payload
+        for(int i = 0; i < payload.length; i++){
+            bytes[i+5] = payload[i];
+        }
+        return bytes;
+    }
+
+    //handle message
+    public static void handleMessage(byte[] msg) {
+        byte[] msgLength  = new byte[4];
+        System.arraycopy(msg, 0, msgLength, 4, 4);
+        int mLength = ByteBuffer.wrap(msgLength).getInt();
+
+        byte[] msgType = new byte[1];
+        System.arraycopy(msg, 4, msgType, 5, 1);
+        int mType = ByteBuffer.wrap(msgType).getInt();
+
+        byte[] msgPayload = new byte[mLength];
+        System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
+
+        switch(mType){
+            case 0:
+                //choke
+            case 1:
+                //unchoke
+            case 2:
+                //interested
+            case 3:
+                //not intrested
+            case 4:
+                //have
+            case 5:
+                //bitfield
+            case 6:
+                //request
+            case 7:
+                //piece
+        }
+    }
 }

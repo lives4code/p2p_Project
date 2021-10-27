@@ -3,6 +3,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.BitSet;
 
 //handler thread class. handlers are spawned from the listening
 //loop and are responsible for dealing with a single client's
@@ -16,14 +17,15 @@ public class Server extends Thread {
     private DataOutputStream out;    //stream write to the socket
     private int peerId;
 
-    private boolean test;
+    private boolean valid;
+
+    //debug
+    private String s;
 
     public Server(Socket connection, int no, int peerId) {
         this.connection = connection;
         this.no = no;
         this.peerId = peerId;
-
-        //debug
     }
 
     public void run() {
@@ -47,17 +49,36 @@ public class Server extends Thread {
                 System.out.println("SERVER " + peerId + ": handshake read from peer");
 
                 //validate handshake
-                test = MessageHandler.validateHandshake(message, peerId);
-                System.out.println("SERVER " + peerId + ": validation result: " + test);
+                valid = MessageHandler.validateHandshake(message, peerId);
+                System.out.println("SERVER " + peerId + ": validation result: " + valid);
+                if (!valid){
+                    //TODO deal with invalid handshake
+                    currentThread().interrupt();
+                }
 
+                //send bitfield
+                System.out.println("SERVER " + peerId + ": creating and sending bitField message");
+                message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
+                MessageHandler.sendMessage(out, message);
+                System.out.println("SERVER " + peerId + ": sent bitField message");
+
+                //receive bitfield
+                message = MessageHandler.receiveMessage(in, message);
+                System.out.println("SERVER " + peerId + " bitfield msg DEBUG: ");
+                s = "";
+                for (byte b : message) {
+                    s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+                }
+
+                System.out.println("SERVER " + peerId + " bitfield msg DEBUG: " + s);
 
                 while (true) {
                     //receive the message sent from the client
-                    in.read(message);
+                    //in.read(message);
                     //debug message to user
-                    System.out.println("Receive message: " + message + " from client " + no);
+                    //System.out.println("Receive message: " + message + " from client " + no);
                     //this is where we will handle the message
-                    handleMessage(message);
+                    //handleMessage(message);
                     //not needed
 //                    //test message
 //                    sendMessage("received");
@@ -76,40 +97,6 @@ public class Server extends Thread {
             } catch (IOException ioException) {
                 System.out.println("Disconnect with Client " + no);
             }
-        }
-    }
-
-
-    //handle message
-    private void handleMessage(byte[] msg) {
-        byte[] msgLength  = new byte[4];
-        System.arraycopy(msg, 0, msgLength, 4, 4);
-        int mLength = ByteBuffer.wrap(msgLength).getInt();
-
-        byte[] msgType = new byte[1];
-        System.arraycopy(msg, 4, msgType, 5, 1);
-        int mType = ByteBuffer.wrap(msgType).getInt();
-
-        byte[] msgPayload = new byte[mLength];
-        System.arraycopy(msg, 5, msgType, mLength + 5, mLength);
-
-        switch(mType){
-            case 0:
-                //choke
-            case 1:
-                //unchoke
-            case 2:
-                //interested
-            case 3:
-                //not intrested
-            case 4:
-                //have
-            case 5:
-                //bitfield
-            case 6:
-                //request
-            case 7:
-                //piece
         }
     }
 

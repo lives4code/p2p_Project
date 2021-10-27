@@ -20,7 +20,8 @@ public class Client extends Thread {
     private int peerId;
 
     //debug
-    private boolean test;
+    private boolean valid;
+    private String s;
 
 
     public Client(int peerId, String host, int port) {
@@ -55,8 +56,26 @@ public class Client extends Thread {
             System.out.println("CLIENT " + peerId + ": handshake read from peer");
 
             //validate handshake
-            test = MessageHandler.validateHandshake(message, peerId);
-            System.out.println("CLIENT " + peerId + ": validation result: " + test);
+            valid = MessageHandler.validateHandshake(message, peerId);
+            System.out.println("CLIENT " + peerId + ": validation result: " + valid);
+            if (!valid){
+                //deal with invalid handshake
+            }
+
+            //send bitfield
+            System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
+            message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
+            MessageHandler.sendMessage(out, message);
+            System.out.println("CLIENT " + peerId + ": sent bitField message");
+
+            //receive bitfield
+            message = MessageHandler.receiveMessage(in, message);
+            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: ");
+            s = "";
+            for (byte b : message) {
+                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+            }
+            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: " + s);
 
             //get Input from standard input
             //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
