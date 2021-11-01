@@ -96,6 +96,8 @@ public class MyProcess {
         return ret;
     }
 
+    //does this function cause each client to start from each computer?
+
     public void start() throws Exception {
         System.out.println("PEER " + myId + ": Peer is running");
         // Start client
@@ -213,4 +215,5 @@ public class MyProcess {
             e.printStackTrace();
         }
     }
+
 }

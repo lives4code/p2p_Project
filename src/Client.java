@@ -12,7 +12,7 @@ public class Client extends Thread {
     //not needed
     private byte[] message;                //message send to the server
     private String MESSAGE;                //capitalized message read from the server
-    private DataInputStream in;	//stream read from the socket
+    private DataInputStream in;    //stream read from the socket
     private DataOutputStream out;    //stream write to the socket
 
     private int port = 8001;
@@ -30,9 +30,8 @@ public class Client extends Thread {
         this.port = port;
     }
 
-    public void run()
-    {
-        try{
+    public void run() {
+        try {
             //create a socket to connect to the server
             System.out.println("CLIENT " + peerId + ":attempt to connect to " + host + " on port " + port);
             requestSocket = new Socket(host, port);
@@ -58,18 +57,19 @@ public class Client extends Thread {
             //validate handshake
             valid = MessageHandler.validateHandshake(message, peerId);
             System.out.println("CLIENT " + peerId + ": validation result: " + valid);
-            if (!valid){
+            if (!valid) {
                 //deal with invalid handshake
             }
 
             //send bitfield
+            //we could probably do this beyyer.
             System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
             s = "";
             for (byte b : MyProcess.bitField.toByteArray()) {
                 s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
             }
 
-            System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length+ " DEBUG: " + s);
+            System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length + " DEBUG: " + s);
 
             message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
             MessageHandler.sendMessage(out, message);
@@ -84,59 +84,24 @@ public class Client extends Thread {
             }
             System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: " + s);
 
-            //get Input from standard input
-            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-            while(true)
-            {
-                //not needed
-//                System.out.print("Hello, please input a sentence: ");
-//                //read a sentence from the standard input
-//                message = bufferedReader.readLine();
-//                //Send the sentence to the server
-//                sendMessage(message);
-//                //Receive the upperCase sentence from the server
-//                MESSAGE = (String)in.readObject();
-//                //show the message to the user
-//                System.out.println("Receive message: " + MESSAGE);
+            while (true) {
+
             }
-        }
-        //not needed
-//        catch ( ClassNotFoundException e ) {
-//            System.err.println("Class not found");
-//        }
-        catch (ConnectException e) {
+        } catch (ConnectException e) {
             System.err.println("Connection refused. You need to initiate a server first.");
-        }
-        catch(UnknownHostException unknownHost){
+        } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
-        }
-        catch(IOException ioException){
+        } catch (IOException ioException) {
             ioException.printStackTrace();
-        }
-        finally{
+        } finally {
             //Close connections
-            try{
+            try {
                 in.close();
                 out.close();
                 requestSocket.close();
-            }
-            catch(IOException ioException){
+            } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
     }
-
-    //not needed
-    //send a message to the output stream
-//    private void sendMessage(String msg)
-//    {
-//        try{
-//            //stream write the message
-//            out.writeObject(msg);
-//            out.flush();
-//        }
-//        catch(IOException ioException){
-//            ioException.printStackTrace();
-//        }
-//    }
 }
