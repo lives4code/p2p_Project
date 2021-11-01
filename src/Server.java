@@ -16,8 +16,7 @@ public class Server extends Thread {
     private DataInputStream in;    //stream read from the socket
     private DataOutputStream out;    //stream write to the socket
     private int peerId;
-
-    private boolean valid;
+    int clientId;
 
     //debug
     private String s;
@@ -48,11 +47,13 @@ public class Server extends Thread {
                 System.out.println("SERVER " + peerId + ": handshake read from peer");
 
                 //validate handshake
-                int clientId = MessageHandler.validateHandshake(message, peerId);
-                System.out.println("SERVER " + peerId + ": validation result: " + valid);
-                if (!valid) {
-                    //TODO deal with invalid handshake
+                try{
+                    clientId = MessageHandler.validateHandshake(message, peerId);
+                }
+                catch (Exception e){
                     currentThread().interrupt();
+                    System.out.println("handshake invalid:" + e.getLocalizedMessage());
+
                 }
 
                 //receive bitfield
