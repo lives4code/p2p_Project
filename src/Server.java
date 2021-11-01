@@ -58,7 +58,8 @@ public class Server extends Thread {
 
                 //receive bitfield
                 message = MessageHandler.handleMessage(in);
-                MyProcess.peers.get(clientId).bitField = BitSet.valueOf(message);
+                int index = MyProcess.getPeerIndexById(clientId);
+                MyProcess.peers.get(index).bitField = BitSet.valueOf(message);
                 System.out.println("SERVER " + peerId + " bitfield msg DEBUG: ");
                 s = "SERVER " + peerId + " bitfield msg DEBUG: ";
                 for (byte b : message) {
@@ -67,11 +68,20 @@ public class Server extends Thread {
 
                 System.out.println(s);
 
+                // Interested or Not Interested
+                boolean interested = checkForInterest(BitSet.valueOf(message), MyProcess.bitField);
+                if (interested)
+                    message = MessageHandler.createMsg(2, new byte[]{});
+                else
+                    message = MessageHandler.createMsg(3, new byte[] {});
+                MessageHandler.sendMessage(out, message);
+
                 while (true) {
 
                 }
             } catch (Exception exception) {
                 System.err.println("Data received in unknown format");
+                exception.printStackTrace();
             }
         } catch (IOException ioException) {
             System.out.println("Disconnect with Client " + no);
@@ -87,14 +97,16 @@ public class Server extends Thread {
         }
     }
 
-    private void choke() {
-        byte[] bytes = new byte[5];
-        byte[] messageLength = ByteBuffer.allocate(4).putInt(0).array();
-        for (int i = 0; i < 4; i++) {
-            bytes[i] = messageLength[i];
+    private boolean checkForInterest(BitSet received, BitSet mine) {
+        boolean interested = false;
+        received.xor(mine);
+        for (int i = 0; i < received.length(); i++) {
+            if (received.get(i) == true) {
+                interested = true;
+                break;
+            }
         }
-        bytes[4] = 0;
-        MessageHandler.sendMessage(out, bytes);
+        return interested;
     }
 }
 

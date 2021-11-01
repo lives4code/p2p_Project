@@ -216,4 +216,13 @@ public class MyProcess {
         }
     }
 
+    public static int getPeerIndexById(int id) {
+        for (int i = 0; i < peers.size(); i++) {
+            if (peers.get(i).getPeerId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
