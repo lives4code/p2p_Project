@@ -66,7 +66,10 @@ public class MessageHandler {
         }
         //still not really checking id.
         int id = ByteBuffer.wrap(b).getInt();
-        //so I'm thinking of maybe jsut seeing if it's one of the legal cases 1001 - 1008
+        if(peerId != id){
+            throw new Exception("id is not equal to peerID");
+        }
+            //so I'm thinking of maybe jsut seeing if it's one of the legal cases 1001 - 1008
         // and returning the result of it just being one of the possible values.
         //the alternative is to get the ip adress from the packet and use a map to compate whether the key value pairs are equal.
 
