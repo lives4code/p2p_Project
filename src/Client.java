@@ -86,7 +86,7 @@ public class Client extends Thread {
 //            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: " + s);
 
             while (true) {
-
+                MessageHandler.handleMessage(in);
             }
         } catch (ConnectException e) {
             System.err.println("Connection refused. You need to initiate a server first.");

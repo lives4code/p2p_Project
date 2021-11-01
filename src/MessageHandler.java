@@ -122,29 +122,38 @@ public class MessageHandler {
         switch(type){
             case 0:
                 //choke
+                System.out.println("MES HANDLER: Handling type 0 message");
                 break;
             case 1:
                 //unchoke
+                System.out.println("MES HANDLER: Handling type 1 message");
                 break;
             case 2:
                 //interested
+                System.out.println("MES HANDLER: Handling type 2 message");
                 break;
             case 3:
                 //not intrested
+                System.out.println("MES HANDLER: Handling type 3 message");
                 break;
             case 4:
-                break;
                 //have
-            case 5:
-                return msg;
-                //bitfield
-            case 6:
+                System.out.println("MES HANDLER: Handling type 4 message");
                 break;
+            case 5:
+                //bitfield
+                System.out.println("MES HANDLER: Handling type 5 message");
+                return msg;
+            case 6:
                 //request
+                System.out.println("MES HANDLER: Handling type 6 message");
+                break;
             case 7:
                 //piece
+                System.out.println("MES HANDLER: Handling type 7 message");
                 break;
             default:
+                // invalid
                 System.out.println("invalid type " + type);
                 break;
         }
