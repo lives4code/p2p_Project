@@ -60,13 +60,8 @@ public class Server extends Thread {
                 message = MessageHandler.handleMessage(in);
                 int index = MyProcess.getPeerIndexById(clientId);
                 MyProcess.peers.get(index).bitField = BitSet.valueOf(message);
-                System.out.println("SERVER " + peerId + " bitfield msg DEBUG: ");
                 s = "SERVER " + peerId + " bitfield msg DEBUG: ";
-                for (byte b : message) {
-                    s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
-                }
-
-                System.out.println(s);
+                printBitfield(message);
 
                 // Interested or Not Interested
                 boolean interested = checkForInterest(BitSet.valueOf(message), MyProcess.bitField);
@@ -77,7 +72,7 @@ public class Server extends Thread {
                 MessageHandler.sendMessage(out, message);
 
                 while (true) {
-
+                    MessageHandler.handleMessage(in);
                 }
             } catch (Exception exception) {
                 System.err.println("Data received in unknown format");
@@ -98,6 +93,7 @@ public class Server extends Thread {
     }
 
     private boolean checkForInterest(BitSet received, BitSet mine) {
+        System.out.println();
         boolean interested = false;
         received.xor(mine);
         for (int i = 0; i < received.length(); i++) {
@@ -107,6 +103,23 @@ public class Server extends Thread {
             }
         }
         return interested;
+    }
+
+    private void printBitfield(BitSet bits) {
+        byte[] bytes = bits.toByteArray();
+        s = "";
+        for (byte b : bytes) {
+            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+        }
+        System.out.println(s);
+    }
+
+    private void printBitfield(byte[] bytes) {
+        s = "";
+        for (byte b : bytes) {
+            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+        }
+        System.out.println(s);
     }
 }
 
