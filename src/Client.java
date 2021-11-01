@@ -20,7 +20,6 @@ public class Client extends Thread {
     private int peerId;
 
     //debug
-    private boolean valid;
     private String s;
 
 
@@ -60,10 +59,6 @@ public class Client extends Thread {
             }
             catch (Exception e){
                 System.out.println(e.getMessage());
-            }
-            System.out.println("CLIENT " + peerId + ": validation result: " + valid);
-            if (!valid) {
-                //deal with invalid handshake
             }
 
             //send bitfield
