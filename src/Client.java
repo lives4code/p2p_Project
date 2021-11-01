@@ -55,7 +55,12 @@ public class Client extends Thread {
             System.out.println("CLIENT " + peerId + ": handshake read from peer");
 
             //validate handshake
-            valid = MessageHandler.validateHandshake(message, peerId);
+            try {
+                int clientId = MessageHandler.validateHandshake(message, peerId);
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
             System.out.println("CLIENT " + peerId + ": validation result: " + valid);
             if (!valid) {
                 //deal with invalid handshake

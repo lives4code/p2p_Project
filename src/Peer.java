@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.BitSet;
 
 public class Peer {
     // From Peer Info Cfg
@@ -9,7 +10,7 @@ public class Peer {
 
     // Other
     boolean isInterested;
-    Bitfield bitfield;
+    BitSet bitField;
     ArrayList<byte[]> piecesNeeded;
     float downloadRate;
     boolean choked;

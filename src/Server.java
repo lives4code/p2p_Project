@@ -48,7 +48,7 @@ public class Server extends Thread {
                 System.out.println("SERVER " + peerId + ": handshake read from peer");
 
                 //validate handshake
-                valid = MessageHandler.validateHandshake(message, peerId);
+                int clientId = MessageHandler.validateHandshake(message, peerId);
                 System.out.println("SERVER " + peerId + ": validation result: " + valid);
                 if (!valid) {
                     //TODO deal with invalid handshake
@@ -57,6 +57,7 @@ public class Server extends Thread {
 
                 //receive bitfield
                 message = MessageHandler.handleMessage(in);
+                MyProcess.peers.get(clientId).bitField = BitSet.valueOf(message);
                 System.out.println("SERVER " + peerId + " bitfield msg DEBUG: ");
                 s = "SERVER " + peerId + " bitfield msg DEBUG: ";
                 for (byte b : message) {

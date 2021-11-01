@@ -21,7 +21,7 @@ public class MyProcess {
     // Handle client, server, and peers
     Client client;
     Server server;
-    List<Peer> peers;
+    static List<Peer> peers;
 
     // Common variables
     int numPrefNeighbors;

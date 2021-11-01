@@ -48,22 +48,23 @@ public class MessageHandler {
         return bytes;
     }
 
-    public static boolean validateHandshake(byte[] msg, int peerId) {
+    public static int validateHandshake(byte[] msg, int peerId) throws Exception {
         byte[] header = ("P2PFILESHARINGPROJ").getBytes();
         // Check for appropriate header
         if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {
-            return false;
+            throw new Exception("string not equal.");
         }
         // Check for zeros
         for (int i = 18; i < 28; i++) {
             if (msg[i] != 0x00)
-                return false;
+                throw new Exception("zeros not equal");
         }
         // Check for peer id
         byte[] b = new byte[4];
         for (int i = 0; i < 4; i++){
             b[i] = msg[i + 28];
         }
+        //still not really checking id.
         int id = ByteBuffer.wrap(b).getInt();
         //so I'm thinking of maybe jsut seeing if it's one of the legal cases 1001 - 1008
         // and returning the result of it just being one of the possible values.
@@ -75,8 +76,7 @@ public class MessageHandler {
 //                Byte.toUnsignedInt(b[1]) +
 //                Byte.toUnsignedInt(b[2]) +
 //                Byte.toUnsignedInt(b[3]));
-
-        return true;
+        return id;
 
         // this doesn't work. return ByteBuffer.wrap(b).getInt() == peerId;
     }
@@ -133,7 +133,7 @@ public class MessageHandler {
                 break;
                 //have
             case 5:
-                break;
+                return msg;
                 //bitfield
             case 6:
                 break;
