@@ -63,26 +63,27 @@ public class Client extends Thread {
 
             //send bitfield
             //we could probably do this beyyer.
-            System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
-            s = "";
+            //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
+            s = "CLIENT " + peerId + ": creating and sending bitField message: ";
             for (byte b : MyProcess.bitField.toByteArray()) {
                 s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
             }
 
-            System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length + " DEBUG: " + s);
+            System.out.println(s);
+            //System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length + " DEBUG: " + s);
 
             message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
             MessageHandler.sendMessage(out, message);
             System.out.println("CLIENT " + peerId + ": sent bitField message");
 
-            //receive bitfield
-            message = MessageHandler.handleMessage(in);
-            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: ");
-            s = "";
-            for (byte b : message) {
-                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
-            }
-            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: " + s);
+//            //receive bitfield
+//            message = MessageHandler.handleMessage(in);
+//            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: ");
+//            s = "";
+//            for (byte b : message) {
+//                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+//            }
+//            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: " + s);
 
             while (true) {
 

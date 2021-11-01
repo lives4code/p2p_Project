@@ -58,12 +58,12 @@ public class Server extends Thread {
                 //receive bitfield
                 message = MessageHandler.handleMessage(in);
                 System.out.println("SERVER " + peerId + " bitfield msg DEBUG: ");
-                s = "";
+                s = "SERVER " + peerId + " bitfield msg DEBUG: ";
                 for (byte b : message) {
                     s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
                 }
 
-                System.out.println("SERVER " + peerId + " bitfield msg DEBUG: " + s);
+                System.out.println(s);
 
                 while (true) {
 
