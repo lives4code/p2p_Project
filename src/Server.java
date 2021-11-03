@@ -15,16 +15,16 @@ public class Server extends Thread {
     private int no;                //The index number of the client
     private DataInputStream in;    //stream read from the socket
     private DataOutputStream out;    //stream write to the socket
-    private int peerId;
-    int clientId;
+    private int myId;
+    private int clientId;
 
     //debug
     private String s;
 
-    public Server(Socket connection, int no, int peerId) {
+    public Server(Socket connection, int no, int myId) {
         this.connection = connection;
         this.no = no;
-        this.peerId = peerId;
+        this.myId = myId;
     }
 
     public void run() {
@@ -35,20 +35,15 @@ public class Server extends Thread {
             in = new DataInputStream(connection.getInputStream());
 
             try {
-                //perform handshake here to validate connection
-                System.out.println("SERVER " + peerId + ": Creating and sending handshake to peer with ID: " + peerId);
-                message = MessageHandler.createHandshake(peerId);
-                MessageHandler.sendMessage(out, message);
-                System.out.println("SERVER " + peerId + ": sent handshake to peer");
 
                 //receive handshake and validate
-                System.out.println("SERVER " + peerId + ": reading handshake from peer");
+                System.out.println("SERVER " + myId + ": reading handshake from peer");
                 MessageHandler.receiveHandshake(in, message);
-                System.out.println("SERVER " + peerId + ": handshake read from peer");
+                System.out.println("SERVER " + myId + ": handshake read from peer");
 
                 //validate handshake
                 try{
-                    clientId = MessageHandler.validateHandshake(message, peerId);
+                    clientId = MessageHandler.validateHandshake(message, myId);
                 }
                 catch (Exception e){
                     currentThread().interrupt();
@@ -58,9 +53,9 @@ public class Server extends Thread {
 
                 //receive bitfield
                 message = MessageHandler.handleMessage(in);
-                int index = MyProcess.getPeerIndexById(clientId);
-                MyProcess.peers.get(index).bitField = BitSet.valueOf(message);
-                s = "SERVER " + peerId + " bitfield msg DEBUG: ";
+
+                MyProcess.peers.get(clientId).bitField = BitSet.valueOf(message);
+                s = "SERVER " + myId + " bitfield msg DEBUG: ";
                 printBitfield(message);
 
                 // Interested or Not Interested
@@ -72,7 +67,7 @@ public class Server extends Thread {
                 MessageHandler.sendMessage(out, message);
 
                 while (true) {
-                    MessageHandler.handleMessage(in);
+                    //MessageHandler.handleMessage(in);
                 }
             } catch (Exception exception) {
                 System.err.println("Data received in unknown format");

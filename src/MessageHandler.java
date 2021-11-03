@@ -64,24 +64,11 @@ public class MessageHandler {
         for (int i = 0; i < 4; i++){
             b[i] = msg[i + 28];
         }
-        //still not really checking id.
         int id = ByteBuffer.wrap(b).getInt();
-        if(peerId != id){
-            throw new Exception("id is not equal to peerID");
+        if(peerId == id){
+            throw new Exception("id is equal to peerID");
         }
-            //so I'm thinking of maybe jsut seeing if it's one of the legal cases 1001 - 1008
-        // and returning the result of it just being one of the possible values.
-        //the alternative is to get the ip adress from the packet and use a map to compate whether the key value pairs are equal.
-
-//        System.out.println("SERVER DEBUG: msg id :" + ByteBuffer.wrap(b).getInt());
-//        System.out.println("SERVER DEBUG: msg id :" +
-//                Byte.toUnsignedInt(b[0]) +
-//                Byte.toUnsignedInt(b[1]) +
-//                Byte.toUnsignedInt(b[2]) +
-//                Byte.toUnsignedInt(b[3]));
         return id;
-
-        // this doesn't work. return ByteBuffer.wrap(b).getInt() == peerId;
     }
 
     public static byte[] createMsg(int mType, byte[] payload){
@@ -120,6 +107,8 @@ public class MessageHandler {
         }
 
         switch(type){
+            //case -1:
+                //break;
             case 0:
                 //choke
                 System.out.println("MES HANDLER: Handling type 0 message");

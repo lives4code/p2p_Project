@@ -171,7 +171,7 @@ public class MyProcess {
                 try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                     outputStream.write(emptyFile);
                 }
-                System.out.println("Successfully wrote to the file.");
+                System.out.println("Successfully wrote to the file.  ID: " + myId);
             }
             fileReader.close();
         } catch (FileNotFoundException e) {

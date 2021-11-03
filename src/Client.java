@@ -48,21 +48,9 @@ public class Client extends Thread {
             MessageHandler.sendMessage(out, message);
             System.out.println("CLIENT " + peerId + ": sent handshake to peer");
 
-            //receive handshake and validate
-            System.out.println("CLIENT " + peerId + ": reading handshake from peer");
-            MessageHandler.receiveHandshake(in, message);
-            System.out.println("CLIENT " + peerId + ": handshake read from peer");
-
-            //validate handshake
-            try {
-                int clientId = MessageHandler.validateHandshake(message, peerId);
-            }
-            catch (Exception e){
-                System.out.println(e.getMessage());
-            }
 
             //send bitfield
-            //we could probably do this beyyer.
+            //we could probably do this better.
             //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
             s = "CLIENT " + peerId + ": creating and sending bitField message: ";
             for (byte b : MyProcess.bitField.toByteArray()) {
