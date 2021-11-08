@@ -1,10 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.System.in;
 
@@ -17,6 +14,7 @@ public class MyProcess {
 
     boolean hasFile;
     static BitSet bitField;
+    Timer timer;
 
     // Handle client, server, and peers
     Client client;
@@ -45,6 +43,10 @@ public class MyProcess {
         System.out.println("PEER: piece size: " + pieceSize);
         System.out.println("PEER: file size: " + fileSize);
 
+        // start timer
+        timer = new Timer();
+        TimerTask redetermineNeighbors = new DetermineNeighbors();
+        timer.schedule(redetermineNeighbors, 0, unchokeInterval * 1000);
     }
 
     //TODO write that we are no longer looking for this piece.
@@ -225,4 +227,11 @@ public class MyProcess {
         return -1;
     }
 
+
+}
+
+class DetermineNeighbors extends TimerTask {
+    public void run() {
+        System.out.println("TODO Redetermine neighbors");
+    }
 }
