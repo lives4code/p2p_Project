@@ -38,27 +38,38 @@ public class Server extends Thread {
 
                 //receive handshake and validate
                 System.out.println("SERVER " + myId + ": reading handshake from peer");
-                MessageHandler.receiveHandshake(in, message);
-                System.out.println("SERVER " + myId + ": handshake read from peer");
+                byte[] handshake = new byte[32];
+                in.read(handshake, 0, 32);
+
+                //MessageHandler.receiveHandshake(in, message);
 
                 //validate handshake
                 try{
-                    clientId = MessageHandler.validateHandshake(message, myId);
+                    clientId = MessageHandler.validateHandshake(handshake, myId);
+                    System.out.println("SERVER " + myId + ": handshake read from peer. ClientID: " + clientId);
                 }
                 catch (Exception e){
                     currentThread().interrupt();
-                    System.out.println("handshake invalid:" + e.getLocalizedMessage());
+                    System.out.println("SERVER: " + myId +  " handshake invalid:" + e.getLocalizedMessage());
 
                 }
 
                 //receive bitfield
-                message = MessageHandler.handleMessage(in);
-
-                MyProcess.peers.get(clientId).bitField = BitSet.valueOf(message);
+                byte[] msg = null;
+                byte[] sizeB = new byte[4];
+                int type = -1; // <- wut
+                    in.read(sizeB);
+                    int size = ByteBuffer.wrap(sizeB).getInt();
+                    msg = new byte[size];
+                    type = in.read();
+                    in.read(msg);
+                message = MessageHandler.handleMessage(msg, type);
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
                 s = "SERVER " + myId + " bitfield msg DEBUG: ";
                 printBitfield(message);
 
                 // Interested or Not Interested
+                /*
                 boolean interested = checkForInterest(BitSet.valueOf(message), MyProcess.bitField);
                 if (interested)
                     message = MessageHandler.createMsg(2, new byte[]{});
@@ -69,8 +80,11 @@ public class Server extends Thread {
                 while (true) {
                     //MessageHandler.handleMessage(in);
                 }
+
+                 */
             } catch (Exception exception) {
-                System.err.println("Data received in unknown format");
+                System.out.println(exception.getMessage());
+                System.err.println("SERVER: Data received in unknown format");
                 exception.printStackTrace();
             }
         } catch (IOException ioException) {
@@ -78,8 +92,12 @@ public class Server extends Thread {
         } finally {
             //Close connections
             try {
-                in.close();
-                out.close();
+                if(in != null) {
+                    in.close();
+                }
+                if(out != null) {
+                    out.close();
+                }
                 connection.close();
             } catch (IOException ioException) {
                 System.out.println("Disconnect with Client " + no);

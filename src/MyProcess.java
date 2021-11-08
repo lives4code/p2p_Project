@@ -105,7 +105,7 @@ public class MyProcess {
         // Start client
         for (Peer peer: peers){
             if (peer.getPeerId() != myId) {
-                new Client(peer.getPeerId(), peer.getHostName(), peer.getPort()).start();
+                new Client(myId, peer.getHostName(), peer.getPort()).start();
             }
         }
 

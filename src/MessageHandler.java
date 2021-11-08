@@ -15,14 +15,6 @@ public class MessageHandler {
             ioException.printStackTrace();
         }
     }
-    public static void receiveHandshake(DataInputStream in, byte[] msg) {
-        try{
-            in.read(msg, 0, 32);
-        }
-        catch(IOException ioException){
-            ioException.printStackTrace();
-        }
-    }
 
     public static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
@@ -65,9 +57,7 @@ public class MessageHandler {
             b[i] = msg[i + 28];
         }
         int id = ByteBuffer.wrap(b).getInt();
-        if(peerId == id){
-            throw new Exception("id is equal to peerID");
-        }
+        System.out.println("Validate handshake returns ID: " + id);
         return id;
     }
 
@@ -89,23 +79,7 @@ public class MessageHandler {
     }
 
     //handle message
-    public static byte[] handleMessage(DataInputStream in) {
-
-        byte[] msg = null;
-        byte[] sizeB = new byte[4];
-        int type = -1; // <- wut
-        try{
-
-            in.read(sizeB);
-            int size = ByteBuffer.wrap(sizeB).getInt();
-            msg = new byte[size];
-            type = in.read();
-            in.read(msg);
-        }
-        catch(IOException ioException){
-            ioException.printStackTrace();
-        }
-
+    public static byte[] handleMessage(byte[] msg, int type) {
         switch(type){
             case -1:
                 //break;
