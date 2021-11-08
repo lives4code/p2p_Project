@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Client extends Thread {
 
@@ -32,6 +33,7 @@ public class Client extends Thread {
     public void run() {
         try {
             //create a socket to connect to the server
+            TimeUnit.SECONDS.sleep(1);
             System.out.println("CLIENT " + myId + ":attempt to connect to " + host + " on port " + port);
             requestSocket = new Socket(host, port);
             System.out.println("CLIENT " + myId + ":connected to " + host + " on port " + port);
@@ -83,6 +85,8 @@ public class Client extends Thread {
             System.err.println("You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
             ioException.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             //Close connections
             try {
