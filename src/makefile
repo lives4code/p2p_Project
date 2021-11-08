@@ -18,3 +18,4 @@ classes: $(CLASSES:.java=.class)
 
 clean:
 	rm *.class
+	rm theFile

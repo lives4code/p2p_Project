@@ -107,7 +107,7 @@ public class MessageHandler {
         }
 
         switch(type){
-            //case -1:
+            case -1:
                 //break;
             case 0:
                 //choke
