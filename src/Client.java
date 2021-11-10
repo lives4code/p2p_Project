@@ -79,8 +79,8 @@ public class Client extends Thread {
                     msg = new byte[size];
                     type = in.read();
                     in.read(msg);
-                    message = MessageHandler.handleMessage(msg, type);
-                    MessageHandler.handleMessage(msg, type);
+                    message = MessageHandler.handleMessage(msg, type, -1);
+                    MessageHandler.handleMessage(msg, type, -1);
                 }
             }
         } catch (ConnectException e) {

@@ -15,6 +15,12 @@ public class MessageHandler {
             ioException.printStackTrace();
         }
     }
+    public static byte[] createInterestedMessage(){
+        return createMsg(2, new byte[]{});
+    }
+    public static byte[] createUninterestedMessage(){
+        return createMsg(3, new byte[]{});
+    }
 
     public static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
@@ -79,7 +85,7 @@ public class MessageHandler {
     }
 
     //handle message
-    public static byte[] handleMessage(byte[] msg, int type) {
+    public static byte[] handleMessage(byte[] msg, int type, int clientId) {
         switch(type){
             case -1:
                 //break;
@@ -102,8 +108,19 @@ public class MessageHandler {
                 break;
             case 4:
                 //have
+                //first update the bitfield to reflect the new piece.
+                //then return either an interested or not interested method after comparison.
+                int i = ByteBuffer.wrap(msg).getInt();
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(i);
                 System.out.println("MES HANDLER: Handling type 4 message");
-                break;
+                if(MyProcess.bitField.get(i) == false){
+                    //send interested
+                    return createInterestedMessage();
+                }
+                else {
+                    //send not interested
+                    return createUninterestedMessage();
+                }
             case 5:
                 //bitfield
                 System.out.println("MES HANDLER: Handling type 5 message");

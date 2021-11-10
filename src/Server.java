@@ -69,15 +69,17 @@ public class Server extends Thread {
                 //receive bitfield
                 //yeah this is copy and pasted code from client.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
-                byte[] msg = null;
+                byte[] msg;
                 byte[] sizeB = new byte[4];
-                int type = -1; // <- wut
+                int type = -1;
+
+
                 in.read(sizeB);
                 int size = ByteBuffer.wrap(sizeB).getInt();
                 msg = new byte[size];
                 type = in.read();
                 in.read(msg);
-                message = MessageHandler.handleMessage(msg, type);
+                message = MessageHandler.handleMessage(msg, type, clientId);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
                 //System.out.println("SERVER " + myId + " DEBUG 1");
                 s = "SERVER " + myId + " recived msg: ";
@@ -101,6 +103,24 @@ public class Server extends Thread {
 //
 //                System.out.println(s);
                 //end debug
+
+                //listener loop.
+                while (true) {
+                    if (in.available() > 0) {
+                        in.read(sizeB);
+                        size = ByteBuffer.wrap(sizeB).getInt();
+                        msg = new byte[size];
+                        type = in.read();
+                        in.read(msg);
+                        message = MessageHandler.handleMessage(msg, type, clientId);
+                        //if the message handler returns an interested or uninterested message then send it.
+                        if(message[4] == 2 || message[4] == 3){
+                            MessageHandler.sendMessage(out, message);
+                        }
+                    }
+                }
+
+
 
                 // Interested or Not Interested
                 /*
