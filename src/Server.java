@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -54,6 +55,17 @@ public class Server extends Thread {
 
                 }
 
+                //debug print my bitset
+                byte[] bf = MyProcess.bitField.toByteArray();
+                s = "SERVER " + myId + ": my bitfield: ";
+
+                for(byte b : bf){
+                    s += "0x" + MyProcess.byteToHex(b).toUpperCase() + ", ";
+                }
+
+                System.out.println(s);
+                //end debug
+
                 //receive bitfield
                 //yeah this is copy and pasted code from client.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
@@ -67,8 +79,28 @@ public class Server extends Thread {
                 in.read(msg);
                 message = MessageHandler.handleMessage(msg, type);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
-                s = "SERVER " + myId + " bitfield msg DEBUG: ";
-                printBitfield(message);
+                //System.out.println("SERVER " + myId + " DEBUG 1");
+                s = "SERVER " + myId + " recived msg: ";
+
+                //convert to little endian
+//                ByteBuffer bb = ByteBuffer.wrap(message);
+//                bb.order( ByteOrder.LITTLE_ENDIAN);
+//                byte[] arr = new byte[bb.remaining()];
+//                bb.get(arr);
+
+                //print receives bitset
+                printBitfield(message ,s);
+
+                //debug
+//                byte[] bf = MyProcess.bitField.toByteArray();
+//                s = "SERVER my bitfield:\n";
+//
+//                for(byte b : bf){
+//                    s += "0x" + MyProcess.byteToHex(b) + ", ";
+//                }
+//
+//                System.out.println(s);
+                //end debug
 
                 // Interested or Not Interested
                 /*
@@ -120,19 +152,18 @@ public class Server extends Thread {
         return interested;
     }
 
-    private void printBitfield(BitSet bits) {
-        byte[] bytes = bits.toByteArray();
-        s = "";
-        for (byte b : bytes) {
-            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
-        }
-        System.out.println(s);
-    }
+//    private void printBitfield(BitSet bits) {
+//        byte[] bytes = bits.toByteArray();
+//        s = "";
+//        for (byte b : bytes) {
+//            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+//        }
+//        System.out.println(s);
+//    }
 
-    private void printBitfield(byte[] bytes) {
-        s = "";
+    private void printBitfield(byte[] bytes, String s) {
         for (byte b : bytes) {
-            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
         }
         System.out.println(s);
     }

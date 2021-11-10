@@ -52,9 +52,10 @@ public class Client extends Thread {
 
             //send bitfield
             //we could probably do this better.
+            //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
             s = "CLIENT " + myId + ": creating and sending bitField message: ";
             for (byte b : MyProcess.bitField.toByteArray()) {
-                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
+                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
             }
 
             System.out.println(s);
