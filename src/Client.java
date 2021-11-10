@@ -44,7 +44,6 @@ public class Client extends Thread {
             in = new DataInputStream(requestSocket.getInputStream());
 
             //preform handshake here to validate connection
-            //preform handshake here to validate connection
             System.out.println("CLIENT " + myId + ": Creating and sending handshake to peer with ID: " + myId);
             message = MessageHandler.createHandshake(myId);
             MessageHandler.sendMessage(out, message);
@@ -53,7 +52,6 @@ public class Client extends Thread {
 
             //send bitfield
             //we could probably do this better.
-            //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
             s = "CLIENT " + myId + ": creating and sending bitField message: ";
             for (byte b : MyProcess.bitField.toByteArray()) {
                 s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
@@ -66,17 +64,23 @@ public class Client extends Thread {
             MessageHandler.sendMessage(out, message);
             System.out.println("CLIENT " + myId + ": sent bitField message");
 
-//            //receive bitfield
-//            message = MessageHandler.handleMessage(in);
-//            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: ");
-//            s = "";
-//            for (byte b : message) {
-//                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
-//            }
-//            System.out.println("CLIENT " + peerId + " bitfield msg DEBUG: " + s);
-
+            //move these outside of the while loop so we don't reinitialize variables a bunch.
+            byte[] msg;
+            byte[] sizeB = new byte[4];
+            int type = -1; // <- wut
             while (true) {
-                //MessageHandler.handleMessage(in);
+                //yeah this is copy and pasted code from server.java but I can't use a method because
+                //passing an inputstream causes a nullpointer exception.
+                if(in.available() > 0 ) {
+                    in.read(sizeB);
+                    System.out.println("size byte array is: " + sizeB.toString());
+                    int size = ByteBuffer.wrap(sizeB).getInt();
+                    msg = new byte[size];
+                    type = in.read();
+                    in.read(msg);
+                    message = MessageHandler.handleMessage(msg, type);
+                    MessageHandler.handleMessage(msg, type);
+                }
             }
         } catch (ConnectException e) {
             //System.out.println(e.getLocalizedMessage());

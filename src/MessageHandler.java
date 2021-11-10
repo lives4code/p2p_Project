@@ -85,6 +85,7 @@ public class MessageHandler {
                 //break;
             case 0:
                 //choke
+                System.out.println(msg.toString());
                 System.out.println("MES HANDLER: Handling type 0 message");
                 break;
             case 1:

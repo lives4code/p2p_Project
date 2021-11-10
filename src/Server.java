@@ -55,14 +55,16 @@ public class Server extends Thread {
                 }
 
                 //receive bitfield
+                //yeah this is copy and pasted code from client.java but I can't use a method because
+                //passing an inputstream causes a nullpointer exception.
                 byte[] msg = null;
                 byte[] sizeB = new byte[4];
                 int type = -1; // <- wut
-                    in.read(sizeB);
-                    int size = ByteBuffer.wrap(sizeB).getInt();
-                    msg = new byte[size];
-                    type = in.read();
-                    in.read(msg);
+                in.read(sizeB);
+                int size = ByteBuffer.wrap(sizeB).getInt();
+                msg = new byte[size];
+                type = in.read();
+                in.read(msg);
                 message = MessageHandler.handleMessage(msg, type);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
                 s = "SERVER " + myId + " bitfield msg DEBUG: ";
