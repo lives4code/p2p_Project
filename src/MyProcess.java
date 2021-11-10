@@ -45,9 +45,7 @@ public class MyProcess {
         System.out.println("PEER: file size: " + fileSize);
 
         // start timer
-        timer = new Timer();
-        TimerTask redetermineNeighbors = new DetermineNeighbors();
-        timer.schedule(redetermineNeighbors, 0, unchokeInterval * 1000);
+        startDeterminingNeighbors();
     }
 
     //TODO write that we are no longer looking for this piece.
@@ -219,6 +217,39 @@ public class MyProcess {
         }
     }
 
+    public void startDeterminingNeighbors() {
+        TimerTask redetermineNeighbors = new TimerTask() {
+            public void run() {
+                if (numPrefNeighbors > peers.size()) {
+                    System.out.println("Error: Number of preferred neighbors cannot be greater than the number of peers.");
+                    cancel();
+                }
+                List<Integer> fastestIndices = new ArrayList<>();
+                // Find fastest indices
+                for (int k = 0; k < numPrefNeighbors; k++) {
+                    int minIndex = 0;
+                    float minRate = Integer.MAX_VALUE;
+                    for (int i = 0; i < peers.size(); i++) {
+                        if (peers.get(i).downloadRate < minRate && !fastestIndices.contains(i)) {
+                            minIndex = i;
+                            minRate = peers.get(i).downloadRate;
+                        }
+                    }
+                    fastestIndices.add(minIndex);
+                }
+                // Set new neighbors
+                for (int i = 0; i < peers.size(); i++) {
+                    if (fastestIndices.contains(i))
+                        peers.get(i).choked = false;
+                    else
+                        peers.get(i).choked = true;
+                }
+            }
+        };
+        timer = new Timer();
+        timer.schedule(redetermineNeighbors, 0, unchokeInterval * 1000);
+    }
+
     public static int getPeerIndexById(int id) {
         for (int i = 0; i < peers.size(); i++) {
             if (peers.get(i).getPeerId() == id) {
@@ -229,10 +260,4 @@ public class MyProcess {
     }
 
 
-}
-
-class DetermineNeighbors extends TimerTask {
-    public void run() {
-        System.out.println("TODO Redetermine neighbors");
-    }
 }

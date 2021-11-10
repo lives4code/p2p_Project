@@ -59,14 +59,17 @@ public class Server extends Thread {
                 //passing an inputstream causes a nullpointer exception.
                 byte[] msg = null;
                 byte[] sizeB = new byte[4];
-                int type = -1; // <- wut
-                in.read(sizeB);
+                int type = -1;
+                long start = System.currentTimeMillis();
+                int read = in.read(sizeB);
                 int size = ByteBuffer.wrap(sizeB).getInt();
                 msg = new byte[size];
                 type = in.read();
-                in.read(msg);
+                read += in.read(msg);
+                long cost = System.currentTimeMillis() - start;
                 message = MessageHandler.handleMessage(msg, type);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = read / cost; // bytes per ms
                 s = "SERVER " + myId + " bitfield msg DEBUG: ";
                 printBitfield(message);
 

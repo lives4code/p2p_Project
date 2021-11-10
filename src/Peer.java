@@ -12,7 +12,7 @@ public class Peer {
     boolean isInterested;
     BitSet bitField;
     ArrayList<byte[]> piecesNeeded;
-    float downloadRate;
+    float downloadRate; // bytes per ms
     boolean choked;
 
     public Peer(int peerId, String hostName, int port, boolean hasFile) {
