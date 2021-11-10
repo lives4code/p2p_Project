@@ -72,7 +72,6 @@ public class Server extends Thread {
                 byte[] msg;
                 byte[] sizeB = new byte[4];
                 int type = -1;
-                int type = -1;
                 long start = System.currentTimeMillis();
                 int read = in.read(sizeB);
                 int size = ByteBuffer.wrap(sizeB).getInt();
@@ -84,7 +83,7 @@ public class Server extends Thread {
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = read / cost; // bytes per ms
                 s = "SERVER " + myId + " bitfield msg DEBUG: ";
-                printBitfield(message);
+                printBitfield(message, s);
 
                 //convert to little endian
 //                ByteBuffer bb = ByteBuffer.wrap(message);
