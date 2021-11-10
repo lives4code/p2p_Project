@@ -15,7 +15,6 @@ public class MyProcess {
 
     boolean hasFile;
     static BitSet bitField;
-    Timer timer;
 
     // Handle client, server, and peers
     Client client;
@@ -23,12 +22,12 @@ public class MyProcess {
     static List<Peer> peers;
 
     // Common variables
-    int numPrefNeighbors;
-    int unchokeInterval;
-    int optUnchokeInterval;
-    String fileName;
-    long fileSize;
-    long pieceSize;
+    static int numPrefNeighbors;
+    static int unchokeInterval;
+    static int optUnchokeInterval;
+    static String fileName;
+    static long fileSize;
+    static long pieceSize;
     Piece[] pieceArray;
     //initialize piece array
 
@@ -43,9 +42,6 @@ public class MyProcess {
         //debug
         System.out.println("PEER: piece size: " + pieceSize);
         System.out.println("PEER: file size: " + fileSize);
-
-        // start timer
-        startDeterminingNeighbors();
     }
 
     //TODO write that we are no longer looking for this piece.
@@ -221,39 +217,6 @@ public class MyProcess {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-    }
-
-    public void startDeterminingNeighbors() {
-        TimerTask redetermineNeighbors = new TimerTask() {
-            public void run() {
-                if (numPrefNeighbors > peers.size()) {
-                    System.out.println("Error: Number of preferred neighbors cannot be greater than the number of peers.");
-                    cancel();
-                }
-                List<Integer> fastestIndices = new ArrayList<>();
-                // Find fastest indices
-                for (int k = 0; k < numPrefNeighbors; k++) {
-                    int minIndex = 0;
-                    float minRate = Integer.MAX_VALUE;
-                    for (int i = 0; i < peers.size(); i++) {
-                        if (peers.get(i).downloadRate < minRate && !fastestIndices.contains(i)) {
-                            minIndex = i;
-                            minRate = peers.get(i).downloadRate;
-                        }
-                    }
-                    fastestIndices.add(minIndex);
-                }
-                // Set new neighbors
-                for (int i = 0; i < peers.size(); i++) {
-                    if (fastestIndices.contains(i))
-                        peers.get(i).choked = false;
-                    else
-                        peers.get(i).choked = true;
-                }
-            }
-        };
-        timer = new Timer();
-        timer.schedule(redetermineNeighbors, 0, unchokeInterval * 1000);
     }
 
     public static int getPeerIndexById(int id) {
