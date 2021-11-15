@@ -92,6 +92,7 @@ public class Server extends Thread {
 
 
                         //request Pieces!
+
                         for(Peer peer :MyProcess.peers){
                             //System.out.println("cheecking peer:" + peer.getPeerId() + " peer InterestdValue: " +  peer.getIsInterested()
                             //        + " peer chokeVal:" + peer.getIsChoked());
@@ -103,6 +104,8 @@ public class Server extends Thread {
                                 }
                             }
                         }
+
+
                     }
                 }
 
