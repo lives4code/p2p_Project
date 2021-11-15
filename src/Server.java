@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 //handler thread class. handlers are spawned from the listening
 //loop and are responsible for dealing with a single client's
@@ -31,12 +33,15 @@ public class Server extends Thread {
     public void run() {
         try {
             //initialize Input and Output streams
+            // initialize Random
+            Random rnd = new Random(System.currentTimeMillis());
+            rnd.setSeed(System.currentTimeMillis());
             out = new DataOutputStream(connection.getOutputStream());
             out.flush();
             in = new DataInputStream(connection.getInputStream());
 
             // start timer
-            startDeterminingNeighbors();
+            //startDeterminingNeighbors();
 
             try {
 
@@ -45,101 +50,61 @@ public class Server extends Thread {
                 byte[] handshake = new byte[32];
                 in.read(handshake, 0, 32);
 
-                //MessageHandler.receiveHandshake(in, message);
-
                 //validate handshake
-                try{
+                try {
                     clientId = MessageHandler.validateHandshake(handshake, myId);
                     System.out.println("SERVER " + myId + ": handshake read from peer. ClientID: " + clientId);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     currentThread().interrupt();
-                    System.out.println("SERVER: " + myId +  " handshake invalid:" + e.getLocalizedMessage());
+                    System.out.println("SERVER: " + myId + " handshake invalid:" + e.getLocalizedMessage());
 
                 }
-
-                //debug print my bitset
-                byte[] bf = MyProcess.bitField.toByteArray();
-                s = "SERVER " + myId + ": my bitfield: ";
-
-                for(byte b : bf){
-                    s += "0x" + MyProcess.byteToHex(b).toUpperCase() + ", ";
-                }
-
-                System.out.println(s);
-                //end debug
-
-                //receive bitfield
                 //yeah this is copy and pasted code from client.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
                 byte[] msg;
                 byte[] sizeB = new byte[4];
                 int type = -1;
-                long start = System.currentTimeMillis();
-                int read = in.read(sizeB);
-                int size = ByteBuffer.wrap(sizeB).getInt();
-                msg = new byte[size];
-                type = in.read();
-                read += in.read(msg);
-                long cost = System.currentTimeMillis() - start;
-                message = MessageHandler.handleMessage(msg, type, clientId);
-                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(message);
-                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = read / cost; // bytes per ms
-                s = "SERVER " + myId + " bitfield msg DEBUG: ";
-                printBitfield(message, s);
+                int size;
+                long cost;
+                long start;
 
-                //convert to little endian
-//                ByteBuffer bb = ByteBuffer.wrap(message);
-//                bb.order( ByteOrder.LITTLE_ENDIAN);
-//                byte[] arr = new byte[bb.remaining()];
-//                bb.get(arr);
-
-                //print receives bitset
-                printBitfield(message ,s);
-
-                //debug
-//                byte[] bf = MyProcess.bitField.toByteArray();
-//                s = "SERVER my bitfield:\n";
-//
-//                for(byte b : bf){
-//                    s += "0x" + MyProcess.byteToHex(b) + ", ";
-//                }
-//
-//                System.out.println(s);
-                //end debug
-
+                //System.out.println("SERVER " + myId + " DEBUG 1");
+                s = "SERVER " + myId + " recived msg: ";
                 //listener loop.
                 while (true) {
                     if (in.available() > 0) {
+                        //handle incoming messages
+                        start = System.currentTimeMillis();
                         in.read(sizeB);
                         size = ByteBuffer.wrap(sizeB).getInt();
                         msg = new byte[size];
                         type = in.read();
-                        in.read(msg);
+                        int sizes = in.read(msg);
+                        cost = System.currentTimeMillis() - start;
                         message = MessageHandler.handleMessage(msg, type, clientId);
                         //if the message handler returns an interested or uninterested message then send it.
-                        if(message[4] == 2 || message[4] == 3){
+                        if (message != null && (message[4] == 2 || message[4] == 3)) {
+                            System.out.println("sending message");
                             MessageHandler.sendMessage(out, message);
+                        }
+                        //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = size / cost; // bytes per ms
+
+
+                        //request Pieces!
+                        for(Peer peer :MyProcess.peers){
+                            //System.out.println("cheecking peer:" + peer.getPeerId() + " peer InterestdValue: " +  peer.getIsInterested()
+                            //        + " peer chokeVal:" + peer.getIsChoked());
+                            if(!peer.getIsChoked()){
+                                if(peer.getIsInterested()){
+                                    System.out.println("we have a peer that is interestedn and unchoked");
+                                    msg = MessageHandler.createRequestMessage(Server.getRandomPiece(peer.bitField, MyProcess.bitField));
+                                    MessageHandler.sendMessage(out, msg);
+                                }
+                            }
                         }
                     }
                 }
 
-
-
-                // Interested or Not Interested
-                /*
-                boolean interested = checkForInterest(BitSet.valueOf(message), MyProcess.bitField);
-                if (interested)
-                    message = MessageHandler.createMsg(2, new byte[]{});
-                else
-                    message = MessageHandler.createMsg(3, new byte[] {});
-                MessageHandler.sendMessage(out, message);
-
-                while (true) {
-                    //MessageHandler.handleMessage(in);
-                }
-
-                 */
             } catch (Exception exception) {
                 System.out.println(exception.getMessage());
                 System.err.println("SERVER: Data received in unknown format");
@@ -150,10 +115,10 @@ public class Server extends Thread {
         } finally {
             //Close connections
             try {
-                if(in != null) {
+                if (in != null) {
                     in.close();
                 }
-                if(out != null) {
+                if (out != null) {
                     out.close();
                 }
                 connection.close();
@@ -163,8 +128,26 @@ public class Server extends Thread {
         }
     }
 
-    private boolean checkForInterest(BitSet received, BitSet mine) {
-        System.out.println();
+    public static byte[] getRandomPiece(BitSet receieved, BitSet mine){
+
+        int randomNum;
+        receieved.xor(mine);
+        //this additional check for interest is so we don't get a random infinite while loop.
+        if(Server.checkForInterest(receieved, mine)) {
+            while (true) {
+                randomNum = ThreadLocalRandom.current().nextInt(0, mine.size() + 1);
+                if (receieved.get(randomNum)) {
+                    return ByteBuffer.allocate(4).putInt(randomNum).array();
+                }
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static boolean checkForInterest(BitSet received, BitSet mine) {
+        System.out.println("cehecking for interest");
         boolean interested = false;
         received.xor(mine);
         for (int i = 0; i < received.length(); i++) {
@@ -176,30 +159,16 @@ public class Server extends Thread {
         return interested;
     }
 
-//    private void printBitfield(BitSet bits) {
-//        byte[] bytes = bits.toByteArray();
-//        s = "";
-//        for (byte b : bytes) {
-//            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + " ";
-//        }
-//        System.out.println(s);
-//    }
-
-    private void printBitfield(byte[] bytes, String s) {
-        for (byte b : bytes) {
-            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
-        }
-        System.out.println(s);
-    }
 
     // Moved to Server instead of MyProcess cuz it has to send messages
-    private void startDeterminingNeighbors() {
+    private void startDeterminingNeighbors(){
         TimerTask redetermineNeighbors = new TimerTask() {
             public void run() {
                 System.out.println("Redetermining neighbors...");
                 if (MyProcess.numPrefNeighbors > MyProcess.peers.size()) {
-                    System.out.println("Error: Number of preferred neighbors cannot be greater than the number of peers.");
-                    cancel();
+                    //System.out.println("Error: Number of preferred neighbors cannot be greater than the number of peers.");
+                    //System.out.println("yes it can.");
+                    //cancel();
                 }
                 List<Integer> fastestIndices = new ArrayList<>();
                 // Find fastest indices
@@ -217,14 +186,14 @@ public class Server extends Thread {
                 // Set new neighbors
                 for (int i = 0; i < MyProcess.peers.size(); i++) {
                     // Unchoke new neighbor
-                    if (fastestIndices.contains(i) && MyProcess.peers.get(i).choked) {
-                        MyProcess.peers.get(i).choked = false;
+                    if (fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked()) {
+                        MyProcess.peers.get(i).setChoked(true);
                         byte[] mes = MessageHandler.createMsg(0, new byte[] {});
                         MessageHandler.sendMessage(out, mes);
                     }
                     // Choke old neighbor
-                    else if (!fastestIndices.contains(i) && !MyProcess.peers.get(i).choked) {
-                        MyProcess.peers.get(i).choked = true;
+                    else if (!fastestIndices.contains(i) && !MyProcess.peers.get(i).getIsChoked()) {
+                        MyProcess.peers.get(i).setChoked(true);
                         byte[] mes = MessageHandler.createMsg(1, new byte[] {});
                         MessageHandler.sendMessage(out, mes);
                     }

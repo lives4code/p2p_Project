@@ -44,10 +44,10 @@ public class MyProcess {
         System.out.println("PEER: file size: " + fileSize);
     }
 
-    //TODO write that we are no longer looking for this piece.
+
     //wrote code to flip index.
     //talk to nick make sure this is right.
-    public void writePiece(byte[] pieceIndex, byte[] piece){
+    public static void writePiece(byte[] pieceIndex, byte[] piece){
         try {
             RandomAccessFile file = new RandomAccessFile("theFile", "w");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
@@ -61,9 +61,8 @@ public class MyProcess {
             System.out.println("error occured");
         }
     }
-    //TODO fix error that can occur at the last byte of the file.
-    //fixed talk with group before pushing.
-    public byte[] readPiece(byte[] pieceIndex ){
+
+    public static byte[] readPiece(byte[] pieceIndex ){
         byte[] ret = new byte[(int)pieceSize];
         int numPieces = (int) Math.ceil(fileSize/pieceSize);
         try {
@@ -100,7 +99,7 @@ public class MyProcess {
         // Start client
         for (Peer peer: peers){
             if (peer.getPeerId() != myId) {
-                new Client(myId, peer.getHostName(), peer.getPort()).start();
+                new Client(myId, peer.getHostName(), peer.getPort(), peer.getPeerId()).start();
             }
         }
 
@@ -146,18 +145,13 @@ public class MyProcess {
                     peers.add(new Peer(peerId, hostName, port, hasFile));
                 }
             }
+            System.out.println("empty peers are initialized");
             //bitfield is initialized to false by default if the file is present set all the values to true.
             bitField = new BitSet(numPieces);
             if(hasFile){
                 for(int i = 0; i < bitField.size(); i++){
-                        bitField.flip(i);
+                        bitField.set(i);
                 }
-                bitField.set(0,8,false);
-                bitField.set(1);
-                bitField.set(2);
-                bitField.set(4);
-                //0b0001_0110
-                //0x16
             }
             if(this.hasFile == false){
                 File theFile = new File("theFile");

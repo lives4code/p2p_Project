@@ -3,6 +3,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.BitSet;
 
 public class MessageHandler {
 
@@ -22,6 +23,16 @@ public class MessageHandler {
         return createMsg(3, new byte[]{});
     }
 
+    public static byte[] createPieceMessage(byte[] pieceIndex){
+        return createMsg(7, MyProcess.readPiece(pieceIndex));
+    }
+    public static byte[] createHaveMessage(byte[] pieceIndex){
+        return createMsg(4, pieceIndex);
+    }
+    public static byte[] createRequestMessage(byte[] pieceIndex){
+        return createMsg(6, pieceIndex);
+    }
+
     public static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
         String hexString = "P2PFILESHARINGPROJ";
@@ -37,12 +48,6 @@ public class MessageHandler {
         for ( int i = 0; i < 4; i++){
             bytes[28 + i] = peer_id[i];
         }
-
-//        System.out.println("CREATE HANDSHAKE DEBUG: ");
-//        for (byte b : bytes) {
-//            System.out.format("0x%x ", b);
-//        }
-
         return bytes;
     }
 
@@ -91,28 +96,31 @@ public class MessageHandler {
                 //break;
             case 0:
                 //choke
-                System.out.println(msg.toString());
-                System.out.println("MES HANDLER: Handling type 0 message");
+                System.out.println("MES HANDLER: Handling type 0 message, choke");
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
                 break;
             case 1:
                 //unchoke
-                System.out.println("MES HANDLER: Handling type 1 message");
+                System.out.println("MES HANDLER: Handling type 1 message, unchoke");
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
                 break;
             case 2:
                 //interested
-                System.out.println("MES HANDLER: Handling type 2 message");
-                break;
+                System.out.println("MES HANDLER: Handling type 2 message, interested");
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(true);
+                return null;
             case 3:
                 //not intrested
-                System.out.println("MES HANDLER: Handling type 3 message");
-                break;
+                System.out.println("MES HANDLER: Handling type 3 message, not interested clientID: " + clientId);
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(false);
+                return null;
             case 4:
                 //have
                 //first update the bitfield to reflect the new piece.
                 //then return either an interested or not interested method after comparison.
                 int i = ByteBuffer.wrap(msg).getInt();
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(i);
-                System.out.println("MES HANDLER: Handling type 4 message");
+                System.out.println("MES HANDLER: Handling type 4 message, have");
                 if(MyProcess.bitField.get(i) == false){
                     //send interested
                     return createInterestedMessage();
@@ -123,16 +131,38 @@ public class MessageHandler {
                 }
             case 5:
                 //bitfield
-                System.out.println("MES HANDLER: Handling type 5 message");
-                return msg;
+                System.out.println("MES HANDLER: Handling type 5 message, bitfield");
+                if(msg.length == 0){
+                    System.out.println("bitfield is empty.");
+                    BitSet b = new BitSet(MyProcess.bitField.size());
+                    b.clear();
+                    MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = b;
+                    System.out.println("empty- size: " +b.size());
+                    return createUninterestedMessage();
+                }
+                printBitfield(msg, "printing bitfield given. ");
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(msg);
+                if(checkForInterest(BitSet.valueOf(msg), MyProcess.bitField)){
+                    return createInterestedMessage();
+                }
+                else {
+                    return createUninterestedMessage();
+                }
             case 6:
                 //request
-                System.out.println("MES HANDLER: Handling type 6 message");
-                break;
+                System.out.println("MES HANDLER: Handling type 6 message, request");
+                return createPieceMessage(msg);
             case 7:
                 //piece
-                System.out.println("MES HANDLER: Handling type 7 message");
-                break;
+                System.out.println("MES HANDLER: Handling type 7 message, piece");
+                byte[] pieceIndex = new byte[4];
+                for( i =0; i < 4; i++){
+                    pieceIndex[i] = msg[i];
+                }
+                MyProcess.bitField.set(ByteBuffer.wrap(pieceIndex).getInt());
+                byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
+                MyProcess.writePiece(pieceIndex,arr);
+                return createPieceMessage(pieceIndex);
             default:
                 // invalid
                 System.out.println("invalid type " + type);
@@ -140,4 +170,25 @@ public class MessageHandler {
         }
         return msg;
     }
+
+    public static boolean checkForInterest(BitSet received, BitSet mine) {
+        System.out.println();
+        boolean interested = false;
+        received.xor(mine);
+        for (int i = 0; i < received.length(); i++) {
+            if (received.get(i) == true) {
+                interested = true;
+                break;
+            }
+        }
+        return interested;
+    }
+
+    private static void printBitfield(byte[] bytes, String s) {
+        for (byte b = 0; b < MyProcess.bitField.size(); b++) {
+            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
+        }
+        System.out.println(s);
+    }
 }
+

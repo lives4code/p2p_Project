@@ -20,6 +20,19 @@ public class Peer {
         this.hostName = hostName;
         this.port = port;
         this.hasFile = hasFile;
+        downloadRate = 100000;
+    }
+    public void setInterested(boolean bool){
+        isInterested = bool;
+    }
+    public boolean getIsInterested(){
+        return isInterested;
+    }
+    public void setChoked(boolean bool){
+        choked = bool;
+    }
+    public boolean getIsChoked(){
+        return choked;
     }
     public int getPeerId(){
         return this.peerId;
