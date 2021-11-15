@@ -19,15 +19,17 @@ public class Client extends Thread {
     private int port = 8001;
     private String host;
     private int myId;
+    private int connectedToID;
 
     //debug
     private String s;
 
 
-    public Client(int myId, String host, int port) {
+    public Client(int myId, String host, int port, int connectedToID) {
         this.myId = myId;
         this.host = host;
         this.port = port;
+        this.connectedToID = connectedToID;
     }
 
     public void run() {
@@ -73,14 +75,27 @@ public class Client extends Thread {
                 //yeah this is copy and pasted code from server.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
                 if(in.available() > 0 ) {
+                    System.out.println("here");
                     in.read(sizeB);
                     System.out.println("size byte array is: " + sizeB.toString());
                     int size = ByteBuffer.wrap(sizeB).getInt();
                     msg = new byte[size];
                     type = in.read();
                     in.read(msg);
-                    message = MessageHandler.handleMessage(msg, type, -1);
-                    MessageHandler.handleMessage(msg, type, -1);
+                    message = MessageHandler.handleMessage(msg, type, connectedToID);
+                    MessageHandler.handleMessage(msg, type, connectedToID);
+                }
+                //request Pieces!
+                for(Peer peer :MyProcess.peers){
+                    //System.out.println("cheecking peer:" + peer.getPeerId() + " peer InterestdValue: " +  peer.getIsInterested()
+                    //        + " peer chokeVal:" + peer.getIsChoked());
+                    if(!peer.getIsChoked()){
+                        if(peer.getIsInterested()){
+                            System.out.println("we have a peer that is interestedn and unchoked");
+                            msg = MessageHandler.createRequestMessage(Server.getRandomPiece(peer.bitField, MyProcess.bitField));
+                            MessageHandler.sendMessage(out, msg);
+                        }
+                    }
                 }
             }
         } catch (ConnectException e) {
