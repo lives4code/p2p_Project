@@ -36,9 +36,9 @@ public class Client extends Thread {
         try {
             //create a socket to connect to the server
             TimeUnit.SECONDS.sleep(1);
-            System.out.println("CLIENT " + myId + ":attempt to connect to " + host + " on port " + port);
+            System.out.println("CLIENT " + myId + ": attempt to connect to " + host + " on port " + port);
             requestSocket = new Socket(host, port);
-            System.out.println("CLIENT " + myId + ":connected to " + host + " on port " + port);
+            System.out.println("CLIENT " + myId + ": connected to " + host + " on port " + port);
 
             //initialize inputStream and outputStream
             out = new DataOutputStream(requestSocket.getOutputStream());
@@ -55,17 +55,19 @@ public class Client extends Thread {
             //send bitfield
             //we could probably do this better.
             //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
-            s = "CLIENT " + myId + ": creating and sending bitField message: ";
-            for (byte b : MyProcess.bitField.toByteArray()) {
-                s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
+            if(!MyProcess.bitField.isEmpty()) {
+                s = "CLIENT " + myId + ": creating and sending bitField message: ";
+                for (byte b : MyProcess.bitField.toByteArray()) {
+                    s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
+                }
+
+                System.out.println(s);
+                //System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length + " DEBUG: " + s);
+
+                message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
+                MessageHandler.sendMessage(out, message);
+                System.out.println("CLIENT " + myId + ": sent bitField message");
             }
-
-            System.out.println(s);
-            //System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length + " DEBUG: " + s);
-
-            message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
-            MessageHandler.sendMessage(out, message);
-            System.out.println("CLIENT " + myId + ": sent bitField message");
 
             //move these outside of the while loop so we don't reinitialize variables a bunch.
             byte[] msg;
@@ -75,15 +77,14 @@ public class Client extends Thread {
                 //yeah this is copy and pasted code from server.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
                 if(in.available() > 0 ) {
-                    System.out.println("here");
+                    System.out.println("CLIENT " + myId + ": beginning new loop iteration");
                     in.read(sizeB);
-                    System.out.println("size byte array is: " + sizeB.toString());
+                    //System.out.println("size byte array is: " + sizeB.toString());
                     int size = ByteBuffer.wrap(sizeB).getInt();
                     msg = new byte[size];
                     type = in.read();
                     in.read(msg);
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
-                    MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
                 }
                 //request Pieces!
                 for(Peer peer :MyProcess.peers){

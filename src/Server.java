@@ -74,6 +74,7 @@ public class Server extends Thread {
                 while (true) {
                     if (in.available() > 0) {
                         //handle incoming messages
+                        System.out.println("SERVER " + myId + ": beginning new loop iteration");
                         start = System.currentTimeMillis();
                         in.read(sizeB);
                         size = ByteBuffer.wrap(sizeB).getInt();
@@ -129,9 +130,11 @@ public class Server extends Thread {
     }
 
     public static byte[] getRandomPiece(BitSet receieved, BitSet mine){
-
+        if (receieved == null) return null;
         int randomNum;
-        receieved.xor(mine);
+        if(!mine.isEmpty() && !(receieved == null)){
+            receieved.xor(mine);
+        }
         //this additional check for interest is so we don't get a random infinite while loop.
         if(Server.checkForInterest(receieved, mine)) {
             while (true) {
@@ -149,7 +152,9 @@ public class Server extends Thread {
     public static boolean checkForInterest(BitSet received, BitSet mine) {
         System.out.println("cehecking for interest");
         boolean interested = false;
-        received.xor(mine);
+        if(!mine.isEmpty() && !(mine == null)){
+            received.xor(mine);
+        }
         for (int i = 0; i < received.length(); i++) {
             if (received.get(i) == true) {
                 interested = true;

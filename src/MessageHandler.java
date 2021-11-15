@@ -185,7 +185,7 @@ public class MessageHandler {
     }
 
     private static void printBitfield(byte[] bytes, String s) {
-        for (byte b = 0; b < MyProcess.bitField.size(); b++) {
+        for (byte b : bytes) {
             s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
         }
         System.out.println(s);
