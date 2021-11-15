@@ -90,28 +90,28 @@ public class MessageHandler {
     }
 
     //handle message
-    public static byte[] handleMessage(byte[] msg, int type, int clientId) {
+    public static byte[] handleMessage(byte[] msg, int type, int clientId, int myId, char s) {
         switch(type){
             case -1:
                 //break;
             case 0:
                 //choke
-                System.out.println("MES HANDLER: Handling type 0 message, choke");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 0 message, choke");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
                 break;
             case 1:
                 //unchoke
-                System.out.println("MES HANDLER: Handling type 1 message, unchoke");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 1 message, unchoke");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
                 break;
             case 2:
                 //interested
-                System.out.println("MES HANDLER: Handling type 2 message, interested");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 2 message, interested");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(true);
                 return null;
             case 3:
                 //not intrested
-                System.out.println("MES HANDLER: Handling type 3 message, not interested clientID: " + clientId);
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 3 message, not interested clientID: " + clientId);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(false);
                 return null;
             case 4:
@@ -120,7 +120,7 @@ public class MessageHandler {
                 //then return either an interested or not interested method after comparison.
                 int i = ByteBuffer.wrap(msg).getInt();
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(i);
-                System.out.println("MES HANDLER: Handling type 4 message, have");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 4 message, have");
                 if(MyProcess.bitField.get(i) == false){
                     //send interested
                     return createInterestedMessage();
@@ -131,16 +131,16 @@ public class MessageHandler {
                 }
             case 5:
                 //bitfield
-                System.out.println("MES HANDLER: Handling type 5 message, bitfield");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 5 message, bitfield");
                 if(msg.length == 0){
-                    System.out.println("bitfield is empty.");
+                    System.out.println("MES HANDLER " + s  + myId + ": bitfield is empty.");
                     BitSet b = new BitSet(MyProcess.bitField.size());
                     b.clear();
                     MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = b;
-                    System.out.println("empty- size: " +b.size());
+                    System.out.println("MES HANDLER " + s  + myId + ": empty- size: " +b.size());
                     return createUninterestedMessage();
                 }
-                printBitfield(msg, "printing bitfield given. ");
+                printBitfield(msg, "MES HANDLER " + s  + myId + ": printing bitfield given. ");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(msg);
                 if(checkForInterest(BitSet.valueOf(msg), MyProcess.bitField)){
                     return createInterestedMessage();
@@ -150,11 +150,11 @@ public class MessageHandler {
                 }
             case 6:
                 //request
-                System.out.println("MES HANDLER: Handling type 6 message, request");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 6 message, request");
                 return createPieceMessage(msg);
             case 7:
                 //piece
-                System.out.println("MES HANDLER: Handling type 7 message, piece");
+                System.out.println("MES HANDLER " + s  + myId + ": Handling type 7 message, piece");
                 byte[] pieceIndex = new byte[4];
                 for( i =0; i < 4; i++){
                     pieceIndex[i] = msg[i];
@@ -165,7 +165,7 @@ public class MessageHandler {
                 return createPieceMessage(pieceIndex);
             default:
                 // invalid
-                System.out.println("invalid type " + type);
+                System.out.println("MES HANDLER " + s  + myId + "invalid type " + type);
                 break;
         }
         return msg;

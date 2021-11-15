@@ -81,7 +81,7 @@ public class Server extends Thread {
                         type = in.read();
                         int sizes = in.read(msg);
                         cost = System.currentTimeMillis() - start;
-                        message = MessageHandler.handleMessage(msg, type, clientId);
+                        message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S');
                         //if the message handler returns an interested or uninterested message then send it.
                         if (message != null && (message[4] == 2 || message[4] == 3)) {
                             System.out.println("sending message");

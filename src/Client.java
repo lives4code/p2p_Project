@@ -82,8 +82,8 @@ public class Client extends Thread {
                     msg = new byte[size];
                     type = in.read();
                     in.read(msg);
-                    message = MessageHandler.handleMessage(msg, type, connectedToID);
-                    MessageHandler.handleMessage(msg, type, connectedToID);
+                    message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
+                    MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
                 }
                 //request Pieces!
                 for(Peer peer :MyProcess.peers){
