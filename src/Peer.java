@@ -14,25 +14,29 @@ public class Peer {
     ArrayList<byte[]> piecesNeeded;
     float downloadRate; // bytes per ms
     boolean choked;
+    boolean changeChoke;
 
     public Peer(int peerId, String hostName, int port, boolean hasFile) {
         this.peerId = peerId;
         this.hostName = hostName;
         this.port = port;
         this.hasFile = hasFile;
-        downloadRate = 100000;
+        this.downloadRate = 100000;
+        this.choked = true;
+        this.changeChoke = false;
+        this.isInterested = false;
     }
     public void setInterested(boolean bool){
         isInterested = bool;
     }
     public boolean getIsInterested(){
-        return isInterested;
+        return this.isInterested;
     }
     public void setChoked(boolean bool){
         choked = bool;
     }
     public boolean getIsChoked(){
-        return choked;
+        return this.choked;
     }
     public int getPeerId(){
         return this.peerId;
@@ -42,6 +46,19 @@ public class Peer {
     }
     public  int getPort(){
         return this.port;
+    }
+    public boolean getChangeChoke(){return this.changeChoke;};
+    public void setChangeChoke(boolean val){this.changeChoke = val;}
+    @Override
+    public String toString(){
+        String r = "peerId:" + peerId;
+        r+= "\nhostName:" + hostName;
+        r+= "\nisinterested:" + isInterested;
+        r+= "\nchoked:" + choked;
+        r+= "\nchangeChoke" + changeChoke;
+        r+= "\ndownloadRate" + downloadRate;
+        r+= "\nhasFile" + hasFile;
+        return r;
     }
 
 }

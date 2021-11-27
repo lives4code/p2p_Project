@@ -3,6 +3,7 @@ import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.System.in;
 
@@ -68,6 +69,7 @@ public class MyProcess {
         try {
             RandomAccessFile file = new RandomAccessFile("theFile", "r");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
+            System.out.println("attempting to read piece with index:" + index);
             int skip = (int)pieceSize * index;
             file.skipBytes(skip);
             if(index == numPieces){
@@ -89,6 +91,8 @@ public class MyProcess {
         catch (Exception e){
             System.out.println("error occured while reading piece");
         }
+        System.out.println("read successful");
+        System.out.println(ret);
         return ret;
     }
 
@@ -102,6 +106,7 @@ public class MyProcess {
                 new Client(myId, peer.getHostName(), peer.getPort(), peer.getPeerId()).start();
             }
         }
+        startDeterminingNeighbors();
 
         //System.out.println("debug 1");
         //new ClientSpawn().start();
@@ -227,6 +232,59 @@ public class MyProcess {
         hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
         hexDigits[1] = Character.forDigit((num & 0xF), 16);
         return new String(hexDigits);
+    }
+    // Moved to Server instead of MyProcess cuz it has to send messages
+    private void startDeterminingNeighbors(){
+        System.out.println("starting Determining neighbors. my id is:" + myId);
+        TimerTask redetermineNeighbors = new TimerTask() {
+            public void run() {
+                System.out.println("Redetermining neighbors...");
+                if (MyProcess.numPrefNeighbors > MyProcess.peers.size()) {
+                    //System.out.println("Error: Number of preferred neighbors cannot be greater than the number of peers.");
+                    //System.out.println("yes it can.");
+                    //cancel();
+                }
+                List<Integer> fastestIndices = new ArrayList<>();
+                // Find fastest indices
+                for (int k = 0; k < MyProcess.numPrefNeighbors; k++) {
+                    int minIndex = 0;
+                    float minRate = Integer.MAX_VALUE;
+                    for (int i = 0; i < MyProcess.peers.size(); i++) {
+                        if (MyProcess.peers.get(i).downloadRate < minRate && !fastestIndices.contains(i)) {
+                            minIndex = i;
+                            minRate = MyProcess.peers.get(i).downloadRate;
+                        }
+                    }
+                    fastestIndices.add(minIndex);
+                }
+                // Set new neighbors
+                for (int i = 0; i < MyProcess.peers.size(); i++) {
+                    // Unchoke new neighbor
+                    if (fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked() || (!fastestIndices.contains(i)) && MyProcess.peers.get(i).getIsChoked()) {
+                        MyProcess.peers.get(i).setChangeChoke(true);
+                        //byte[] mes = MessageHandler.createMsg(0, new byte[] {});
+                        //MessageHandler.sendMessage(out, mes);
+                    }
+                    /*
+                    // Choke old neighbor
+                    else if (!fastestIndices.contains(i) && !MyProcess.peers.get(i).getIsChoked()) {
+                        MyProcess.peers.get(i).setChoked(true);
+                        byte[] mes = MessageHandler.createMsg(1, new byte[] {});
+                        //MessageHandler.sendMessage(out, mes);
+                    }
+
+                     */
+                    // Anything else, no change
+                }
+
+                // Debug
+                for (int i = 0; i < MyProcess.peers.size(); i++) {
+                    System.out.println("Peer " + i + ": " + MyProcess.peers.get(i).downloadRate + ", " + MyProcess.peers.get(i).choked);
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(redetermineNeighbors, 0, MyProcess.unchokeInterval * 1000);
     }
 
 

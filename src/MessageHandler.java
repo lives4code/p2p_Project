@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Vector;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MessageHandler {
 
@@ -22,7 +24,6 @@ public class MessageHandler {
     public static byte[] createUninterestedMessage(){
         return createMsg(3, new byte[]{});
     }
-
     public static byte[] createPieceMessage(byte[] pieceIndex){
         return createMsg(7, MyProcess.readPiece(pieceIndex));
     }
@@ -32,7 +33,12 @@ public class MessageHandler {
     public static byte[] createRequestMessage(byte[] pieceIndex){
         return createMsg(6, pieceIndex);
     }
-
+    public static byte[] createChokeMessage(){
+        return createMsg(0, new byte[]{});
+    }
+    public static byte[] createunChokeMessage(){
+        return createMsg(1, new byte[]{});
+    }
     public static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
         String hexString = "P2PFILESHARINGPROJ";
@@ -73,6 +79,7 @@ public class MessageHandler {
     }
 
     public static byte[] createMsg(int mType, byte[] payload){
+
         byte[] bytes = new byte[5 + payload.length];
         byte[] messageLength = ByteBuffer.allocate(4).putInt(payload.length).array();
 
@@ -86,6 +93,13 @@ public class MessageHandler {
         for(int i = 0; i < payload.length; i++){
             bytes[i+5] = payload[i];
         }
+        /*
+        if(ByteBuffer.wrap(messageLength).getInt() > 0) {
+            int intpayload = ByteBuffer.wrap(payload).getInt();
+            System.out.println("payload is " + intpayload);
+        }
+
+         */
         return bytes;
     }
     public static void printMessageHandlerDebug(int type, int clientId, int myId, char s){
@@ -112,7 +126,7 @@ public class MessageHandler {
 
         }
         String clientOrServer;
-        if(s == 's'){
+        if(s == 'S' || s == 's'){
             clientOrServer = "server";
         }
         else {
@@ -130,12 +144,13 @@ public class MessageHandler {
                 //choke
                 printMessageHandlerDebug(0, clientId, myId, s);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
-                break;
+                return null;
             case 1:
                 //unchoke
                 printMessageHandlerDebug(1, clientId, myId, s);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
-                break;
+                System.out.println("MES " + "client:" + clientId + "ischoked:" + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
+                return null;
             case 2:
                 //interested
                 printMessageHandlerDebug(2, clientId, myId, s);
@@ -172,11 +187,8 @@ public class MessageHandler {
                     System.out.println("empty- size: " +b.size());
                     return createUninterestedMessage();
                 }
-                System.out.println("hitting the printbitfield message");
-                //printBitfield(msg, "printing bitfield given. ");
-                System.out.println("hitting the printbitfield message");
-
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField = BitSet.valueOf(msg);
+                System.out.println("about to check for interest mybitfield:" + MyProcess.bitField + "incoming bitfield" + BitSet.valueOf(msg));
                 if(checkForInterest(BitSet.valueOf(msg), MyProcess.bitField)){
                     return createInterestedMessage();
                 }
@@ -195,6 +207,7 @@ public class MessageHandler {
                     pieceIndex[i] = msg[i];
                 }
                 MyProcess.bitField.set(ByteBuffer.wrap(pieceIndex).getInt());
+                System.out.println("writing piece index:" + ByteBuffer.wrap(pieceIndex).getInt());
                 byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
                 MyProcess.writePiece(pieceIndex,arr);
                 return createPieceMessage(pieceIndex);
@@ -206,17 +219,74 @@ public class MessageHandler {
         return msg;
     }
 
+    public static BitSet getComplement(BitSet input){
+        BitSet ret = new BitSet(input.size());
+        if(input.isEmpty()){
+            for(int i =0; i < ret.size(); i++){
+                ret.set(i);
+            }
+        }
+        else {
+            for (int i = 0; i < input.length(); i++) {
+                ret.set(i, input.get(i));
+                ret.flip(i);
+            }
+        }
+
+        return ret;
+    }
+    public static BitSet getNeededPieces(BitSet received, BitSet mine){
+        if(mine == null || mine.isEmpty()){
+            //System.out.println("mine is null");
+            mine = new BitSet(received.length());
+        }
+        if(received == null || received.isEmpty()){
+            //System.out.println("received is null");
+            received = new BitSet(mine.length());
+        }
+        BitSet comp = getComplement(mine);
+        comp.and(received);
+        //System.out.println("pieces Needed:" + comp);
+        return comp;
+    }
     public static boolean checkForInterest(BitSet received, BitSet mine) {
-        System.out.println();
+        BitSet comp = getNeededPieces(received, mine);
+        //System.out.println("checking for interest" + comp);
         boolean interested = false;
-        received.xor(mine);
-        for (int i = 0; i < received.length(); i++) {
-            if (received.get(i) == true) {
+        for (int i = 0; i < comp.length(); i++) {
+            if (comp.get(i) == true) {
                 interested = true;
                 break;
             }
         }
         return interested;
+    }
+    public static int[] getIndecesOfInterest(BitSet input){
+        int size = 0;
+        for(int i = 0; i < input.size(); i++){
+            if(input.get(i)){
+                size++;
+            }
+        }
+        int[] ret = new int[size];
+        for (int i =0; i < input.size(); i++){
+            int index = 0;
+            if(input.get(i)){
+                ret[index] = i;
+                index++;
+            }
+        }
+        return ret;
+    }
+
+
+    public static byte[] getRandomPiece(BitSet received, BitSet mine){
+        int randomNum;
+        BitSet neededPieces = getNeededPieces(received, mine);
+        int[] neededPieceIndexes = getIndecesOfInterest(neededPieces);
+        randomNum = ThreadLocalRandom.current().nextInt(0, neededPieceIndexes.length + 1);
+        System.out.println("random piece index is:" + randomNum);
+        return ByteBuffer.allocate(4).putInt(randomNum).array();
     }
 
     private static void printBitfield(byte[] bytes, String s) {

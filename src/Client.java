@@ -55,7 +55,9 @@ public class Client extends Thread {
             //send bitfield
             //we could probably do this better.
             //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
-            if(!MyProcess.bitField.isEmpty()) {
+            boolean bitfieldSent = false;
+            if(!bitfieldSent) {
+                bitfieldSent = true;
                 s = "CLIENT " + myId + ": creating and sending bitField message: ";
                 for (byte b : MyProcess.bitField.toByteArray()) {
                     s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
@@ -67,13 +69,29 @@ public class Client extends Thread {
                 message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
                 MessageHandler.sendMessage(out, message);
                 System.out.println("CLIENT " + myId + ": sent bitField message");
+
             }
 
             //move these outside of the while loop so we don't reinitialize variables a bunch.
             byte[] msg;
             byte[] sizeB = new byte[4];
             int type = -1; // <- wut
+            int peerIndex = MyProcess.getPeerIndexById(connectedToID);
+
             while (true) {
+                //check if it needs to send a choke or unchoke message.
+                if(MyProcess.peers.get(peerIndex).getChangeChoke() == true){
+                    if(MyProcess.peers.get(peerIndex).getIsChoked()){
+                        message = MessageHandler.createunChokeMessage();
+                        //MyProcess.peers.get(peerIndex).setChoked(false);
+                    }
+                    else {
+                        message = MessageHandler.createChokeMessage();
+                        //MyProcess.peers.get(peerIndex).setChoked(true);
+                    }
+                    MessageHandler.sendMessage(out, message);
+                    MyProcess.peers.get(peerIndex).setChangeChoke(false);
+                }
                 //yeah this is copy and pasted code from server.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
                 if(in.available() > 0 ) {
@@ -86,18 +104,17 @@ public class Client extends Thread {
                     in.read(msg);
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
                 }
+                //I don't think we need this here I think we should use is interested and is choked to respond to request messages.
                 //request Pieces!
+
                 for(Peer peer :MyProcess.peers){
-                    //System.out.println("cheecking peer:" + peer.getPeerId() + " peer InterestdValue: " +  peer.getIsInterested()
-                    //        + " peer chokeVal:" + peer.getIsChoked());
                     if(!peer.getIsChoked()){
-                        if(peer.getIsInterested()){
-                            System.out.println("we have a peer that is interestedn and unchoked");
-                            msg = MessageHandler.createRequestMessage(Server.getRandomPiece(peer.bitField, MyProcess.bitField));
-                            MessageHandler.sendMessage(out, msg);
-                        }
+                        msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                        MessageHandler.sendMessage(out, msg);
                     }
                 }
+
+
             }
         } catch (ConnectException e) {
             //System.out.println(e.getLocalizedMessage());
