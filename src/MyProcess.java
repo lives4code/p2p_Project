@@ -238,17 +238,17 @@ public class MyProcess {
         TimerTask redetermineNeighbors = new TimerTask() {
             public void run() {
                 System.out.println("Redetermining neighbors...");
-                if (MyProcess.numPrefNeighbors > MyProcess.peers.size()) {
+                if (numPrefNeighbors > peers.size()) {
                     System.out.println("Error: Num preferred neighbors is greater than num of peers");
                     cancel();
                 }
                 List<Integer> fastestIndices = new ArrayList<>();
                 // Find fastest indices
-                for (int k = 0; k < MyProcess.numPrefNeighbors; k++) {
+                for (int k = 0; k < numPrefNeighbors; k++) {
                     int minIndex = 0;
                     double minRate = Double.MAX_VALUE;
-                    for (int i = 0; i < MyProcess.peers.size(); i++) {
-                        if (MyProcess.peers.get(i).downloadRate < minRate && !fastestIndices.contains(i)) {
+                    for (int i = 0; i < peers.size(); i++) {
+                        if (peers.get(i).downloadRate < minRate && !fastestIndices.contains(i) && peers.get(i).getIsInterested()) {
                             minIndex = i;
                             minRate = peers.get(i).downloadRate;
                         }
@@ -256,17 +256,17 @@ public class MyProcess {
                     fastestIndices.add(minIndex);
                 }
                 // Set new neighbors
-                for (int i = 0; i < MyProcess.peers.size(); i++) {
+                for (int i = 0; i < peers.size(); i++) {
                     // Unchoke new neighbor // Choke old neighbor
-                    if ((fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked())
-                            || (!fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked())) {
+                    if ((fastestIndices.contains(i) && peers.get(i).getIsChoked())
+                            || (!fastestIndices.contains(i) && !peers.get(i).getIsChoked())) {
                         peers.get(i).setChangeChoke(true);
                     }
                 }
 
                 // Debug
-                for (int i = 0; i < MyProcess.peers.size(); i++) {
-                    System.out.println("Peer " + i + ": " + MyProcess.peers.get(i).downloadRate + ", " + MyProcess.peers.get(i).choked);
+                for (int i = 0; i < peers.size(); i++) {
+                    System.out.println("Peer " + i + ": " + peers.get(i).downloadRate + ", " + peers.get(i).choked);
                 }
             }
         };
@@ -281,14 +281,14 @@ public class MyProcess {
                 // Randomly select optimistic neighbor
                 List<Integer> chokedIndices = new ArrayList<>();
                 for (int i = 0; i < peers.size(); i++) {
-                    if (peers.get(i).getIsChoked()) {
+                    if (peers.get(i).getIsChoked() && peers.get(i).getIsInterested()) {
                         chokedIndices.add(i);
                     }
                 }
                 Random rand = new Random();
                 int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
                 // Set new neighbors
-                for (int i = 0; i < MyProcess.peers.size(); i++) {
+                for (int i = 0; i < peers.size(); i++) {
                     // Unchoke optimistic
                     if (randomIndex == i) {
                         peers.get(i).setChangeChoke(true);
@@ -296,8 +296,8 @@ public class MyProcess {
                 }
 
                 // Debug
-                for (int i = 0; i < MyProcess.peers.size(); i++) {
-                    System.out.println("Peer " + i + ": " + MyProcess.peers.get(i).downloadRate + ", " + MyProcess.peers.get(i).choked);
+                for (int i = 0; i < peers.size(); i++) {
+                    System.out.println("Peer " + i + ": " + peers.get(i).downloadRate + ", " + peers.get(i).choked);
                 }
             }
         };
