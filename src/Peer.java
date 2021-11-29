@@ -12,7 +12,7 @@ public class Peer {
     boolean isInterested;
     BitSet bitField;
     ArrayList<byte[]> piecesNeeded;
-    float downloadRate; // bytes per ms
+    double downloadRate; // bytes per ms
     boolean choked;
     boolean changeChoke;
 
@@ -21,10 +21,10 @@ public class Peer {
         this.hostName = hostName;
         this.port = port;
         this.hasFile = hasFile;
-        this.downloadRate = 100000;
         this.choked = true;
         this.changeChoke = false;
         this.isInterested = false;
+        this.downloadRate = Double.MAX_VALUE;
     }
     public void setInterested(boolean bool){
         isInterested = bool;

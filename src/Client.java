@@ -3,8 +3,6 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Client extends Thread {
@@ -23,7 +21,6 @@ public class Client extends Thread {
 
     //debug
     private String s;
-
 
     public Client(int myId, String host, int port, int connectedToID) {
         this.myId = myId;
@@ -54,7 +51,6 @@ public class Client extends Thread {
 
             //send bitfield
             //we could probably do this better.
-            //System.out.println("CLIENT " + peerId + ": creating and sending bitField message");
             boolean bitfieldSent = false;
             if(!bitfieldSent) {
                 bitfieldSent = true;
@@ -62,10 +58,7 @@ public class Client extends Thread {
                 for (byte b : MyProcess.bitField.toByteArray()) {
                     s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
                 }
-
                 System.out.println(s);
-                //System.out.println("CLIENT " + peerId + " bitfield len" + MyProcess.bitField.toByteArray().length + " DEBUG: " + s);
-
                 message = MessageHandler.createMsg(5, MyProcess.bitField.toByteArray());
                 MessageHandler.sendMessage(out, message);
                 System.out.println("CLIENT " + myId + ": sent bitField message");
@@ -77,44 +70,38 @@ public class Client extends Thread {
             byte[] sizeB = new byte[4];
             int type = -1; // <- wut
             int peerIndex = MyProcess.getPeerIndexById(connectedToID);
+            long cost;
+            long start;
 
             while (true) {
                 //check if it needs to send a choke or unchoke message.
                 if(MyProcess.peers.get(peerIndex).getChangeChoke() == true){
                     if(MyProcess.peers.get(peerIndex).getIsChoked()){
                         message = MessageHandler.createunChokeMessage();
-                        //MyProcess.peers.get(peerIndex).setChoked(false);
                     }
                     else {
                         message = MessageHandler.createChokeMessage();
-                        //MyProcess.peers.get(peerIndex).setChoked(true);
                     }
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);
                 }
-                //yeah this is copy and pasted code from server.java but I can't use a method because
-                //passing an inputstream causes a nullpointer exception.
+
                 if(in.available() > 0 ) {
                     System.out.println("CLIENT " + myId + ": beginning new loop iteration");
+                    start = System.currentTimeMillis();
                     in.read(sizeB);
-                    //System.out.println("size byte array is: " + sizeB.toString());
                     int size = ByteBuffer.wrap(sizeB).getInt();
                     msg = new byte[size];
                     type = in.read();
                     in.read(msg);
+                    cost = System.currentTimeMillis() - start;
+                    // TODO Client should not be getting type 7; server should be; why is this happening?
+                    if (type == 7) { // Only record download rate if receiving a piece
+                        MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate = cost != 0 ? size / cost : size / 0.0000001; // bytes per ms
+                        System.out.println("CLIENT " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate);
+                    }
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
                 }
-                //I don't think we need this here I think we should use is interested and is choked to respond to request messages.
-                //request Pieces!
-
-                for(Peer peer :MyProcess.peers){
-                    if(!peer.getIsChoked()){
-                        msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
-                        MessageHandler.sendMessage(out, msg);
-                    }
-                }
-
-
             }
         } catch (ConnectException e) {
             //System.out.println(e.getLocalizedMessage());

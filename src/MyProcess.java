@@ -17,9 +17,7 @@ public class MyProcess {
     boolean hasFile;
     static BitSet bitField;
 
-    // Handle client, server, and peers
-    Client client;
-    Server server;
+    // Handle peers
     static List<Peer> peers;
 
     // Common variables
@@ -32,13 +30,15 @@ public class MyProcess {
     Piece[] pieceArray;
     //initialize piece array
 
-    static int test = 0;
-
     public MyProcess(int peerId) {
         myId = peerId;
         peers = new ArrayList<>();
         loadCommonConfig();
         loadPeerInfo();
+
+        // start timers
+        startDeterminingNeighbors();
+        startDeterminingOptimistic();
 
         //debug
         System.out.println("PEER: piece size: " + pieceSize);
@@ -59,7 +59,7 @@ public class MyProcess {
             file.close();
         }
         catch (Exception e){
-            System.out.println("error occured");
+            System.out.println("error occurred");
         }
     }
 
@@ -89,7 +89,7 @@ public class MyProcess {
             file.close();
         }
         catch (Exception e){
-            System.out.println("error occured while reading piece");
+            System.out.println("error occurred while reading piece");
         }
         System.out.println("read successful");
         System.out.println(ret);
@@ -97,7 +97,6 @@ public class MyProcess {
     }
 
     //does this function cause each client to start from each computer?
-
     public void start() throws Exception {
         System.out.println("PEER " + myId + ": Peer is running");
         // Start client
@@ -108,28 +107,18 @@ public class MyProcess {
         }
         startDeterminingNeighbors();
 
-        //System.out.println("debug 1");
-        //new ClientSpawn().start();
         // Start Server
         ServerSocket listener = new ServerSocket(port);
         int clientNum = 1;
         try {
             while (true) {
-                //System.out.println("debug 2");
                 new Server(listener.accept(), clientNum, myId).start();
                 System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                 clientNum++;
-                //System.out.println("debug ");
-
-                //System.out.println("debug " + test);
             }
         } finally {
             listener.close();
         }
-    }
-    public byte[] intToByte(int input){
-        byte[] bytes = ByteBuffer.allocate(4).putInt(input).array();
-        return bytes;
     }
 
     public void loadPeerInfo() {
@@ -233,48 +222,36 @@ public class MyProcess {
         hexDigits[1] = Character.forDigit((num & 0xF), 16);
         return new String(hexDigits);
     }
-    // Moved to Server instead of MyProcess cuz it has to send messages
+
     private void startDeterminingNeighbors(){
         System.out.println("starting Determining neighbors. my id is:" + myId);
         TimerTask redetermineNeighbors = new TimerTask() {
             public void run() {
                 System.out.println("Redetermining neighbors...");
                 if (MyProcess.numPrefNeighbors > MyProcess.peers.size()) {
-                    //System.out.println("Error: Number of preferred neighbors cannot be greater than the number of peers.");
-                    //System.out.println("yes it can.");
-                    //cancel();
+                    System.out.println("Error: Num preferred neighbors is greater than num of peers");
+                    cancel();
                 }
                 List<Integer> fastestIndices = new ArrayList<>();
                 // Find fastest indices
                 for (int k = 0; k < MyProcess.numPrefNeighbors; k++) {
                     int minIndex = 0;
-                    float minRate = Integer.MAX_VALUE;
+                    double minRate = Double.MAX_VALUE;
                     for (int i = 0; i < MyProcess.peers.size(); i++) {
                         if (MyProcess.peers.get(i).downloadRate < minRate && !fastestIndices.contains(i)) {
                             minIndex = i;
-                            minRate = MyProcess.peers.get(i).downloadRate;
+                            minRate = peers.get(i).downloadRate;
                         }
                     }
                     fastestIndices.add(minIndex);
                 }
                 // Set new neighbors
                 for (int i = 0; i < MyProcess.peers.size(); i++) {
-                    // Unchoke new neighbor
-                    if (fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked() || (!fastestIndices.contains(i)) && MyProcess.peers.get(i).getIsChoked()) {
-                        MyProcess.peers.get(i).setChangeChoke(true);
-                        //byte[] mes = MessageHandler.createMsg(0, new byte[] {});
-                        //MessageHandler.sendMessage(out, mes);
+                    // Unchoke new neighbor // Choke old neighbor
+                    if ((fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked())
+                            || (!fastestIndices.contains(i) && MyProcess.peers.get(i).getIsChoked())) {
+                        peers.get(i).setChangeChoke(true);
                     }
-                    /*
-                    // Choke old neighbor
-                    else if (!fastestIndices.contains(i) && !MyProcess.peers.get(i).getIsChoked()) {
-                        MyProcess.peers.get(i).setChoked(true);
-                        byte[] mes = MessageHandler.createMsg(1, new byte[] {});
-                        //MessageHandler.sendMessage(out, mes);
-                    }
-
-                     */
-                    // Anything else, no change
                 }
 
                 // Debug
@@ -284,8 +261,37 @@ public class MyProcess {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(redetermineNeighbors, 0, MyProcess.unchokeInterval * 1000);
+        timer.schedule(redetermineNeighbors, 0, unchokeInterval * 1000);
     }
 
+    private void startDeterminingOptimistic(){
+        TimerTask redetermineOptimistic = new TimerTask() {
+            public void run() {
+                System.out.println("Redetermining optimistic...");
+                // Randomly select optimistic neighbor
+                List<Integer> chokedIndices = new ArrayList<>();
+                for (int i = 0; i < peers.size(); i++) {
+                    if (peers.get(i).getIsChoked()) {
+                        chokedIndices.add(i);
+                    }
+                }
+                Random rand = new Random();
+                int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
+                // Set new neighbors
+                for (int i = 0; i < MyProcess.peers.size(); i++) {
+                    // Unchoke optimistic
+                    if (randomIndex == i) {
+                        peers.get(i).setChangeChoke(true);
+                    }
+                }
 
+                // Debug
+                for (int i = 0; i < MyProcess.peers.size(); i++) {
+                    System.out.println("Peer " + i + ": " + MyProcess.peers.get(i).downloadRate + ", " + MyProcess.peers.get(i).choked);
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(redetermineOptimistic, 0, optUnchokeInterval * 1000);
+    }
 }

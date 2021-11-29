@@ -1,10 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 //handler thread class. handlers are spawned from the listening
@@ -19,7 +16,6 @@ public class Server extends Thread {
     private DataOutputStream out;    //stream write to the socket
     private int myId;
     private int clientId;
-    Timer timer;
 
     //debug
     private String s;
@@ -39,9 +35,6 @@ public class Server extends Thread {
             out = new DataOutputStream(connection.getOutputStream());
             out.flush();
             in = new DataInputStream(connection.getInputStream());
-
-            // start timer
-            //startDeterminingNeighbors();
 
             try {
 
@@ -68,8 +61,7 @@ public class Server extends Thread {
                 long cost;
                 long start;
 
-                //System.out.println("SERVER " + myId + " DEBUG 1");
-                s = "SERVER " + myId + " recived msg: ";
+                s = "SERVER " + myId + " received msg: ";
                 //listener loop.
                 while (true) {
 
@@ -81,29 +73,27 @@ public class Server extends Thread {
                         size = ByteBuffer.wrap(sizeB).getInt();
                         msg = new byte[size];
                         type = in.read();
-                        int sizes = in.read(msg);
+                        in.read(msg);
                         cost = System.currentTimeMillis() - start;
+                        // TODO Currently server is never receiving type 7 messages
+                        if (type == 7) { // Only record download rate if receiving a piece
+                            MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = cost != 0 ? size / cost : size / 0.0000001; // bytes per ms
+                            System.out.println("SERVER " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate);
+                        }
                         message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S');
                         //if the message handler returns an interested or uninterested message then send it.
                         if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
                             System.out.println("sending message");
                             MessageHandler.sendMessage(out, message);
                         }
-                        //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = size / cost; // bytes per ms
 
                         //request Pieces!
-                        /*
                         for(Peer peer :MyProcess.peers){
                             if(!peer.getIsChoked()){
-                                if(peer.getIsInterested()){
-                                    System.out.println("we have a peer that is interestedn and unchoked");
-                                    msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
-                                    MessageHandler.sendMessage(out, msg);
-                                }
+                                msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                                MessageHandler.sendMessage(out, msg);
                             }
                         }
-
-                         */
                     }
                 }
 
@@ -131,8 +121,19 @@ public class Server extends Thread {
     }
 
 
-
-
-
+    public static boolean checkForInterest(BitSet received, BitSet mine) {
+        System.out.println("checking for interest");
+        boolean interested = false;
+        if(!mine.isEmpty() && !(mine == null)){
+            received.xor(mine);
+        }
+        for (int i = 0; i < received.length(); i++) {
+            if (received.get(i) == true) {
+                interested = true;
+                break;
+            }
+        }
+        return interested;
+    }
 }
 
