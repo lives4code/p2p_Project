@@ -83,7 +83,7 @@ public class Server extends Thread {
                         message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S');
                         //if the message handler returns an interested or uninterested message then send it.
                         if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
-                            System.out.println("sending message");
+                            System.out.println("sending message from server");
                             MessageHandler.sendMessage(out, message);
                         }
 

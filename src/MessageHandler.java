@@ -93,6 +93,12 @@ public class MessageHandler {
         for(int i = 0; i < payload.length; i++){
             bytes[i+5] = payload[i];
         }
+        if(mType == 7){
+            System.out.println("for piece message wrapped payload is: " + ByteBuffer.wrap(payload).getInt());
+        }
+        if(mType == 6){
+            System.out.println("for request message wrapped payload is: " + ByteBuffer.wrap(payload).getInt());
+        }
         /*
         if(ByteBuffer.wrap(messageLength).getInt() > 0) {
             int intpayload = ByteBuffer.wrap(payload).getInt();
@@ -285,8 +291,9 @@ public class MessageHandler {
         BitSet neededPieces = getNeededPieces(received, mine);
         int[] neededPieceIndexes = getIndecesOfInterest(neededPieces);
         randomNum = ThreadLocalRandom.current().nextInt(0, neededPieceIndexes.length + 1);
-        System.out.println("random piece index is:" + randomNum);
+        //System.out.println("random piece index is:" + randomNum);
         return ByteBuffer.allocate(4).putInt(randomNum).array();
+        //return ByteBuffer.allocate(4).putInt(0).array();
     }
 
     private static void printBitfield(byte[] bytes, String s) {

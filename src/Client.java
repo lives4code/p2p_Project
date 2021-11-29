@@ -85,7 +85,8 @@ public class Client extends Thread {
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);
                 }
-
+                //yeah this is copy and pasted code from server.java but I can't use a method because
+                //passing an inputstream causes a nullpointer exception.
                 if(in.available() > 0 ) {
                     System.out.println("CLIENT " + myId + ": beginning new loop iteration");
                     start = System.currentTimeMillis();

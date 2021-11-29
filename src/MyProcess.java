@@ -50,6 +50,7 @@ public class MyProcess {
     //talk to nick make sure this is right.
     public static void writePiece(byte[] pieceIndex, byte[] piece){
         try {
+
             RandomAccessFile file = new RandomAccessFile("theFile", "w");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
@@ -57,6 +58,9 @@ public class MyProcess {
             file.write(piece);
             bitField.flip(index);
             file.close();
+            String pieceRead = "";
+            System.out.println("write successful index:" + ByteBuffer.wrap(pieceIndex).getInt()  + " piece:" + pieceRead);
+
         }
         catch (Exception e){
             System.out.println("error occurred");
@@ -64,14 +68,16 @@ public class MyProcess {
     }
 
     public static byte[] readPiece(byte[] pieceIndex ){
+        System.out.println("piecesize" + pieceSize);
         byte[] ret = new byte[(int)pieceSize];
         int numPieces = (int) Math.ceil(fileSize/pieceSize);
         try {
-            RandomAccessFile file = new RandomAccessFile("theFile", "r");
+            RandomAccessFile file = new RandomAccessFile("../Files_From_Prof/project_config_file_small/project_config_file_small/1001/thefile", "r");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             System.out.println("attempting to read piece with index:" + index);
             int skip = (int)pieceSize * index;
-            file.skipBytes(skip);
+            file.seek(skip);
+            //file.skipBytes(skip);
             if(index == numPieces){
                 int lastPieces = (int) (fileSize - (Math.floor(fileSize/pieceSize) * pieceSize));
                 byte[] lastPiece = new byte[lastPieces];
@@ -91,8 +97,12 @@ public class MyProcess {
         catch (Exception e){
             System.out.println("error occurred while reading piece");
         }
-        System.out.println("read successful");
-        System.out.println(ret);
+        //System.out.println("read successful");
+        String pieceRead = "";
+        for(int i =0; i < ret.length; i++){
+            pieceRead += (char)ret[i] + " ";
+        }
+        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()  + "size:" + ret.length + " piece:" + pieceRead);
         return ret;
     }
 
