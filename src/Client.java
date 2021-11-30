@@ -102,6 +102,10 @@ public class Client extends Thread {
                         System.out.println("CLIENT " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate);
                     }
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
+                    if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
+                        System.out.println("sending message from server");
+                        MessageHandler.sendMessage(out, message);
+                    }
                 }
             }
         } catch (ConnectException e) {

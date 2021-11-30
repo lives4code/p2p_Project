@@ -27,7 +27,6 @@ public class MyProcess {
     static String fileName;
     static long fileSize;
     static long pieceSize;
-    Piece[] pieceArray;
     //initialize piece array
 
     public MyProcess(int peerId) {
@@ -50,59 +49,70 @@ public class MyProcess {
     //talk to nick make sure this is right.
     public static void writePiece(byte[] pieceIndex, byte[] piece){
         try {
-
-            RandomAccessFile file = new RandomAccessFile("theFile", "w");
+            RandomAccessFile file = new RandomAccessFile("theFile", "rw");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
+            System.out.println("write index is:" + index);
             int skip = (int)pieceSize * index;
-            file.skipBytes(skip);
+            file.seek(skip);
             file.write(piece);
-            bitField.flip(index);
+            bitField.set(index);
             file.close();
             String pieceRead = "";
-            System.out.println("write successful index:" + ByteBuffer.wrap(pieceIndex).getInt()  + " piece:" + pieceRead);
+            System.out.println("write successful index:" + index  + " piece:" + pieceRead);
 
         }
         catch (Exception e){
+            e.printStackTrace();
             System.out.println("error occurred");
         }
     }
 
     public static byte[] readPiece(byte[] pieceIndex ){
-        System.out.println("piecesize" + pieceSize);
-        byte[] ret = new byte[(int)pieceSize];
+        byte[] piece = new byte[(int) pieceSize];
         int numPieces = (int) Math.ceil(fileSize/pieceSize);
-        try {
+        byte[] pieceInd = new byte[4];
+        byte[] ret = new byte[(int)pieceSize + 4];
+        for(int i = 0; i < 4; i++){
+            pieceInd[i] = pieceIndex[i];
+        }
+        try{
             RandomAccessFile file = new RandomAccessFile("../Files_From_Prof/project_config_file_small/project_config_file_small/1001/thefile", "r");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             System.out.println("attempting to read piece with index:" + index);
             int skip = (int)pieceSize * index;
             file.seek(skip);
-            //file.skipBytes(skip);
             if(index == numPieces){
                 int lastPieces = (int) (fileSize - (Math.floor(fileSize/pieceSize) * pieceSize));
                 byte[] lastPiece = new byte[lastPieces];
                 file.read(lastPiece);
                 for(int i = 0; i < lastPieces; i++){
-                    ret[i] = lastPiece[i];
+                    piece[i] = lastPiece[i];
                 }
                 for(int i = lastPieces; i < (int) pieceSize; i++){
-                    ret[i] = 0;
+                    piece[i] = 0;
                 }
             }
             else {
-                file.read(ret);
+                file.read(piece);
             }
             file.close();
         }
         catch (Exception e){
             System.out.println("error occurred while reading piece");
         }
+        for(int i = 0; i < 4; i++){
+            ret[i] = pieceInd[i];
+        }
+        for(int i =4; i < ret.length; i++){
+            ret[i] = piece[i - 4];
+        }
         //System.out.println("read successful");
         String pieceRead = "";
+
         for(int i =0; i < ret.length; i++){
-            pieceRead += (char)ret[i] + " ";
+            pieceRead += (char)ret[i] + "";
         }
-        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()  + "size:" + ret.length + " piece:" + pieceRead);
+        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()  + "size:" + ret.length + "pieceInd " + ByteBuffer.wrap(pieceInd).getInt());
         return ret;
     }
 

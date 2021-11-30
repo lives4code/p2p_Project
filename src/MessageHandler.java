@@ -25,13 +25,26 @@ public class MessageHandler {
         return createMsg(3, new byte[]{});
     }
     public static byte[] createPieceMessage(byte[] pieceIndex){
-        return createMsg(7, MyProcess.readPiece(pieceIndex));
+        byte[] payload = createMsg(7, MyProcess.readPiece(pieceIndex));
+        byte[] index = new byte[4];
+        for(int i = 0; i < 4; i++){
+            index[i] = payload[i + 5];
+        }
+        System.out.println("for piece message index is:" + ByteBuffer.wrap(index).getInt());
+        return payload;
     }
     public static byte[] createHaveMessage(byte[] pieceIndex){
         return createMsg(4, pieceIndex);
     }
     public static byte[] createRequestMessage(byte[] pieceIndex){
-        return createMsg(6, pieceIndex);
+        byte[] payload = createMsg(6, pieceIndex);
+        byte[] index = new byte[4];
+        for(int i = 0; i < index.length; i++){
+            index[i] = payload[i + 5];
+        }
+        System.out.println("for request message wrapped payload is: " + ByteBuffer.wrap(index).getInt());
+
+        return payload;
     }
     public static byte[] createChokeMessage(){
         return createMsg(0, new byte[]{});
@@ -79,10 +92,8 @@ public class MessageHandler {
     }
 
     public static byte[] createMsg(int mType, byte[] payload){
-
         byte[] bytes = new byte[5 + payload.length];
         byte[] messageLength = ByteBuffer.allocate(4).putInt(payload.length).array();
-
         //message length
         for(int i = 0; i < 4; i++){
             bytes[i] = messageLength[i];
@@ -93,19 +104,6 @@ public class MessageHandler {
         for(int i = 0; i < payload.length; i++){
             bytes[i+5] = payload[i];
         }
-        if(mType == 7){
-            System.out.println("for piece message wrapped payload is: " + ByteBuffer.wrap(payload).getInt());
-        }
-        if(mType == 6){
-            System.out.println("for request message wrapped payload is: " + ByteBuffer.wrap(payload).getInt());
-        }
-        /*
-        if(ByteBuffer.wrap(messageLength).getInt() > 0) {
-            int intpayload = ByteBuffer.wrap(payload).getInt();
-            System.out.println("payload is " + intpayload);
-        }
-
-         */
         return bytes;
     }
     public static void printMessageHandlerDebug(int type, int clientId, int myId, char s){
@@ -171,10 +169,10 @@ public class MessageHandler {
                 //have
                 //first update the bitfield to reflect the new piece.
                 //then return either an interested or not interested method after comparison.
-                int i = ByteBuffer.wrap(msg).getInt();
-                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(i);
+                int integer = ByteBuffer.wrap(msg).getInt();
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(integer);
                 printMessageHandlerDebug(4, clientId, myId, s);
-                if(MyProcess.bitField.get(i) == false){
+                if(MyProcess.bitField.get(integer) == false){
                     //send interested
                     return createInterestedMessage();
                 }
@@ -208,15 +206,21 @@ public class MessageHandler {
             case 7:
                 //piece
                 printMessageHandlerDebug(7, clientId, myId, s);
-                byte[] pieceIndex = new byte[4];
-                for( i =0; i < 4; i++){
-                    pieceIndex[i] = msg[i];
+                byte[] pieceIndexArr = new byte[4];
+                for( int i =0; i < 4; i++){
+                    pieceIndexArr[i] = msg[i];
                 }
-                MyProcess.bitField.set(ByteBuffer.wrap(pieceIndex).getInt());
-                System.out.println("writing piece index:" + ByteBuffer.wrap(pieceIndex).getInt());
+                int pieceIndex = ByteBuffer.wrap(pieceIndexArr).getInt();
+                MyProcess.bitField.set(pieceIndex);
+                System.out.println("writing piece index:" + pieceIndex);
                 byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
-                MyProcess.writePiece(pieceIndex,arr);
-                return createPieceMessage(pieceIndex);
+                String st = "";
+                for(int j =0; j < arr.length; j++){
+                    st+= (char)arr[j];
+                }
+                //System.out.println("with payload" + st);
+                MyProcess.writePiece(pieceIndexArr,arr);
+                return createHaveMessage(pieceIndexArr);
             default:
                 // invalid
                 System.out.println("invalid type " + type);
