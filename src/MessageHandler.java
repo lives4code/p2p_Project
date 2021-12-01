@@ -212,7 +212,6 @@ public class MessageHandler {
                 }
                 int pieceIndex = ByteBuffer.wrap(pieceIndexArr).getInt();
                 MyProcess.bitField.set(pieceIndex);
-                System.out.println("writing piece index:" + pieceIndex);
                 byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
                 String st = "";
                 for(int j =0; j < arr.length; j++){
@@ -230,6 +229,7 @@ public class MessageHandler {
     }
 
     public static BitSet getComplement(BitSet input){
+        //System.out.println("complement input is " + input);
         BitSet ret = new BitSet(input.size());
         if(input.isEmpty()){
             for(int i =0; i < ret.size(); i++){
@@ -237,11 +237,12 @@ public class MessageHandler {
             }
         }
         else {
-            for (int i = 0; i < input.length(); i++) {
+            for (int i = 0; i < input.size(); i++) {
                 ret.set(i, input.get(i));
                 ret.flip(i);
             }
         }
+        //System.out.println("complement output is" + ret);
 
         return ret;
     }
@@ -260,6 +261,7 @@ public class MessageHandler {
         return comp;
     }
     public static boolean checkForInterest(BitSet received, BitSet mine) {
+        //System.out.println("about to check for interest mybitfield:" + mine + "incoming bitfield" + received);
         BitSet comp = getNeededPieces(received, mine);
         //System.out.println("checking for interest" + comp);
         boolean interested = false;
@@ -272,6 +274,8 @@ public class MessageHandler {
         return interested;
     }
     public static int[] getIndecesOfInterest(BitSet input){
+        //System.out.println("indeces of interest inptut is " + input);
+        int index = 0;
         int size = 0;
         for(int i = 0; i < input.size(); i++){
             if(input.get(i)){
@@ -280,23 +284,43 @@ public class MessageHandler {
         }
         int[] ret = new int[size];
         for (int i =0; i < input.size(); i++){
-            int index = 0;
             if(input.get(i)){
+                //System.out.println("ret[index]: " + index + "=:" + i);
                 ret[index] = i;
                 index++;
             }
         }
+        String s = "";
+        for (int i =0; i < size; i++){
+            s+= " " + String.valueOf(ret[i]);
+        }
+        //System.out.println("indeseces of interest output is " + s);
+
         return ret;
     }
 
 
     public static byte[] getRandomPiece(BitSet received, BitSet mine){
         int randomNum;
+        //System.out.println("get random piece input recieved:"  + received);
+        //System.out.println("get random piece input mine:"  + received);
         BitSet neededPieces = getNeededPieces(received, mine);
+        System.out.println("get random piece needed pieces"  + neededPieces);
         int[] neededPieceIndexes = getIndecesOfInterest(neededPieces);
-        randomNum = ThreadLocalRandom.current().nextInt(0, neededPieceIndexes.length + 1);
+        String s = "";
+        for(int i =0; i < neededPieceIndexes.length; i++){
+            s+= " " + String.valueOf(neededPieceIndexes[i]);
+        }
+        //System.out.println("get random needed piece indexes size:" + neededPieceIndexes.length + "indexes"  + s);
+
+        if(neededPieceIndexes.length == 0){
+            System.out.println("don't need anymore pieces.");
+        }
+        randomNum = ThreadLocalRandom.current().nextInt(0, neededPieceIndexes.length);
         //System.out.println("random piece index is:" + randomNum);
-        return ByteBuffer.allocate(4).putInt(randomNum).array();
+        System.out.println("get random piece  returns"  + neededPieceIndexes[randomNum]);
+
+        return ByteBuffer.allocate(4).putInt(neededPieceIndexes[randomNum]).array();
         //return ByteBuffer.allocate(4).putInt(0).array();
     }
 
@@ -305,6 +329,14 @@ public class MessageHandler {
             s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
         }
         System.out.println(s);
+    }
+    public static boolean isFull(BitSet input){
+        for(int i = 0; i <input.size(); i++){
+            if(input.get(i) == false){
+                return false;
+            }
+        }
+        return true;
     }
 }
 

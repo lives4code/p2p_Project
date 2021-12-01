@@ -90,8 +90,13 @@ public class Server extends Thread {
                         //request Pieces!
                         for(Peer peer :MyProcess.peers){
                             if(!peer.getIsChoked()){
-                                msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
-                                MessageHandler.sendMessage(out, msg);
+                                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
+                                    msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                                    MessageHandler.sendMessage(out, msg);
+                                }
+                                else {
+                                    System.out.println("download complete");
+                                }
                             }
                         }
                     }
@@ -120,20 +125,5 @@ public class Server extends Thread {
         }
     }
 
-
-    public static boolean checkForInterest(BitSet received, BitSet mine) {
-        System.out.println("checking for interest");
-        boolean interested = false;
-        if(!mine.isEmpty() && !(mine == null)){
-            received.xor(mine);
-        }
-        for (int i = 0; i < received.length(); i++) {
-            if (received.get(i) == true) {
-                interested = true;
-                break;
-            }
-        }
-        return interested;
-    }
 }
 

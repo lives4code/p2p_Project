@@ -9,7 +9,8 @@ import static java.lang.System.in;
 
 public class MyProcess {
     // From Peer Info Cfg
-    private int myId;
+    private static int myId;
+    private static String filename;
     // put your ip and port no
     private String myHostName;
     int port;
@@ -31,6 +32,7 @@ public class MyProcess {
 
     public MyProcess(int peerId) {
         myId = peerId;
+        filename = "/home/jacob/IdeaProjects/p2p_Project/Files_From_Prof/project_config_file_small/project_config_file_small/" + String.valueOf(myId) + "/thefile";
         peers = new ArrayList<>();
         loadCommonConfig();
         loadPeerInfo();
@@ -49,15 +51,19 @@ public class MyProcess {
     //talk to nick make sure this is right.
     public static void writePiece(byte[] pieceIndex, byte[] piece){
         try {
-            RandomAccessFile file = new RandomAccessFile("theFile", "rw");
+            String pieceRead = "";
+            for(int i = -0; i< piece.length; i++){
+                pieceRead += " " + String.valueOf(piece[i]);
+            }
+            System.out.println("filename:" + filename);
+            RandomAccessFile file = new RandomAccessFile(fileName, "rw");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
-            System.out.println("write index is:" + index);
             int skip = (int)pieceSize * index;
             file.seek(skip);
             file.write(piece);
             bitField.set(index);
+            System.out.println("bitfield is now" + bitField);
             file.close();
-            String pieceRead = "";
             System.out.println("write successful index:" + index  + " piece:" + pieceRead);
 
         }
@@ -68,6 +74,7 @@ public class MyProcess {
     }
 
     public static byte[] readPiece(byte[] pieceIndex ){
+        System.out.println("filename:" + filename);
         byte[] piece = new byte[(int) pieceSize];
         int numPieces = (int) Math.ceil(fileSize/pieceSize);
         byte[] pieceInd = new byte[4];
@@ -76,9 +83,8 @@ public class MyProcess {
             pieceInd[i] = pieceIndex[i];
         }
         try{
-            RandomAccessFile file = new RandomAccessFile("../Files_From_Prof/project_config_file_small/project_config_file_small/1001/thefile", "r");
+            RandomAccessFile file = new RandomAccessFile(fileName, "r");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
-            System.out.println("attempting to read piece with index:" + index);
             int skip = (int)pieceSize * index;
             file.seek(skip);
             if(index == numPieces){
@@ -110,9 +116,10 @@ public class MyProcess {
         String pieceRead = "";
 
         for(int i =0; i < ret.length; i++){
-            pieceRead += (char)ret[i] + "";
+            pieceRead += String.valueOf(ret[i]) + "";
         }
-        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()  + "size:" + ret.length + "pieceInd " + ByteBuffer.wrap(pieceInd).getInt());
+        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()
+                + "size:" + ret.length +  "piece " + pieceRead);
         return ret;
     }
 
@@ -162,13 +169,13 @@ public class MyProcess {
             System.out.println("empty peers are initialized");
             //bitfield is initialized to false by default if the file is present set all the values to true.
             bitField = new BitSet(numPieces);
-            if(hasFile){
+            if(this.hasFile){
                 for(int i = 0; i < bitField.size(); i++){
                         bitField.set(i);
                 }
             }
             if(this.hasFile == false){
-                File theFile = new File("theFile");
+                File theFile = new File(filename);
                 if (theFile.createNewFile()) {
                     System.out.println("File created: " + theFile.getName());
                 } else {
