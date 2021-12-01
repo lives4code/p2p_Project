@@ -10,7 +10,6 @@ import static java.lang.System.in;
 public class MyProcess {
     // From Peer Info Cfg
     private static int myId;
-    private static String filename;
     // put your ip and port no
     private String myHostName;
     int port;
@@ -25,14 +24,14 @@ public class MyProcess {
     static int numPrefNeighbors;
     static int unchokeInterval;
     static int optUnchokeInterval;
-    static String fileName;
+    static String filename;
     static long fileSize;
     static long pieceSize;
     //initialize piece array
 
     public MyProcess(int peerId) {
         myId = peerId;
-        filename = "/home/jacob/IdeaProjects/p2p_Project/Files_From_Prof/project_config_file_small/project_config_file_small/" + String.valueOf(myId) + "/thefile";
+        filename = "../Files_From_Prof/project_config_file_small/project_config_file_small/" + String.valueOf(myId) + "/";
         peers = new ArrayList<>();
         loadCommonConfig();
         loadPeerInfo();
@@ -56,7 +55,7 @@ public class MyProcess {
                 pieceRead += " " + String.valueOf(piece[i]);
             }
             System.out.println("filename:" + filename);
-            RandomAccessFile file = new RandomAccessFile(fileName, "rw");
+            RandomAccessFile file = new RandomAccessFile(filename, "rw");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
             file.seek(skip);
@@ -83,7 +82,7 @@ public class MyProcess {
             pieceInd[i] = pieceIndex[i];
         }
         try{
-            RandomAccessFile file = new RandomAccessFile(fileName, "r");
+            RandomAccessFile file = new RandomAccessFile(filename, "r");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
             file.seek(skip);
@@ -218,7 +217,7 @@ public class MyProcess {
                 optUnchokeInterval = Integer.valueOf(fileReader.next());
                 // File Name
                 fileReader.next();
-                fileName = fileReader.next();
+                filename += fileReader.next();
                 // File Size
                 fileReader.next();
                 fileSize = Long.valueOf(fileReader.next());
