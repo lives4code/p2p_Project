@@ -102,6 +102,12 @@ public class Client extends Thread {
                         System.out.println("CLIENT " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate);
                     }
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
+                    if (type == 8){
+                        // stop thread
+                        System.out.println("CLIENT " + myId + ": " + "download complete");
+                        System.out.println("CLIENT " + myId + ": " + "Disconnect with Server");
+                        return;
+                    }
                     if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
                         System.out.println("sending message from server");
                         MessageHandler.sendMessage(out, message);
@@ -114,8 +120,10 @@ public class Client extends Thread {
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
+            System.out.println("ERROR1\n");
             ioException.printStackTrace();
         } catch (InterruptedException e) {
+            System.out.println("ERROR2\n");
             e.printStackTrace();
         } finally {
             //Close connections
@@ -128,6 +136,7 @@ public class Client extends Thread {
                 }
                 requestSocket.close();
             } catch (IOException ioException) {
+                System.out.println("ERROR3\n");
                 ioException.printStackTrace();
             }
         }

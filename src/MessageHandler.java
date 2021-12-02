@@ -220,6 +220,10 @@ public class MessageHandler {
                 //System.out.println("with payload" + st);
                 MyProcess.writePiece(pieceIndexArr,arr);
                 return createHaveMessage(pieceIndexArr);
+            case 8:
+                // server complete tell client to stop
+                System.out.println("CLIENT " + myId + ": received kill request");
+                return msg;
             default:
                 // invalid
                 System.out.println("invalid type " + type);

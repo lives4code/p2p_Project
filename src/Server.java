@@ -63,6 +63,7 @@ public class Server extends Thread {
 
                 s = "SERVER " + myId + " received msg: ";
                 //listener loop.
+
                 while (true) {
 
                     if (in.available() > 0) {
@@ -95,7 +96,16 @@ public class Server extends Thread {
                                     MessageHandler.sendMessage(out, msg);
                                 }
                                 else {
-                                    System.out.println("download complete");
+                                    // tell client that we are done
+                                    MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
+
+                                    System.out.println("SERVER " + myId + ": " + "download complete");
+                                    System.out.println("SERVER " + myId + ": " + "Disconnect with Client " + clientId);
+                                    in.close();
+                                    out.close();
+                                    connection.close();
+                                    System.out.println("SERVER " + myId + ": STOP");
+                                    return;
                                 }
                             }
                         }
