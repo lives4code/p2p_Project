@@ -60,7 +60,7 @@ public class MyProcess {
             for(int i = -0; i< piece.length; i++){
                 pieceRead += " " + String.valueOf(piece[i]);
             }
-            System.out.println("filename:" + filename);
+            //System.out.println("filename:" + filename);
             RandomAccessFile file = new RandomAccessFile(filename, "rw");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
@@ -69,7 +69,7 @@ public class MyProcess {
             bitField.set(index);
             System.out.println("bitfield is now" + bitField);
             file.close();
-            System.out.println("write successful index:" + index  + " piece:" + pieceRead);
+            //System.out.println("write successful index:" + index  + " piece:" + pieceRead);
 
         }
         catch (Exception e){
@@ -79,7 +79,7 @@ public class MyProcess {
     }
 
     public static byte[] readPiece(byte[] pieceIndex ){
-        System.out.println("filename:" + filename);
+        //System.out.println("filename:" + filename);
         byte[] piece = new byte[(int) pieceSize];
         int numPieces = (int) Math.ceil(fileSize/pieceSize);
         byte[] pieceInd = new byte[4];
@@ -123,8 +123,8 @@ public class MyProcess {
         for(int i =0; i < ret.length; i++){
             pieceRead += String.valueOf(ret[i]) + "";
         }
-        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()
-                + "size:" + ret.length +  "piece " + pieceRead);
+        //System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()
+        //        + "size:" + ret.length +  "piece " + pieceRead);
         return ret;
     }
 

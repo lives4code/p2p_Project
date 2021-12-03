@@ -83,17 +83,18 @@ public class Server extends Thread {
                         }
                         message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S');
                         //if the message handler returns an interested or uninterested message then send it.
-                        if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
+                        if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7 || message[4] == 6)) {
                             System.out.println("sending message from server");
                             MessageHandler.sendMessage(out, message);
                         }
 
                         //request Pieces!
+                        //this no longer requests pieces we should consider removing it.
                         for(Peer peer :MyProcess.peers){
                             if(!peer.getIsChoked()){
                                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
-                                    msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
-                                    MessageHandler.sendMessage(out, msg);
+                                    //msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                                    //MessageHandler.sendMessage(out, msg);
                                 } else {
                                     // tell client that we are done
                                     MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
