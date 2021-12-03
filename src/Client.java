@@ -3,6 +3,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.BitSet;
 import java.util.concurrent.TimeUnit;
 
 public class Client extends Thread {
@@ -13,11 +14,13 @@ public class Client extends Thread {
     private String MESSAGE;                //capitalized message read from the server
     private DataInputStream in;    //stream read from the socket
     private DataOutputStream out;    //stream write to the socket
+    private BitSet clientBitfield;
 
     private int port = 8001;
     private String host;
     private int myId;
     private int connectedToID;
+    private int[] haveMessages = null;
 
     //debug
     private String s;
@@ -27,6 +30,31 @@ public class Client extends Thread {
         this.host = host;
         this.port = port;
         this.connectedToID = connectedToID;
+        this.clientBitfield = (BitSet)MyProcess.bitField.clone();
+    }
+
+    private static int[] getDifference(BitSet myProcess, BitSet client){
+        int size = 0;
+        if(myProcess != null && myProcess.size() !=0 && client != null){
+            for(int i = 0; i < myProcess.size(); i++){
+                if(myProcess.get(i) != client.get(i)){
+                    size++;
+                }
+            }
+            if(size != 0) {
+                System.out.println("get difference size is" + size);
+            }
+            int[] ret = new int[size];
+            int index = 0;
+            for (int i = 0; i < myProcess.size(); i++){
+                if(myProcess.get(i) != client.get(i)){
+                    System.out.println("adding at index" + index);
+                    ret[index] = i;
+                    index++;
+                }
+            }
+        }
+        return null;
     }
 
     public void run() {
@@ -88,6 +116,23 @@ public class Client extends Thread {
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);
                 }
+                //send out the have messages
+                BitSet neededPieces = MessageHandler.getNeededPieces(MyProcess.bitField, clientBitfield);
+                if(!neededPieces.isEmpty()) {
+                    System.out.println("get have message pieces" + neededPieces);
+                    int[] neededPieceIndexes = MessageHandler.getIndecesOfInterest(neededPieces);
+                    clientBitfield = (BitSet) MyProcess.bitField.clone();
+                    int temp;
+                    byte[] tmp = new byte[4];
+                    for (int i = 0; i < neededPieceIndexes.length; i++) {
+                        temp = neededPieceIndexes[i];
+                        ByteBuffer bb = ByteBuffer.allocate(4);
+                        bb.putInt(temp);
+                        msg = MessageHandler.createHaveMessage(bb.array());
+                        MessageHandler.sendMessage(out, msg);
+                    }
+                }
+
                 //yeah this is copy and pasted code from server.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
                 if(in.available() > 0 ) {

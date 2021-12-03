@@ -141,6 +141,7 @@ public class MessageHandler {
 
     //handle message
     public static byte[] handleMessage(byte[] msg, int type, int clientId, int myId, char s) {
+        Peer peer = MyProcess.peers.get(MyProcess.getPeerIndexById(clientId));
         switch(type){
             case -1:
                 //break;
@@ -153,7 +154,10 @@ public class MessageHandler {
                 //unchoke
                 printMessageHandlerDebug(1, clientId, myId, s);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
-                System.out.println("MES HANDLER client: " + clientId + " ischoked: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
+                System.out.println("MES " + "client:" + clientId + "ischoked:" + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
+                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
+                    return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                }
                 return null;
             case 2:
                 //interested
@@ -219,7 +223,11 @@ public class MessageHandler {
                 }
                 //System.out.println("with payload" + st);
                 MyProcess.writePiece(pieceIndexArr,arr);
-                return createHaveMessage(pieceIndexArr);
+                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
+                    return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                }
+                //return createRequestMessage(pieceIndexArr);
+                return null;
             case 8:
                 // server complete tell client to stop
                 System.out.println("CLIENT " + myId + ": received kill request");
