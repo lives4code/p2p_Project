@@ -94,17 +94,21 @@ public class Server extends Thread {
                                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                                     msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                                     MessageHandler.sendMessage(out, msg);
-                                }
-                                else {
+                                } else {
                                     // tell client that we are done
                                     MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
 
-                                    System.out.println("SERVER " + myId + ": " + "download complete");
-                                    System.out.println("SERVER " + myId + ": " + "Disconnect with Client " + clientId);
+                                    // tell my process we are done
+                                    MyProcess.checkDone = true;
+                                    MyProcess.done = true;
+
+                                    System.out.println("SERVER END " + myId + ": connected to " + clientId + " download complete");
+                                    System.out.println("SERVER END " + myId + ": Disconnect with Client: " + clientId);
                                     in.close();
                                     out.close();
                                     connection.close();
-                                    System.out.println("SERVER " + myId + ": STOP");
+                                    System.out.println("SERVER END " + myId + ": TERMINATED");
+                                    //System.exit(1);
                                     return;
                                 }
                             }

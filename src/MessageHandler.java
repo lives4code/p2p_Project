@@ -136,7 +136,7 @@ public class MessageHandler {
         else {
             clientOrServer = "client";
         }
-        System.out.println("MES HANDLER:" + myId + " Handling type " + type + " message operation: " + operation + " client id:" + clientId + " from " + clientOrServer);
+        System.out.println("MES HANDLER " + myId + ": Handling type " + type + " message operation: " + operation + " from " + clientOrServer + " id: " + clientId);
     }
 
     //handle message
@@ -153,7 +153,7 @@ public class MessageHandler {
                 //unchoke
                 printMessageHandlerDebug(1, clientId, myId, s);
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
-                System.out.println("MES " + "client:" + clientId + "ischoked:" + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
+                System.out.println("MES HANDLER client: " + clientId + " ischoked: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
                 return null;
             case 2:
                 //interested

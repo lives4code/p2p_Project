@@ -1,14 +1,15 @@
 #!/bin/bash
 
-sleepTime=30s
+#sleepTime=30s
 make
 echo "---starting peers---"
 java PeerProcess 1001 &
-PID1=$!
+#PID1=$!
 java PeerProcess 1002 &
-PID2=$!
+#PID2=$!
+java PeerProcess 1003 &
 echo "---peers started---"
-sleep $sleepTime
-echo "killing processes after sleeping" $sleepTime
-kill $PID1
-kill $PID2
+#sleep $sleepTime
+#echo "killing processes after sleeping" $sleepTime
+#kill $PID1
+#kill $PID2
