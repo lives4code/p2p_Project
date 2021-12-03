@@ -15,6 +15,7 @@ public class Peer {
     double downloadRate; // bytes per ms
     boolean choked;
     boolean changeChoke;
+    boolean optimistic;
 
     public Peer(int peerId, String hostName, int port, boolean hasFile) {
         this.peerId = peerId;
@@ -25,6 +26,7 @@ public class Peer {
         this.changeChoke = false;
         this.isInterested = false;
         this.downloadRate = Double.MAX_VALUE;
+        this.optimistic = false;
     }
     public void setInterested(boolean bool){
         isInterested = bool;
@@ -49,6 +51,9 @@ public class Peer {
     }
     public boolean getChangeChoke(){return this.changeChoke;};
     public void setChangeChoke(boolean val){this.changeChoke = val;}
+    public boolean getOptimistic() {return this.optimistic;}
+    public void setOptimistic(boolean val) {this.optimistic = val;}
+
     @Override
     public String toString(){
         String r = "peerId:" + peerId;
@@ -58,6 +63,7 @@ public class Peer {
         r+= "\nchangeChoke" + changeChoke;
         r+= "\ndownloadRate" + downloadRate;
         r+= "\nhasFile" + hasFile;
+        r+= "\noptimistic" + optimistic;
         return r;
     }
 
