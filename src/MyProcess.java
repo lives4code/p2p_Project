@@ -352,7 +352,8 @@ public class MyProcess {
                         chokedIndices.add(i);
                     }
                 }
-                chokedIndices.add(prevIndex);
+                if (prevIndex != -1)
+                    chokedIndices.add(prevIndex);
                 Random rand = new Random();
                 int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
                 // Set new neighbors
@@ -365,7 +366,7 @@ public class MyProcess {
                     }
                 }
                 // Choke the old optimistic peer
-                if (randomIndex != prevIndex) {
+                if (randomIndex != prevIndex && randomIndex != -1 && prevIndex != -1) {
                     peers.get(prevIndex).setChangeChoke(true);
                     peers.get(prevIndex).setOptimistic(false);
                 }
