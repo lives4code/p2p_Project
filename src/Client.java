@@ -108,9 +108,9 @@ public class Client extends Thread {
                         //the peer who i am connected to is now done
                         MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).setDone();
                         // stop thread
-                        System.out.println("CLIENT " + myId + ": " + "download complete");
-                        System.out.println("CLIENT " + myId + ": " + "Disconnect with Server " + connectedToID);
-                        System.out.println("CLIENT " + myId + ": " + "TERMINATED");
+                        System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " download complete");
+                        System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " Disconnect with Server " + connectedToID);
+                        System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " TERMINATED");
                         //System.exit(1);
                         return;
                     }

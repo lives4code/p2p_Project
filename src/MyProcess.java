@@ -151,7 +151,7 @@ public class MyProcess {
                     System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                     clientNum++;
                 } catch (SocketTimeoutException e) {
-                    System.out.println("PEER " + myId + ": socket timeout. Restart interval");
+                    System.out.println("PEER CHECK " + myId + ": socket timeout. Restart interval. done: " + done + " check done: " + checkDone);
                 }
 
                 //check for children done
