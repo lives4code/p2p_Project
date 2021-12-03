@@ -322,7 +322,7 @@ public class MyProcess {
 
                 // Debug
                 for (int i = 0; i < peers.size(); i++) {
-                    System.out.println("Peer " + i + ": " + peers.get(i).downloadRate + ", " + peers.get(i).choked);
+                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" : ""));
                 }
             }
         };
@@ -373,7 +373,7 @@ public class MyProcess {
 
                 // Debug
                 for (int i = 0; i < peers.size(); i++) {
-                    System.out.println("Peer " + i + ": " + peers.get(i).downloadRate + ", " + peers.get(i).choked);
+                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" : ""));
                 }
             }
         };
