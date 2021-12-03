@@ -314,6 +314,10 @@ public class MyProcess {
                             || (!fastestIndices.contains(i) && !peers.get(i).getIsChoked() && !peers.get(i).getOptimistic())) {
                         peers.get(i).setChangeChoke(true);
                     }
+                    // None of the fastest indices should be considered optimistic
+                    if (fastestIndices.contains(i)) {
+                        peers.get(i).setOptimistic(false);
+                    }
                 }
 
                 // Debug
@@ -330,9 +334,16 @@ public class MyProcess {
         TimerTask redetermineOptimistic = new TimerTask() {
             public void run() {
                 System.out.println("Redetermining optimistic...");
-                if (numPrefNeighbors - 1 > peers.size()) {
+                if (numPrefNeighbors + 1 > peers.size()) {
                     System.out.println("NumPrefNeighbors == num of peers => all neighbors always unchoked");
                     cancel();
+                }
+                // Get the previous optimistic
+                int prevIndex = -1;
+                for (int i = 0; i < peers.size(); i++) {
+                    if (peers.get(i).getOptimistic()) {
+                        prevIndex = i;
+                    }
                 }
                 // Randomly select optimistic neighbor
                 List<Integer> chokedIndices = new ArrayList<>();
@@ -341,22 +352,22 @@ public class MyProcess {
                         chokedIndices.add(i);
                     }
                 }
+                chokedIndices.add(prevIndex);
                 Random rand = new Random();
                 int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
-                // Choke the previous optimistic
-                for (int i = 0; i < peers.size(); i++) {
-                    if (peers.get(i).getOptimistic()) {
-                        peers.get(i).setOptimistic(false);
-                        peers.get(i).setChangeChoke(true);
-                    }
-                }
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
                     // Unchoke the new optimistic peer
                     if (randomIndex == i) {
                         peers.get(i).setOptimistic(true);
-                        peers.get(i).setChangeChoke(true);
+                        if (peers.get(i).getIsChoked())
+                            peers.get(i).setChangeChoke(true);
                     }
+                }
+                // Choke the old optimistic peer
+                if (randomIndex != prevIndex) {
+                    peers.get(prevIndex).setChangeChoke(true);
+                    peers.get(prevIndex).setOptimistic(false);
                 }
 
                 // Debug
