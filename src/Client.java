@@ -75,11 +75,14 @@ public class Client extends Thread {
 
             while (true) {
                 //check if it needs to send a choke or unchoke message.
+                System.out.println("CLIENT CHOKER " + myId + ": connected to, index: " + connectedToID + ", " + peerIndex + "| is get change choke: " + MyProcess.peers.get(peerIndex).getChangeChoke() );
                 if(MyProcess.peers.get(peerIndex).getChangeChoke() == true){
                     if(MyProcess.peers.get(peerIndex).getIsChoked()){
+                        System.out.println("CLIENT CHOKER " + myId + ": unchoke: " + connectedToID);
                         message = MessageHandler.createunChokeMessage();
                     }
                     else {
+                        System.out.println("CLIENT CHOKER " + myId + ": choke: " + connectedToID);
                         message = MessageHandler.createChokeMessage();
                     }
                     MessageHandler.sendMessage(out, message);
@@ -103,10 +106,11 @@ public class Client extends Thread {
                     }
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
                     if (type == 8){
-                        //tell my process to check for other processes complete
-                        MyProcess.checkDone = true;
                         //the peer who i am connected to is now done
                         MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).setDone();
+                        //tell my process to check for other processes complete
+                        MyProcess.checkDone = true;
+
                         // stop thread
                         System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " download complete");
                         System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " Disconnect with Server " + connectedToID);

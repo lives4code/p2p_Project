@@ -136,7 +136,7 @@ public class MessageHandler {
         else {
             clientOrServer = "client";
         }
-        System.out.println("MES HANDLER " + myId + ": Handling type " + type + " message operation: " + operation + " from " + clientOrServer + " id: " + clientId);
+        System.out.println("MES HANDLER " + clientOrServer + " " + myId + ": Handling type " + type + " message operation: " + operation + " from: " + clientId);
     }
 
     //handle message

@@ -69,7 +69,7 @@ public class MyProcess {
             bitField.set(index);
             System.out.println("bitfield is now" + bitField);
             file.close();
-            System.out.println("write successful index:" + index  + " piece:" + pieceRead);
+            //System.out.println("write successful index:" + index  + " piece:" + pieceRead);
 
         }
         catch (Exception e){
@@ -123,8 +123,7 @@ public class MyProcess {
         for(int i =0; i < ret.length; i++){
             pieceRead += String.valueOf(ret[i]) + "";
         }
-        System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt()
-                + "size:" + ret.length +  "piece " + pieceRead);
+        //System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt() + "size:" + ret.length +  "piece " + pieceRead);
         return ret;
     }
 
@@ -312,6 +311,7 @@ public class MyProcess {
                     // Unchoke new neighbor // Choke old neighbor except optimistic
                     if ((fastestIndices.contains(i) && peers.get(i).getIsChoked())
                             || (!fastestIndices.contains(i) && !peers.get(i).getIsChoked() && !peers.get(i).getOptimistic())) {
+                        System.out.println("PEER " + myId + ": CHANGE CHOKE for: " + peers.get(i).getPeerId());
                         peers.get(i).setChangeChoke(true);
                     }
                     // None of the fastest indices should be considered optimistic
@@ -334,6 +334,7 @@ public class MyProcess {
         TimerTask redetermineOptimistic = new TimerTask() {
             public void run() {
                 System.out.println("Redetermining optimistic...");
+
                 if (numPrefNeighbors + 1 > peers.size()) {
                     System.out.println("NumPrefNeighbors == num of peers => all neighbors always unchoked");
                     cancel();
