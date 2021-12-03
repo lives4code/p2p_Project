@@ -103,9 +103,15 @@ public class Client extends Thread {
                     }
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
                     if (type == 8){
+                        //tell my process to check for other processes complete
+                        MyProcess.checkDone = true;
+                        //the peer who i am connected to is now done
+                        MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).setDone();
                         // stop thread
                         System.out.println("CLIENT " + myId + ": " + "download complete");
-                        System.out.println("CLIENT " + myId + ": " + "Disconnect with Server");
+                        System.out.println("CLIENT " + myId + ": " + "Disconnect with Server " + connectedToID);
+                        System.out.println("CLIENT " + myId + ": " + "TERMINATED");
+                        //System.exit(1);
                         return;
                     }
                     if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {

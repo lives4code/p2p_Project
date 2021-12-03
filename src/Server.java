@@ -99,12 +99,17 @@ public class Server extends Thread {
                                     // tell client that we are done
                                     MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
 
+                                    // tell my process we are done
+                                    MyProcess.checkDone = true;
+                                    MyProcess.done = true;
+
                                     System.out.println("SERVER " + myId + ": " + "download complete");
                                     System.out.println("SERVER " + myId + ": " + "Disconnect with Client " + clientId);
                                     in.close();
                                     out.close();
                                     connection.close();
-                                    System.out.println("SERVER " + myId + ": STOP");
+                                    System.out.println("SERVER " + myId + ": TERMINATED");
+                                    //System.exit(1);
                                     return;
                                 }
                             }

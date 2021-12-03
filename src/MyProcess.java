@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,8 @@ public class MyProcess {
 
     // Handle peers
     static List<Peer> peers;
+    static boolean checkDone;
+    static boolean done;
 
     // Common variables
     static int numPrefNeighbors;
@@ -33,9 +36,12 @@ public class MyProcess {
         myId = peerId;
         filename = "../Files_From_Prof/project_config_file_small/project_config_file_small/" + String.valueOf(myId) + "/";
         peers = new ArrayList<>();
+        checkDone = false;
+
         loadCommonConfig();
         loadPeerInfo();
 
+        done = hasFile;
         // start timers
         startDeterminingNeighbors();
         startDeterminingOptimistic();
@@ -137,13 +143,43 @@ public class MyProcess {
         ServerSocket listener = new ServerSocket(port);
         int clientNum = 1;
         try {
+            outerloop:
             while (true) {
-                new Server(listener.accept(), clientNum, myId).start();
-                System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
-                clientNum++;
+                try {
+                    listener.setSoTimeout(5000);
+                    new Server(listener.accept(), clientNum, myId).start();
+                    System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
+                    clientNum++;
+                } catch (SocketTimeoutException e) {
+                    System.out.println("PEER " + myId + ": socket timeout. Restart interval");
+                }
+
+                //check for children done
+                if (checkDone){
+                    //am i done
+                    if (!done){
+                        System.out.println("PEER CHECK " + myId + ": not done");
+                        checkDone = false;
+                        continue outerloop;
+                    }
+
+                    //see if each peer is done if so quit
+                    for (Peer peer: peers){
+                        System.out.println("PEER CHECK " + myId + ": checking peer " + peer.getPeerId() + " is " + peer.getDone() + " has file " + peer.hasFile);
+                        if (!peer.getDone()){
+                            checkDone = false;
+                            System.out.println("PEER CHECK " + myId + ": continue");
+                            continue outerloop;
+                        }
+                        // all other peers are done
+                    }
+                    System.out.println("PEER " + myId + ": exiting process");
+                    break;
+                }
             }
         } finally {
             listener.close();
+            System.exit(1);
         }
     }
 
