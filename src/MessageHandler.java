@@ -243,7 +243,7 @@ public class MessageHandler {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
                 //return createRequestMessage(pieceIndexArr);
-                return null;
+                return createUninterestedMessage();
             case 8:
                 // server complete tell client to stop
                 System.out.println("CLIENT " + myId + ": received kill request");

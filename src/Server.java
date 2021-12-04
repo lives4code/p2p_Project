@@ -70,6 +70,30 @@ public class Server extends Thread {
                 mainloop:
                 while (true) {
 
+                    int peerIndex = MyProcess.getPeerIndexById(clientId);
+
+
+                    /*
+                    //check if it needs to send a choke or unchoke message.
+                    //System.out.println("CLIENT CHOKER " + myId + ": connected to, index: " + clientId + ", " + peerIndex + "| is get change choke: " + MyProcess.peers.get(peerIndex).getChangeChoke() );
+                    if(MyProcess.peers.get(peerIndex).getChangeChoke() == true){
+                        MyProcess.peers.get(peerIndex).setChangeChoke(false);
+                        if(MyProcess.peers.get(peerIndex).getIsChoked()){
+                            System.out.println("CLIENT CHOKER " + myId + ": unchoke: " + clientId);
+                            MyProcess.peers.get(peerIndex).setChoked(false);
+                            message = MessageHandler.createunChokeMessage();
+                        }
+                        else {
+                            System.out.println("CLIENT CHOKER " + myId + ": choke: " + clientId);
+                            MyProcess.peers.get(peerIndex).setChoked(true);
+                            message = MessageHandler.createChokeMessage();
+                        }
+                        MessageHandler.sendMessage(out, message);
+                    }
+
+                     */
+
+
                     if (in.available() > 0) {
                         //handle incoming messages
                         System.out.println("SERVER " + myId + ": beginning new loop iteration");

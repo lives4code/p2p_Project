@@ -171,6 +171,7 @@ public class MyProcess {
                     System.out.println("PEER CHECK " + myId + ": socket timeout. Restart interval. done: " + done + " check done: " + checkDone);
                 }
 
+
                 //check for children done
                 if (checkDone){
                     //am i done
@@ -183,7 +184,7 @@ public class MyProcess {
 
                     //see if each peer is done if so quit
                     for (Peer peer: peers){
-                        System.out.println("PEER CHECK " + myId + ": checking peer " + peer.getPeerId() + " is " + peer.getDone() + " has file " + peer.hasFile);
+                        //System.out.println("PEER CHECK " + myId + ": checking peer " + peer.getPeerId() + " is " + peer.getDone() + " has file " + peer.hasFile);
                         if (!peer.getDone()){
                             checkDone = false;
                             System.out.println("PEER CHECK " + myId + ": continue");
@@ -194,6 +195,8 @@ public class MyProcess {
                     System.out.println("PEER CHECK " + myId + ": break");
                     break;
                 }
+
+
             }
         } finally {
             listener.close();
@@ -343,7 +346,7 @@ public class MyProcess {
 
                 // Debug
                 for (int i = 0; i < peers.size(); i++) {
-                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke " : " "));
+                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" + myId: "" + myId));
                 }
 
                 // Log
