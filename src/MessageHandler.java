@@ -1,6 +1,7 @@
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -13,8 +14,9 @@ public class MessageHandler {
         try{
             out.write(msg, 0, msg.length);
             out.flush();
-        }
-        catch(IOException ioException){
+        } catch (SocketException e){
+            System.out.println("ERROR IN MES HANDLER SEND MESSAGE: SocketException. likely broken pipe");
+        } catch(IOException ioException){
             ioException.printStackTrace();
         }
     }

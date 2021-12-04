@@ -103,15 +103,17 @@ public class Client extends Thread {
 
             while (true) {
                 //check if it needs to send a choke or unchoke message.
-                System.out.println("CLIENT CHOKER " + myId + ": connected to, index: " + connectedToID + ", " + peerIndex + "| is get change choke: " + MyProcess.peers.get(peerIndex).getChangeChoke() );
+                //System.out.println("CLIENT CHOKER " + myId + ": connected to, index: " + connectedToID + ", " + peerIndex + "| is get change choke: " + MyProcess.peers.get(peerIndex).getChangeChoke() );
                 if(MyProcess.peers.get(peerIndex).getChangeChoke() == true){
                     if(MyProcess.peers.get(peerIndex).getIsChoked()){
                         System.out.println("CLIENT CHOKER " + myId + ": unchoke: " + connectedToID);
                         message = MessageHandler.createunChokeMessage();
+                        MyProcess.peers.get(peerIndex).setChoked(false);
                     }
                     else {
                         System.out.println("CLIENT CHOKER " + myId + ": choke: " + connectedToID);
                         message = MessageHandler.createChokeMessage();
+                       MyProcess.peers.get(peerIndex).setChoked(true);
                     }
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);
@@ -164,7 +166,7 @@ public class Client extends Thread {
                         return;
                     }
                     if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
-                        System.out.println("sending message from server");
+                        System.out.println("CLIENT " + myId + ": sending type " + message[4] + " to " + connectedToID);
                         MessageHandler.sendMessage(out, message);
                     }
                 }

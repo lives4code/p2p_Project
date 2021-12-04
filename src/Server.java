@@ -63,7 +63,7 @@ public class Server extends Thread {
 
                 s = "SERVER " + myId + " received msg: ";
                 //listener loop.
-
+                mainloop:
                 while (true) {
 
                     if (in.available() > 0) {
@@ -84,36 +84,69 @@ public class Server extends Thread {
                         message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S');
                         //if the message handler returns an interested or uninterested message then send it.
                         if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7 || message[4] == 6)) {
-                            System.out.println("sending message from server");
+                            System.out.println("SERVER " + myId + ": sending type " + message[4] + " to " + clientId);
                             MessageHandler.sendMessage(out, message);
                         }
 
                         //request Pieces!
                         //this no longer requests pieces we should consider removing it.
-                        for(Peer peer :MyProcess.peers){
+                        for(Peer peer : MyProcess.peers){
                             if(!peer.getIsChoked()){
                                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                                     //msg = MessageHandler.createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                                     //MessageHandler.sendMessage(out, msg);
                                 } else {
-                                    // tell client that we are done
-                                    MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
-
                                     // tell my process we are done
-                                    MyProcess.checkDone = true;
+                                    // todo may need to check bitfield here to see if the process of this server has all pieces
+                                    // todo sometimes a server never hits here even though
+                                    for(int i = 0; i < MyProcess.bitField.size(); i++){
+                                        if(!MyProcess.bitField.get(i) && !MyProcess.hasFile){
+                                            System.out.println("SERVER END " + myId + ": not done witn Client: " + clientId);
+                                            continue mainloop;
+                                        }
+                                    }
+                                    //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setDone();
                                     MyProcess.done = true;
+                                    MyProcess.checkDone = true;
+
+                                    // tell client that we are done
+
+                                    MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
 
                                     System.out.println("SERVER END " + myId + ": connected to " + clientId + " download complete");
                                     System.out.println("SERVER END " + myId + ": Disconnect with Client: " + clientId);
-                                    in.close();
-                                    out.close();
-                                    connection.close();
-                                    System.out.println("SERVER END " + myId + ": TERMINATED");
+//                                    in.close();
+//                                    out.close();
+//                                    connection.close();
+                                    System.out.println("CLIENT END " + myId + ": connected to " + clientId + " TERMINATED");
                                     //System.exit(1);
                                     return;
                                 }
                             }
                         }
+                    }
+                    //check if we are done
+                    for(int i = 0; i < MyProcess.bitField.size(); i++){
+                        if(!MyProcess.bitField.get(i) && !MyProcess.hasFile){
+                            //System.out.println("SERVER END " + myId + ": not done witn Client: " + clientId);
+                            continue mainloop;
+                        }
+                        MyProcess.done = true;
+                    }
+                    if (MyProcess.done){
+                        //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setDone();
+                        // todo may need to check bitfield here to see if the process of this server has all pieces
+
+                        MyProcess.checkDone = true;
+                        MessageHandler.sendMessage(out, MessageHandler.createMsg(8,new byte[]{}));
+                        System.out.println("SERVER END " + myId + ": connected to " + clientId + " download complete");
+                        System.out.println("SERVER END " + myId + ": Disconnect with Client: " + clientId);
+//                                    in.close();
+//                                    out.close();
+//                                    connection.close();
+                        System.out.println("CLIENT END " + myId + ": connected to " + clientId + " TERMINATED");
+                        //System.exit(1);
+                        return;
                     }
                 }
 

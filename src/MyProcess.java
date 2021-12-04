@@ -15,7 +15,7 @@ public class MyProcess {
     private String myHostName;
     int port;
 
-    boolean hasFile;
+    static boolean hasFile;
     static BitSet bitField;
 
     // Handle peers
@@ -41,7 +41,7 @@ public class MyProcess {
         loadCommonConfig();
         loadPeerInfo();
 
-        done = hasFile;
+        done = false;
         // start timers
         startDeterminingNeighbors();
         startDeterminingOptimistic();
@@ -160,6 +160,7 @@ public class MyProcess {
                     if (!done){
                         System.out.println("PEER CHECK " + myId + ": not done");
                         checkDone = false;
+                        System.out.println("PEER CHECK " + myId + ": continue");
                         continue outerloop;
                     }
 
@@ -173,12 +174,13 @@ public class MyProcess {
                         }
                         // all other peers are done
                     }
-                    System.out.println("PEER " + myId + ": exiting process");
+                    System.out.println("PEER CHECK " + myId + ": break");
                     break;
                 }
             }
         } finally {
             listener.close();
+            System.out.println("PEER CHECK " + myId + ": exit");
             System.exit(1);
         }
     }
@@ -312,7 +314,7 @@ public class MyProcess {
                     // Unchoke new neighbor // Choke old neighbor except optimistic
                     if ((fastestIndices.contains(i) && peers.get(i).getIsChoked())
                             || (!fastestIndices.contains(i) && !peers.get(i).getIsChoked() && !peers.get(i).getOptimistic())) {
-                        System.out.println("PEER " + myId + ": CHANGE CHOKE for: " + peers.get(i).getPeerId());
+                        System.out.println("PEER " + myId + ": CHANGE CHOKE for: " + peers.get(i).getPeerId() + " current choke: " + peers.get(i).getIsChoked());
                         peers.get(i).setChangeChoke(true);
                     }
                     // None of the fastest indices should be considered optimistic
@@ -365,17 +367,19 @@ public class MyProcess {
                         peers.get(i).setOptimistic(true);
                         if (peers.get(i).getIsChoked())
                             peers.get(i).setChangeChoke(true);
+                            System.out.println("PEER " + myId + ": new opt unchoke:" + peers.get(i));
                     }
                 }
                 // Choke the old optimistic peer
                 if (randomIndex != prevIndex && randomIndex != -1 && prevIndex != -1) {
                     peers.get(prevIndex).setChangeChoke(true);
+                    System.out.println("PEER " + myId + ": old opt choke:" + peers.get(prevIndex));
                     peers.get(prevIndex).setOptimistic(false);
                 }
 
                 // Debug
                 for (int i = 0; i < peers.size(); i++) {
-                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" : ""));
+                    System.out.println("PEER " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" : ""));
                 }
             }
         };
