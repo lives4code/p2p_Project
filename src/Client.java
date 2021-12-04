@@ -102,22 +102,32 @@ public class Client extends Thread {
             long start;
 
             while (true) {
+
+
                 //check if it needs to send a choke or unchoke message.
                 //System.out.println("CLIENT CHOKER " + myId + ": connected to, index: " + connectedToID + ", " + peerIndex + "| is get change choke: " + MyProcess.peers.get(peerIndex).getChangeChoke() );
                 if(MyProcess.peers.get(peerIndex).getChangeChoke() == true){
                     if(MyProcess.peers.get(peerIndex).getIsChoked()){
                         System.out.println("CLIENT CHOKER " + myId + ": unchoke: " + connectedToID);
+                        MyProcess.peers.get(peerIndex).setChoked(false);
                         message = MessageHandler.createunChokeMessage();
                         MyProcess.peers.get(peerIndex).setChoked(false);
                     }
                     else {
                         System.out.println("CLIENT CHOKER " + myId + ": choke: " + connectedToID);
+                        MyProcess.peers.get(peerIndex).setChoked(true);
                         message = MessageHandler.createChokeMessage();
                        MyProcess.peers.get(peerIndex).setChoked(true);
                     }
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);
                 }
+
+
+
+
+
+
                 //send out the have messages
                 BitSet neededPieces = MessageHandler.getNeededPieces(MyProcess.bitField, clientBitfield);
                 if(!neededPieces.isEmpty()) {
