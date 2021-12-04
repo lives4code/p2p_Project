@@ -21,3 +21,8 @@ clean:
 	rm *.txt
 	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1002/theFile
 	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1003/theFile
+	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1004/theFile
+	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1005/theFile
+	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1006/theFile
+	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1007/theFile
+	rm ../Files_From_Prof/project_config_file_small/project_config_file_small/1008/theFile
