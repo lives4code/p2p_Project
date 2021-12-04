@@ -2,11 +2,10 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static java.lang.System.in;
+import java.util.logging.*;
 
 public class MyProcess {
     // From Peer Info Cfg
@@ -30,7 +29,10 @@ public class MyProcess {
     static String filename;
     static long fileSize;
     static long pieceSize;
-    //initialize piece array
+
+    // Logging
+    Logger log = Logger.getLogger("Log");
+    FileHandler fh;
 
     public MyProcess(int peerId) {
         myId = peerId;
@@ -42,13 +44,27 @@ public class MyProcess {
         loadPeerInfo();
 
         done = false;
-        // start timers
-        startDeterminingNeighbors();
-        startDeterminingOptimistic();
 
         //debug
         System.out.println("PEER: piece size: " + pieceSize);
         System.out.println("PEER: file size: " + fileSize);
+
+        // configure logger
+        try {
+            fh = new FileHandler("./log_peer_" + peerId + ".log");
+            MyFormatter formatter = new MyFormatter();
+            fh.setFormatter(formatter);
+            log.addHandler(fh);
+            log.setUseParentHandlers(false);
+        }catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // start timers
+        startDeterminingNeighbors();
+        startDeterminingOptimistic();
     }
 
 
@@ -134,7 +150,8 @@ public class MyProcess {
         // Start client
         for (Peer peer: peers){
             if (peer.getPeerId() != myId) {
-                new Client(myId, peer.getHostName(), peer.getPort(), peer.getPeerId()).start();
+                new Client(myId, peer.getHostName(), peer.getPort(), peer.getPeerId(), log).start();
+                log.info("Peer " + myId + " makes a connection to Peer " + peer.getPeerId() + ".");
             }
         }
         startDeterminingNeighbors();
@@ -147,7 +164,7 @@ public class MyProcess {
             while (true) {
                 try {
                     listener.setSoTimeout(5000);
-                    new Server(listener.accept(), clientNum, myId).start();
+                    new Server(listener.accept(), clientNum, myId, log).start();
                     System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                     clientNum++;
                 } catch (SocketTimeoutException e) {
@@ -299,15 +316,16 @@ public class MyProcess {
                 List<Integer> fastestIndices = new ArrayList<>();
                 // Find fastest indices
                 for (int k = 0; k < numPrefNeighbors; k++) {
-                    int minIndex = 0;
+                    int minIndex = -1;
                     double minRate = Double.MAX_VALUE;
                     for (int i = 0; i < peers.size(); i++) {
-                        if (peers.get(i).downloadRate < minRate && !fastestIndices.contains(i) && peers.get(i).getIsInterested()) {
+                        if (peers.get(i).downloadRate <= minRate && !fastestIndices.contains(i) && peers.get(i).getIsInterested()) {
                             minIndex = i;
                             minRate = peers.get(i).downloadRate;
                         }
                     }
-                    fastestIndices.add(minIndex);
+                    if (minIndex != -1)
+                        fastestIndices.add(minIndex);
                 }
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
@@ -325,8 +343,19 @@ public class MyProcess {
 
                 // Debug
                 for (int i = 0; i < peers.size(); i++) {
-                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" : ""));
+                    System.out.println("Peer " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke " : " "));
                 }
+
+                // Log
+                String msg = "Peer " + myId + " has the preferred neighbors ";
+                for (int i = 0; i < peers.size(); i++) {
+                    if (fastestIndices.contains(i)) {
+                        msg += peers.get(i).getPeerId();
+                        msg += ", ";
+                    }
+                }
+                msg = msg.substring(0, msg.length() - 2);
+                log.info(msg + ".");
             }
         };
         Timer timer = new Timer();
@@ -356,7 +385,7 @@ public class MyProcess {
                         chokedIndices.add(i);
                     }
                 }
-                if (prevIndex != -1)
+                if (prevIndex != -1 && peers.get(prevIndex).isInterested)
                     chokedIndices.add(prevIndex);
                 Random rand = new Random();
                 int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
@@ -371,7 +400,7 @@ public class MyProcess {
                     }
                 }
                 // Choke the old optimistic peer
-                if (randomIndex != prevIndex && randomIndex != -1 && prevIndex != -1) {
+                if (randomIndex != prevIndex && prevIndex != -1) {
                     peers.get(prevIndex).setChangeChoke(true);
                     System.out.println("PEER " + myId + ": old opt choke:" + peers.get(prevIndex));
                     peers.get(prevIndex).setOptimistic(false);
@@ -381,6 +410,14 @@ public class MyProcess {
                 for (int i = 0; i < peers.size(); i++) {
                     System.out.println("PEER " + peers.get(i).getPeerId() + ": " + peers.get(i).downloadRate + ", " + (peers.get(i).changeChoke ? "changing choke" : ""));
                 }
+
+                // Log
+                String msg = "Peer " + myId + " has the optimistically unchoked neighbor ";
+                for (int i = 0; i < peers.size(); i++) {
+                    if (i == randomIndex)
+                        msg += peers.get(i).getPeerId();
+                }
+                log.info(msg + ".");
             }
         };
         Timer timer = new Timer();

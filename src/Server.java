@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.logging.Logger;
 
 
 //handler thread class. handlers are spawned from the listening
@@ -19,11 +20,13 @@ public class Server extends Thread {
 
     //debug
     private String s;
+    private Logger log;
 
-    public Server(Socket connection, int no, int myId) {
+    public Server(Socket connection, int no, int myId, Logger log) {
         this.connection = connection;
         this.no = no;
         this.myId = myId;
+        this.log = log;
     }
 
     public void run() {
@@ -47,6 +50,7 @@ public class Server extends Thread {
                 try {
                     clientId = MessageHandler.validateHandshake(handshake, myId);
                     System.out.println("SERVER " + myId + ": handshake read from peer. ClientID: " + clientId);
+                    log.info("Peer " + myId + " is connected from Peer " + clientId + ".");
                 } catch (Exception e) {
                     currentThread().interrupt();
                     System.out.println("SERVER: " + myId + " handshake invalid:" + e.getLocalizedMessage());
@@ -81,7 +85,7 @@ public class Server extends Thread {
                             MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = cost != 0 ? size / cost : size / 0.0000001; // bytes per ms
                             System.out.println("SERVER " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate);
                         }
-                        message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S');
+                        message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S', log);
                         //if the message handler returns an interested or uninterested message then send it.
                         if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7 || message[4] == 6)) {
                             System.out.println("SERVER " + myId + ": sending type " + message[4] + " to " + clientId);
@@ -100,11 +104,12 @@ public class Server extends Thread {
                                     // todo may need to check bitfield here to see if the process of this server has all pieces
                                     // todo sometimes a server never hits here even though
                                     for(int i = 0; i < MyProcess.bitField.size(); i++){
-                                        if(!MyProcess.bitField.get(i) && !MyProcess.hasFile){
+                                        if(!MyProcess.bitField.get(i)){
                                             System.out.println("SERVER END " + myId + ": not done witn Client: " + clientId);
                                             continue mainloop;
                                         }
                                     }
+                                    log.info("Peer " + myId + " has downloaded the complete file.");
                                     //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setDone();
                                     MyProcess.done = true;
                                     MyProcess.checkDone = true;
@@ -127,7 +132,7 @@ public class Server extends Thread {
                     }
                     //check if we are done
                     for(int i = 0; i < MyProcess.bitField.size(); i++){
-                        if(!MyProcess.bitField.get(i) && !MyProcess.hasFile){
+                        if(!MyProcess.bitField.get(i)){
                             //System.out.println("SERVER END " + myId + ": not done witn Client: " + clientId);
                             continue mainloop;
                         }

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 
 public class MessageHandler {
 
@@ -142,7 +143,7 @@ public class MessageHandler {
     }
 
     //handle message
-    public static byte[] handleMessage(byte[] msg, int type, int clientId, int myId, char s) {
+    public static byte[] handleMessage(byte[] msg, int type, int clientId, int myId, char s, Logger log) {
         Peer peer = MyProcess.peers.get(MyProcess.getPeerIndexById(clientId));
         switch(type){
             case -1:
@@ -150,25 +151,29 @@ public class MessageHandler {
             case 0:
                 //choke
                 printMessageHandlerDebug(0, clientId, myId, s);
-                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
+                //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
+                log.info("Peer " + myId + " is choked by " + clientId + ".");
                 return null;
             case 1:
                 //unchoke
                 printMessageHandlerDebug(1, clientId, myId, s);
-                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
-                System.out.println("MES " + "client:" + clientId + "ischoked:" + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
+                log.info("Peer " + myId + " is unchoked by " + clientId + ".");
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
+                //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
+                //System.out.println("MES HANDLER client: " + clientId + " ischoked: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
                 return null;
             case 2:
                 //interested
                 printMessageHandlerDebug(2, clientId, myId, s);
+                log.info("Peer " + myId + " received the ‘interested’ message from " + clientId + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(true);
                 return null;
             case 3:
                 //not intrested
                 printMessageHandlerDebug(3, clientId, myId, s);
+                log.info("Peer " + myId + " received the ‘not interested’ message from " + clientId + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(false);
                 return null;
             case 4:
@@ -176,6 +181,7 @@ public class MessageHandler {
                 //first update the bitfield to reflect the new piece.
                 //then return either an interested or not interested method after comparison.
                 int integer = ByteBuffer.wrap(msg).getInt();
+                log.info("Peer " + myId + " received the ‘have’ message from " + clientId + " for the piece " + integer + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(integer);
                 printMessageHandlerDebug(4, clientId, myId, s);
                 if(MyProcess.bitField.get(integer) == false){
@@ -218,6 +224,14 @@ public class MessageHandler {
                 }
                 int pieceIndex = ByteBuffer.wrap(pieceIndexArr).getInt();
                 MyProcess.bitField.set(pieceIndex);
+                // log
+                int numPieces = 0;
+                for(int i = 0; i < MyProcess.bitField.size(); i++){
+                    if(MyProcess.bitField.get(i))
+                        numPieces++;
+                }
+                log.info("Peer " + myId + " has downloaded the piece " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
+
                 byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
                 String st = "";
                 for(int j =0; j < arr.length; j++){

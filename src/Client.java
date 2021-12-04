@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class Client extends Thread {
 
@@ -24,13 +25,15 @@ public class Client extends Thread {
 
     //debug
     private String s;
+    Logger log;
 
-    public Client(int myId, String host, int port, int connectedToID) {
+    public Client(int myId, String host, int port, int connectedToID, Logger log) {
         this.myId = myId;
         this.host = host;
         this.port = port;
         this.connectedToID = connectedToID;
         this.clientBitfield = (BitSet)MyProcess.bitField.clone();
+        this.log = log;
     }
 
     private static int[] getDifference(BitSet myProcess, BitSet client){
@@ -113,7 +116,7 @@ public class Client extends Thread {
                     else {
                         System.out.println("CLIENT CHOKER " + myId + ": choke: " + connectedToID);
                         message = MessageHandler.createChokeMessage();
-                       MyProcess.peers.get(peerIndex).setChoked(true);
+                        MyProcess.peers.get(peerIndex).setChoked(true);
                     }
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);
@@ -151,7 +154,7 @@ public class Client extends Thread {
                         MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate = cost != 0 ? size / cost : size / 0.0000001; // bytes per ms
                         System.out.println("CLIENT " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate);
                     }
-                    message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C');
+                    message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C', log);
                     if (type == 8){
                         //the peer who i am connected to is now done
                         MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).setDone();
