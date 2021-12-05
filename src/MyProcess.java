@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 
 public class MyProcess {
@@ -163,12 +164,22 @@ public class MyProcess {
             outerloop:
             while (true) {
                 try {
-                    listener.setSoTimeout(5000);
+                    listener.setSoTimeout(3000);
                     new Server(listener.accept(), clientNum, myId, log).start();
                     System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                     clientNum++;
                 } catch (SocketTimeoutException e) {
-                    System.out.println("PEER CHECK " + myId + ": socket timeout. Restart interval. done: " + done + " check done: " + checkDone);
+                    //System.out.println("PEER CHECK " + myId + ": socket timeout. Restart interval. done: " + done + " check done: " + checkDone);
+                    String s = "PEER CHECK " + myId + ": TIMEOUT done: " + done + " print bitfield: ";
+                    for (int i = 0; i < MyProcess.bitField.size(); i ++){
+                        s += MyProcess.bitField.get(i) + ", ";
+                    }
+                    System.out.println(s);
+                    s = "PEER CHECK " + myId + ": TIMEOUT peers done: ";
+                    for(Peer peer : peers){
+                        s += "(" + peer.getPeerId() + ", " + peer.getDone() + "), ";
+                    }
+                    System.out.println(s);
                 }
 
 
@@ -200,8 +211,11 @@ public class MyProcess {
             }
         } finally {
             listener.close();
+            System.out.println("PEER CHECK " + myId + ": exit in 5 sec");
+            TimeUnit.SECONDS.sleep(5);
             System.out.println("PEER CHECK " + myId + ": exit");
             System.exit(1);
+
         }
     }
 

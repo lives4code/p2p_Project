@@ -105,6 +105,7 @@ public class Client extends Thread {
             long start;
 
             while (true) {
+                System.out.println("CLIENT " + myId + ": connected to " + connectedToID + ": beginning new loop iteration");
 
 
                 //check if it needs to send a choke or unchoke message.
@@ -151,7 +152,7 @@ public class Client extends Thread {
                 //yeah this is copy and pasted code from server.java but I can't use a method because
                 //passing an inputstream causes a nullpointer exception.
                 if(in.available() > 0 ) {
-                    System.out.println("CLIENT " + myId + ": beginning new loop iteration");
+                    System.out.println("CLIENT " + myId + ": new input");
                     start = System.currentTimeMillis();
                     in.read(sizeB);
                     int size = ByteBuffer.wrap(sizeB).getInt();
@@ -172,10 +173,19 @@ public class Client extends Thread {
                         MyProcess.checkDone = true;
 
                         // stop thread
-                        System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " download complete");
-                        System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " Disconnect with Server " + connectedToID);
-                        System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " TERMINATED");
+                       // System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " download complete");
+
+                        //debug local print
+
+                        String s = "CLIENT END " + myId + ": connected to " + connectedToID + " download complete. print bitfield: ";
+                        for (int i = 0; i < MyProcess.bitField.size(); i ++){
+                            s += MyProcess.bitField.get(i) + ", ";
+                        }
+                        System.out.println(s);
+                        //System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " Disconnect with Server " + connectedToID);
+                        //System.out.println("CLIENT END " + myId + ": connected to " + connectedToID + " TERMINATED");
                         //System.exit(1);
+                        //wait(5000);
                         return;
                     }
                     if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {

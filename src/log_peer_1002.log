@@ -1,0 +1,607 @@
+12-05-2021 01:13:48.787: Peer 1002 makes a connection to Peer 1001.
+12-05-2021 01:13:48.788: Peer 1002 makes a connection to Peer 1003.
+12-05-2021 01:13:48.792: Peer 1002 has the preferred neighbor.
+12-05-2021 01:13:48.792: Peer 1002 has the optimistically unchoked neighbor .
+12-05-2021 01:13:48.792: Peer 1002 has the preferred neighbor.
+12-05-2021 01:13:49.776: Peer 1002 is connected from Peer 1001.
+12-05-2021 01:13:49.800: Peer 1002 is connected from Peer 1003.
+12-05-2021 01:13:49.831: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:53.756: Peer 1002 is unchoked by 1001.
+12-05-2021 01:13:53.811: Peer 1002 has the preferred neighbor.
+12-05-2021 01:13:53.812: Peer 1002 has the preferred neighbor.
+12-05-2021 01:13:53.863: Peer 1002 has downloaded the piece 140 from 1001. Now the number of pieces it has is 1.
+12-05-2021 01:13:53.893: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:53.907: Peer 1002 received the ‘have’ message from 1003 for the piece 121.
+12-05-2021 01:13:54.014: Peer 1002 has downloaded the piece 158 from 1001. Now the number of pieces it has is 2.
+12-05-2021 01:13:54.023: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:54.159: Peer 1002 received the ‘have’ message from 1003 for the piece 131.
+12-05-2021 01:13:54.202: Peer 1002 has downloaded the piece 96 from 1001. Now the number of pieces it has is 3.
+12-05-2021 01:13:54.214: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:54.316: Peer 1002 has downloaded the piece 166 from 1001. Now the number of pieces it has is 4.
+12-05-2021 01:13:54.334: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:54.364: Peer 1002 received the ‘have’ message from 1003 for the piece 64.
+12-05-2021 01:13:54.446: Peer 1002 has downloaded the piece 72 from 1001. Now the number of pieces it has is 5.
+12-05-2021 01:13:54.455: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:54.504: Peer 1002 received the ‘have’ message from 1003 for the piece 87.
+12-05-2021 01:13:54.671: Peer 1002 has downloaded the piece 85 from 1001. Now the number of pieces it has is 6.
+12-05-2021 01:13:54.681: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:54.691: Peer 1002 received the ‘have’ message from 1003 for the piece 171.
+12-05-2021 01:13:54.830: Peer 1002 has downloaded the piece 61 from 1001. Now the number of pieces it has is 7.
+12-05-2021 01:13:54.842: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:54.950: Peer 1002 received the ‘have’ message from 1003 for the piece 47.
+12-05-2021 01:13:54.973: Peer 1002 has downloaded the piece 183 from 1001. Now the number of pieces it has is 8.
+12-05-2021 01:13:54.987: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.100: Peer 1002 received the ‘have’ message from 1003 for the piece 12.
+12-05-2021 01:13:55.113: Peer 1002 has downloaded the piece 130 from 1001. Now the number of pieces it has is 9.
+12-05-2021 01:13:55.125: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.241: Peer 1002 received the ‘have’ message from 1003 for the piece 134.
+12-05-2021 01:13:55.279: Peer 1002 has downloaded the piece 16 from 1001. Now the number of pieces it has is 10.
+12-05-2021 01:13:55.294: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.364: Peer 1002 received the ‘have’ message from 1003 for the piece 117.
+12-05-2021 01:13:55.440: Peer 1002 has downloaded the piece 80 from 1001. Now the number of pieces it has is 11.
+12-05-2021 01:13:55.455: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.520: Peer 1002 received the ‘have’ message from 1003 for the piece 157.
+12-05-2021 01:13:55.565: Peer 1002 has downloaded the piece 163 from 1001. Now the number of pieces it has is 12.
+12-05-2021 01:13:55.578: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.656: Peer 1002 received the ‘have’ message from 1003 for the piece 23.
+12-05-2021 01:13:55.670: Peer 1002 has downloaded the piece 111 from 1001. Now the number of pieces it has is 13.
+12-05-2021 01:13:55.684: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.789: Peer 1002 received the ‘have’ message from 1003 for the piece 89.
+12-05-2021 01:13:55.803: Peer 1002 has downloaded the piece 187 from 1001. Now the number of pieces it has is 14.
+12-05-2021 01:13:55.819: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:55.907: Peer 1002 has downloaded the piece 153 from 1001. Now the number of pieces it has is 15.
+12-05-2021 01:13:55.936: Peer 1002 received the ‘have’ message from 1003 for the piece 165.
+12-05-2021 01:13:55.936: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.017: Peer 1002 has downloaded the piece 93 from 1001. Now the number of pieces it has is 16.
+12-05-2021 01:13:56.046: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.060: Peer 1002 received the ‘have’ message from 1003 for the piece 66.
+12-05-2021 01:13:56.151: Peer 1002 has downloaded the piece 143 from 1001. Now the number of pieces it has is 17.
+12-05-2021 01:13:56.188: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.216: Peer 1002 received the ‘have’ message from 1003 for the piece 124.
+12-05-2021 01:13:56.306: Peer 1002 has downloaded the piece 108 from 1001. Now the number of pieces it has is 18.
+12-05-2021 01:13:56.317: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.363: Peer 1002 received the ‘have’ message from 1003 for the piece 145.
+12-05-2021 01:13:56.436: Peer 1002 has downloaded the piece 98 from 1001. Now the number of pieces it has is 19.
+12-05-2021 01:13:56.481: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.488: Peer 1002 received the ‘have’ message from 1003 for the piece 65.
+12-05-2021 01:13:56.581: Peer 1002 has downloaded the piece 106 from 1001. Now the number of pieces it has is 20.
+12-05-2021 01:13:56.594: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.617: Peer 1002 received the ‘have’ message from 1003 for the piece 180.
+12-05-2021 01:13:56.701: Peer 1002 has downloaded the piece 132 from 1001. Now the number of pieces it has is 21.
+12-05-2021 01:13:56.727: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.738: Peer 1002 received the ‘have’ message from 1003 for the piece 100.
+12-05-2021 01:13:56.826: Peer 1002 has downloaded the piece 78 from 1001. Now the number of pieces it has is 22.
+12-05-2021 01:13:56.844: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:56.882: Peer 1002 received the ‘have’ message from 1003 for the piece 26.
+12-05-2021 01:13:56.973: Peer 1002 has downloaded the piece 175 from 1001. Now the number of pieces it has is 23.
+12-05-2021 01:13:57.013: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:57.037: Peer 1002 received the ‘have’ message from 1003 for the piece 107.
+12-05-2021 01:13:57.104: Peer 1002 has downloaded the piece 86 from 1001. Now the number of pieces it has is 24.
+12-05-2021 01:13:57.132: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:57.204: Peer 1002 received the ‘have’ message from 1003 for the piece 60.
+12-05-2021 01:13:57.249: Peer 1002 has downloaded the piece 88 from 1001. Now the number of pieces it has is 25.
+12-05-2021 01:13:57.259: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:57.375: Peer 1002 received the ‘have’ message from 1003 for the piece 19.
+12-05-2021 01:13:57.382: Peer 1002 has downloaded the piece 76 from 1001. Now the number of pieces it has is 26.
+12-05-2021 01:13:57.395: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:57.487: Peer 1002 received the ‘have’ message from 1003 for the piece 63.
+12-05-2021 01:13:57.526: Peer 1002 has downloaded the piece 122 from 1001. Now the number of pieces it has is 27.
+12-05-2021 01:13:57.541: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:57.624: Peer 1002 received the ‘have’ message from 1003 for the piece 50.
+12-05-2021 01:13:57.660: Peer 1002 has downloaded the piece 157 from 1001. Now the number of pieces it has is 28.
+12-05-2021 01:13:57.669: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:57.760: Peer 1002 received the ‘have’ message from 1003 for the piece 174.
+12-05-2021 01:13:57.783: Peer 1002 has downloaded the piece 50 from 1001. Now the number of pieces it has is 29.
+12-05-2021 01:13:57.796: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:57.885: Peer 1002 received the ‘have’ message from 1003 for the piece 73.
+12-05-2021 01:13:57.902: Peer 1002 has downloaded the piece 134 from 1001. Now the number of pieces it has is 30.
+12-05-2021 01:13:57.918: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:57.997: Peer 1002 received the ‘have’ message from 1003 for the piece 185.
+12-05-2021 01:13:58.055: Peer 1002 has downloaded the piece 18 from 1001. Now the number of pieces it has is 31.
+12-05-2021 01:13:58.076: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:58.144: Peer 1002 received the ‘have’ message from 1003 for the piece 88.
+12-05-2021 01:13:58.203: Peer 1002 has downloaded the piece 89 from 1001. Now the number of pieces it has is 32.
+12-05-2021 01:13:58.216: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:58.307: Peer 1002 received the ‘have’ message from 1003 for the piece 81.
+12-05-2021 01:13:58.345: Peer 1002 has downloaded the piece 66 from 1001. Now the number of pieces it has is 33.
+12-05-2021 01:13:58.354: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:58.450: Peer 1002 received the ‘have’ message from 1003 for the piece 20.
+12-05-2021 01:13:58.480: Peer 1002 has downloaded the piece 74 from 1001. Now the number of pieces it has is 34.
+12-05-2021 01:13:58.496: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:58.600: Peer 1002 received the ‘have’ message from 1003 for the piece 41.
+12-05-2021 01:13:58.623: Peer 1002 has downloaded the piece 191 from 1001. Now the number of pieces it has is 35.
+12-05-2021 01:13:58.633: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:58.742: Peer 1002 received the ‘have’ message from 1003 for the piece 103.
+12-05-2021 01:13:58.742: Peer 1002 has downloaded the piece 133 from 1001. Now the number of pieces it has is 36.
+12-05-2021 01:13:58.754: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:58.789: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:13:58.793: Peer 1002 is unchoked by 1003.
+12-05-2021 01:13:58.796: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:13:58.856: Peer 1002 has downloaded the piece 103 from 1003. Now the number of pieces it has is 37.
+12-05-2021 01:13:58.885: Peer 1002 has downloaded the piece 185 from 1001. Now the number of pieces it has is 38.
+12-05-2021 01:13:58.994: Peer 1002 received the ‘have’ message from 1003 for the piece 132.
+12-05-2021 01:13:59.001: Peer 1002 received the ‘have’ message from 1003 for the piece 153.
+12-05-2021 01:13:59.075: Peer 1002 has downloaded the piece 81 from 1003. Now the number of pieces it has is 39.
+12-05-2021 01:13:59.102: Peer 1002 has downloaded the piece 125 from 1001. Now the number of pieces it has is 40.
+12-05-2021 01:13:59.127: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:59.130: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:59.284: Peer 1002 received the ‘have’ message from 1003 for the piece 96.
+12-05-2021 01:13:59.314: Peer 1002 received the ‘have’ message from 1003 for the piece 99.
+12-05-2021 01:13:59.375: Peer 1002 has downloaded the piece 63 from 1003. Now the number of pieces it has is 41.
+12-05-2021 01:13:59.397: Peer 1002 has downloaded the piece 120 from 1001. Now the number of pieces it has is 42.
+12-05-2021 01:13:59.429: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:59.431: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:59.568: Peer 1002 received the ‘have’ message from 1003 for the piece 106.
+12-05-2021 01:13:59.651: Peer 1002 has downloaded the piece 135 from 1001. Now the number of pieces it has is 43.
+12-05-2021 01:13:59.653: Peer 1002 has downloaded the piece 60 from 1003. Now the number of pieces it has is 44.
+12-05-2021 01:13:59.696: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:59.699: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:13:59.837: Peer 1002 received the ‘have’ message from 1003 for the piece 110.
+12-05-2021 01:13:59.844: Peer 1002 received the ‘have’ message from 1003 for the piece 18.
+12-05-2021 01:13:59.879: Peer 1002 has downloaded the piece 44 from 1001. Now the number of pieces it has is 45.
+12-05-2021 01:13:59.934: Peer 1002 has downloaded the piece 65 from 1003. Now the number of pieces it has is 46.
+12-05-2021 01:13:59.940: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:13:59.942: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:00.091: Peer 1002 received the ‘have’ message from 1003 for the piece 56.
+12-05-2021 01:14:00.096: Peer 1002 received the ‘have’ message from 1003 for the piece 111.
+12-05-2021 01:14:00.138: Peer 1002 has downloaded the piece 31 from 1001. Now the number of pieces it has is 47.
+12-05-2021 01:14:00.140: Peer 1002 has downloaded the piece 180 from 1003. Now the number of pieces it has is 48.
+12-05-2021 01:14:00.199: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:00.201: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:00.260: Peer 1002 received the ‘have’ message from 1003 for the piece 72.
+12-05-2021 01:14:00.264: Peer 1002 received the ‘have’ message from 1003 for the piece 52.
+12-05-2021 01:14:00.351: Peer 1002 has downloaded the piece 87 from 1003. Now the number of pieces it has is 49.
+12-05-2021 01:14:00.405: Peer 1002 has downloaded the piece 34 from 1001. Now the number of pieces it has is 50.
+12-05-2021 01:14:00.412: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:00.414: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:00.417: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:00.506: Peer 1002 received the ‘have’ message from 1003 for the piece 143.
+12-05-2021 01:14:00.516: Peer 1002 received the ‘have’ message from 1003 for the piece 15.
+12-05-2021 01:14:00.592: Peer 1002 has downloaded the piece 12 from 1003. Now the number of pieces it has is 51.
+12-05-2021 01:14:00.619: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:00.644: Peer 1002 has downloaded the piece 114 from 1001. Now the number of pieces it has is 52.
+12-05-2021 01:14:00.754: Peer 1002 received the ‘have’ message from 1003 for the piece 175.
+12-05-2021 01:14:00.770: Peer 1002 received the ‘have’ message from 1003 for the piece 188.
+12-05-2021 01:14:00.819: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:00.828: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:00.832: Peer 1002 has downloaded the piece 131 from 1003. Now the number of pieces it has is 53.
+12-05-2021 01:14:00.878: Peer 1002 has downloaded the piece 92 from 1001. Now the number of pieces it has is 54.
+12-05-2021 01:14:00.990: Peer 1002 received the ‘have’ message from 1003 for the piece 183.
+12-05-2021 01:14:00.993: Peer 1002 received the ‘have’ message from 1003 for the piece 181.
+12-05-2021 01:14:01.017: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:01.022: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:01.079: Peer 1002 has downloaded the piece 142 from 1001. Now the number of pieces it has is 55.
+12-05-2021 01:14:01.081: Peer 1002 has downloaded the piece 107 from 1003. Now the number of pieces it has is 56.
+12-05-2021 01:14:01.241: Peer 1002 has downloaded the piece 154 from 1001. Now the number of pieces it has is 57.
+12-05-2021 01:14:01.242: Peer 1002 received the ‘have’ message from 1003 for the piece 5.
+12-05-2021 01:14:01.248: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:01.249: Peer 1002 received the ‘have’ message from 1003 for the piece 80.
+12-05-2021 01:14:01.338: Peer 1002 has downloaded the piece 73 from 1003. Now the number of pieces it has is 58.
+12-05-2021 01:14:01.452: Peer 1002 has downloaded the piece 127 from 1001. Now the number of pieces it has is 59.
+12-05-2021 01:14:01.483: Peer 1002 received the ‘have’ message from 1003 for the piece 84.
+12-05-2021 01:14:01.487: Peer 1002 received the ‘have’ message from 1003 for the piece 108.
+12-05-2021 01:14:01.493: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:01.498: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:01.584: Peer 1002 has downloaded the piece 99 from 1003. Now the number of pieces it has is 60.
+12-05-2021 01:14:01.677: Peer 1002 has downloaded the piece 27 from 1001. Now the number of pieces it has is 61.
+12-05-2021 01:14:01.706: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:01.707: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:01.746: Peer 1002 received the ‘have’ message from 1003 for the piece 76.
+12-05-2021 01:14:01.757: Peer 1002 received the ‘have’ message from 1003 for the piece 93.
+12-05-2021 01:14:01.765: Peer 1002 received the ‘have’ message from 1003 for the piece 163.
+12-05-2021 01:14:01.845: Peer 1002 has downloaded the piece 84 from 1003. Now the number of pieces it has is 62.
+12-05-2021 01:14:01.896: Peer 1002 has downloaded the piece 30 from 1001. Now the number of pieces it has is 63.
+12-05-2021 01:14:01.932: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:02.008: Peer 1002 received the ‘have’ message from 1003 for the piece 92.
+12-05-2021 01:14:02.013: Peer 1002 received the ‘have’ message from 1003 for the piece 127.
+12-05-2021 01:14:02.106: Peer 1002 has downloaded the piece 117 from 1003. Now the number of pieces it has is 64.
+12-05-2021 01:14:02.126: Peer 1002 has downloaded the piece 102 from 1001. Now the number of pieces it has is 65.
+12-05-2021 01:14:02.148: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:02.151: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:02.270: Peer 1002 received the ‘have’ message from 1003 for the piece 97.
+12-05-2021 01:14:02.275: Peer 1002 received the ‘have’ message from 1003 for the piece 140.
+12-05-2021 01:14:02.282: Peer 1002 received the ‘have’ message from 1003 for the piece 46.
+12-05-2021 01:14:02.331: Peer 1002 has downloaded the piece 164 from 1001. Now the number of pieces it has is 66.
+12-05-2021 01:14:02.359: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:02.361: Peer 1002 has downloaded the piece 100 from 1003. Now the number of pieces it has is 67.
+12-05-2021 01:14:02.380: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:02.500: Peer 1002 has downloaded the piece 147 from 1001. Now the number of pieces it has is 68.
+12-05-2021 01:14:02.518: Peer 1002 received the ‘have’ message from 1003 for the piece 27.
+12-05-2021 01:14:02.521: Peer 1002 received the ‘have’ message from 1003 for the piece 71.
+12-05-2021 01:14:02.574: Peer 1002 has downloaded the piece 188 from 1003. Now the number of pieces it has is 69.
+12-05-2021 01:14:02.585: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:02.587: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:02.589: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:02.669: Peer 1002 has downloaded the piece 162 from 1001. Now the number of pieces it has is 70.
+12-05-2021 01:14:02.690: Peer 1002 received the ‘have’ message from 1003 for the piece 78.
+12-05-2021 01:14:02.779: Peer 1002 has downloaded the piece 56 from 1003. Now the number of pieces it has is 71.
+12-05-2021 01:14:02.815: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:02.824: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:02.862: Peer 1002 has downloaded the piece 57 from 1001. Now the number of pieces it has is 72.
+12-05-2021 01:14:02.936: Peer 1002 received the ‘have’ message from 1003 for the piece 55.
+12-05-2021 01:14:02.941: Peer 1002 received the ‘have’ message from 1003 for the piece 130.
+12-05-2021 01:14:03.015: Peer 1002 has downloaded the piece 110 from 1003. Now the number of pieces it has is 73.
+12-05-2021 01:14:03.051: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.056: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:03.135: Peer 1002 has downloaded the piece 121 from 1001. Now the number of pieces it has is 74.
+12-05-2021 01:14:03.158: Peer 1002 received the ‘have’ message from 1003 for the piece 77.
+12-05-2021 01:14:03.166: Peer 1002 received the ‘have’ message from 1003 for the piece 85.
+12-05-2021 01:14:03.250: Peer 1002 has downloaded the piece 23 from 1003. Now the number of pieces it has is 75.
+12-05-2021 01:14:03.252: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.254: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.349: Peer 1002 has downloaded the piece 168 from 1001. Now the number of pieces it has is 76.
+12-05-2021 01:14:03.395: Peer 1002 received the ‘have’ message from 1003 for the piece 53.
+12-05-2021 01:14:03.398: Peer 1002 received the ‘have’ message from 1003 for the piece 166.
+12-05-2021 01:14:03.451: Peer 1002 has downloaded the piece 165 from 1003. Now the number of pieces it has is 77.
+12-05-2021 01:14:03.460: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.463: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:03.567: Peer 1002 received the ‘have’ message from 1003 for the piece 31.
+12-05-2021 01:14:03.567: Peer 1002 has downloaded the piece 17 from 1001. Now the number of pieces it has is 78.
+12-05-2021 01:14:03.573: Peer 1002 received the ‘have’ message from 1003 for the piece 44.
+12-05-2021 01:14:03.647: Peer 1002 has downloaded the piece 77 from 1003. Now the number of pieces it has is 79.
+12-05-2021 01:14:03.692: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.695: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:03.785: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:14:03.794: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:14:03.799: Peer 1002 has downloaded the piece 174 from 1001. Now the number of pieces it has is 80.
+12-05-2021 01:14:03.806: Peer 1002 received the ‘have’ message from 1003 for the piece 62.
+12-05-2021 01:14:03.809: Peer 1002 received the ‘have’ message from 1003 for the piece 102.
+12-05-2021 01:14:03.815: Peer 1002 is choked by 1003.
+12-05-2021 01:14:03.852: Peer 1002 has downloaded the piece 171 from 1003. Now the number of pieces it has is 81.
+12-05-2021 01:14:03.943: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.949: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.954: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:03.967: Peer 1002 has downloaded the piece 179 from 1001. Now the number of pieces it has is 82.
+12-05-2021 01:14:03.991: Peer 1002 received the ‘have’ message from 1003 for the piece 101.
+12-05-2021 01:14:03.996: Peer 1002 received the ‘have’ message from 1003 for the piece 16.
+12-05-2021 01:14:04.078: Peer 1002 has downloaded the piece 124 from 1003. Now the number of pieces it has is 83.
+12-05-2021 01:14:04.125: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:04.137: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:04.168: Peer 1002 has downloaded the piece 71 from 1001. Now the number of pieces it has is 84.
+12-05-2021 01:14:04.202: Peer 1002 received the ‘have’ message from 1003 for the piece 147.
+12-05-2021 01:14:04.206: Peer 1002 received the ‘have’ message from 1003 for the piece 167.
+12-05-2021 01:14:04.281: Peer 1002 has downloaded the piece 26 from 1003. Now the number of pieces it has is 85.
+12-05-2021 01:14:04.355: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:04.427: Peer 1002 has downloaded the piece 24 from 1001. Now the number of pieces it has is 86.
+12-05-2021 01:14:04.430: Peer 1002 received the ‘have’ message from 1003 for the piece 151.
+12-05-2021 01:14:04.434: Peer 1002 received the ‘have’ message from 1003 for the piece 122.
+12-05-2021 01:14:04.483: Peer 1002 has downloaded the piece 167 from 1003. Now the number of pieces it has is 87.
+12-05-2021 01:14:04.581: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:04.584: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:04.605: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:04.622: Peer 1002 received the ‘have’ message from 1003 for the piece 49.
+12-05-2021 01:14:04.626: Peer 1002 received the ‘have’ message from 1003 for the piece 179.
+12-05-2021 01:14:04.631: Peer 1002 has downloaded the piece 145 from 1001. Now the number of pieces it has is 88.
+12-05-2021 01:14:04.718: Peer 1002 has downloaded the piece 19 from 1003. Now the number of pieces it has is 89.
+12-05-2021 01:14:04.772: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:04.853: Peer 1002 has downloaded the piece 10 from 1001. Now the number of pieces it has is 90.
+12-05-2021 01:14:04.877: Peer 1002 received the ‘have’ message from 1003 for the piece 189.
+12-05-2021 01:14:04.883: Peer 1002 received the ‘have’ message from 1003 for the piece 57.
+12-05-2021 01:14:04.956: Peer 1002 has downloaded the piece 5 from 1003. Now the number of pieces it has is 91.
+12-05-2021 01:14:05.044: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:05.047: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:05.051: Peer 1002 has downloaded the piece 173 from 1001. Now the number of pieces it has is 92.
+12-05-2021 01:14:05.107: Peer 1002 received the ‘have’ message from 1003 for the piece 149.
+12-05-2021 01:14:05.112: Peer 1002 received the ‘have’ message from 1003 for the piece 24.
+12-05-2021 01:14:05.193: Peer 1002 has downloaded the piece 62 from 1003. Now the number of pieces it has is 93.
+12-05-2021 01:14:05.269: Peer 1002 has downloaded the piece 41 from 1001. Now the number of pieces it has is 94.
+12-05-2021 01:14:05.315: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:05.317: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:05.320: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:05.368: Peer 1002 received the ‘have’ message from 1003 for the piece 82.
+12-05-2021 01:14:05.374: Peer 1002 received the ‘have’ message from 1003 for the piece 74.
+12-05-2021 01:14:05.461: Peer 1002 has downloaded the piece 52 from 1003. Now the number of pieces it has is 95.
+12-05-2021 01:14:05.531: Peer 1002 has downloaded the piece 40 from 1001. Now the number of pieces it has is 96.
+12-05-2021 01:14:05.547: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:05.552: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:05.641: Peer 1002 received the ‘have’ message from 1003 for the piece 45.
+12-05-2021 01:14:05.649: Peer 1002 received the ‘have’ message from 1003 for the piece 17.
+12-05-2021 01:14:05.729: Peer 1002 has downloaded the piece 55 from 1003. Now the number of pieces it has is 97.
+12-05-2021 01:14:05.772: Peer 1002 has downloaded the piece 0 from 1001. Now the number of pieces it has is 98.
+12-05-2021 01:14:05.790: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:05.893: Peer 1002 received the ‘have’ message from 1003 for the piece 191.
+12-05-2021 01:14:05.897: Peer 1002 received the ‘have’ message from 1003 for the piece 34.
+12-05-2021 01:14:05.904: Peer 1002 received the ‘have’ message from 1003 for the piece 36.
+12-05-2021 01:14:05.970: Peer 1002 has downloaded the piece 139 from 1001. Now the number of pieces it has is 99.
+12-05-2021 01:14:05.980: Peer 1002 has downloaded the piece 20 from 1003. Now the number of pieces it has is 100.
+12-05-2021 01:14:06.059: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:06.060: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:06.062: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:06.063: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:06.146: Peer 1002 has downloaded the piece 181 from 1001. Now the number of pieces it has is 101.
+12-05-2021 01:14:06.175: Peer 1002 received the ‘have’ message from 1003 for the piece 98.
+12-05-2021 01:14:06.181: Peer 1002 received the ‘have’ message from 1003 for the piece 173.
+12-05-2021 01:14:06.265: Peer 1002 has downloaded the piece 64 from 1003. Now the number of pieces it has is 102.
+12-05-2021 01:14:06.292: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:06.352: Peer 1002 has downloaded the piece 91 from 1001. Now the number of pieces it has is 103.
+12-05-2021 01:14:06.532: Peer 1002 received the ‘have’ message from 1003 for the piece 135.
+12-05-2021 01:14:06.540: Peer 1002 received the ‘have’ message from 1003 for the piece 3.
+12-05-2021 01:14:06.609: Peer 1002 has downloaded the piece 75 from 1001. Now the number of pieces it has is 104.
+12-05-2021 01:14:06.625: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:06.627: Peer 1002 has downloaded the piece 45 from 1003. Now the number of pieces it has is 105.
+12-05-2021 01:14:06.628: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:06.815: Peer 1002 received the ‘have’ message from 1003 for the piece 10.
+12-05-2021 01:14:06.827: Peer 1002 received the ‘have’ message from 1003 for the piece 115.
+12-05-2021 01:14:06.869: Peer 1002 has downloaded the piece 33 from 1001. Now the number of pieces it has is 106.
+12-05-2021 01:14:06.914: Peer 1002 has downloaded the piece 97 from 1003. Now the number of pieces it has is 107.
+12-05-2021 01:14:06.915: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:06.918: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:07.075: Peer 1002 received the ‘have’ message from 1003 for the piece 120.
+12-05-2021 01:14:07.082: Peer 1002 received the ‘have’ message from 1003 for the piece 172.
+12-05-2021 01:14:07.116: Peer 1002 has downloaded the piece 25 from 1001. Now the number of pieces it has is 108.
+12-05-2021 01:14:07.126: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:07.131: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:07.154: Peer 1002 has downloaded the piece 46 from 1003. Now the number of pieces it has is 109.
+12-05-2021 01:14:07.321: Peer 1002 received the ‘have’ message from 1003 for the piece 133.
+12-05-2021 01:14:07.326: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:07.329: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:07.333: Peer 1002 received the ‘have’ message from 1003 for the piece 70.
+12-05-2021 01:14:07.367: Peer 1002 has downloaded the piece 59 from 1001. Now the number of pieces it has is 110.
+12-05-2021 01:14:07.402: Peer 1002 has downloaded the piece 3 from 1003. Now the number of pieces it has is 111.
+12-05-2021 01:14:07.549: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:07.553: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:07.558: Peer 1002 received the ‘have’ message from 1003 for the piece 61.
+12-05-2021 01:14:07.571: Peer 1002 received the ‘have’ message from 1003 for the piece 35.
+12-05-2021 01:14:07.589: Peer 1002 received the ‘have’ message from 1003 for the piece 139.
+12-05-2021 01:14:07.603: Peer 1002 has downloaded the piece 42 from 1001. Now the number of pieces it has is 112.
+12-05-2021 01:14:07.608: Peer 1002 has downloaded the piece 172 from 1003. Now the number of pieces it has is 113.
+12-05-2021 01:14:07.731: Peer 1002 received the ‘have’ message from 1003 for the piece 125.
+12-05-2021 01:14:07.797: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:07.801: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:07.825: Peer 1002 has downloaded the piece 15 from 1003. Now the number of pieces it has is 114.
+12-05-2021 01:14:07.832: Peer 1002 has downloaded the piece 101 from 1001. Now the number of pieces it has is 115.
+12-05-2021 01:14:07.999: Peer 1002 received the ‘have’ message from 1003 for the piece 86.
+12-05-2021 01:14:08.004: Peer 1002 received the ‘have’ message from 1003 for the piece 182.
+12-05-2021 01:14:08.009: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:08.013: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:08.070: Peer 1002 has downloaded the piece 58 from 1001. Now the number of pieces it has is 116.
+12-05-2021 01:14:08.076: Peer 1002 has downloaded the piece 53 from 1003. Now the number of pieces it has is 117.
+12-05-2021 01:14:08.223: Peer 1002 received the ‘have’ message from 1003 for the piece 40.
+12-05-2021 01:14:08.226: Peer 1002 received the ‘have’ message from 1003 for the piece 42.
+12-05-2021 01:14:08.260: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:08.274: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:08.317: Peer 1002 has downloaded the piece 35 from 1003. Now the number of pieces it has is 118.
+12-05-2021 01:14:08.332: Peer 1002 has downloaded the piece 69 from 1001. Now the number of pieces it has is 119.
+12-05-2021 01:14:08.475: Peer 1002 received the ‘have’ message from 1003 for the piece 0.
+12-05-2021 01:14:08.477: Peer 1002 received the ‘have’ message from 1003 for the piece 113.
+12-05-2021 01:14:08.503: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:08.505: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:08.531: Peer 1002 has downloaded the piece 151 from 1003. Now the number of pieces it has is 120.
+12-05-2021 01:14:08.566: Peer 1002 has downloaded the piece 2 from 1001. Now the number of pieces it has is 121.
+12-05-2021 01:14:08.654: Peer 1002 received the ‘have’ message from 1003 for the piece 58.
+12-05-2021 01:14:08.659: Peer 1002 received the ‘have’ message from 1003 for the piece 138.
+12-05-2021 01:14:08.710: Peer 1002 has downloaded the piece 189 from 1003. Now the number of pieces it has is 122.
+12-05-2021 01:14:08.727: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:08.732: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:08.783: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:14:08.786: Peer 1002 has downloaded the piece 39 from 1001. Now the number of pieces it has is 123.
+12-05-2021 01:14:08.793: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:14:08.834: Peer 1002 received the ‘have’ message from 1003 for the piece 146.
+12-05-2021 01:14:08.840: Peer 1002 received the ‘have’ message from 1003 for the piece 25.
+12-05-2021 01:14:08.849: Peer 1002 is unchoked by 1003.
+12-05-2021 01:14:08.917: Peer 1002 has downloaded the piece 49 from 1003. Now the number of pieces it has is 124.
+12-05-2021 01:14:08.989: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:08.996: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:09.036: Peer 1002 has downloaded the piece 47 from 1001. Now the number of pieces it has is 125.
+12-05-2021 01:14:09.086: Peer 1002 received the ‘have’ message from 1003 for the piece 11.
+12-05-2021 01:14:09.095: Peer 1002 has downloaded the piece 149 from 1003. Now the number of pieces it has is 126.
+12-05-2021 01:14:09.244: Peer 1002 received the ‘have’ message from 1003 for the piece 114.
+12-05-2021 01:14:09.244: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:09.246: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:09.249: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:09.259: Peer 1002 has downloaded the piece 113 from 1003. Now the number of pieces it has is 127.
+12-05-2021 01:14:09.314: Peer 1002 has downloaded the piece 109 from 1001. Now the number of pieces it has is 128.
+12-05-2021 01:14:09.454: Peer 1002 received the ‘have’ message from 1003 for the piece 29.
+12-05-2021 01:14:09.460: Peer 1002 has downloaded the piece 70 from 1003. Now the number of pieces it has is 129.
+12-05-2021 01:14:09.525: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:09.526: Peer 1002 has downloaded the piece 190 from 1001. Now the number of pieces it has is 130.
+12-05-2021 01:14:09.527: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:09.630: Peer 1002 received the ‘have’ message from 1003 for the piece 2.
+12-05-2021 01:14:09.637: Peer 1002 received the ‘have’ message from 1003 for the piece 28.
+12-05-2021 01:14:09.644: Peer 1002 has downloaded the piece 11 from 1003. Now the number of pieces it has is 131.
+12-05-2021 01:14:09.711: Peer 1002 has downloaded the piece 144 from 1001. Now the number of pieces it has is 132.
+12-05-2021 01:14:09.783: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:09.786: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:09.789: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:09.835: Peer 1002 received the ‘have’ message from 1003 for the piece 33.
+12-05-2021 01:14:09.842: Peer 1002 has downloaded the piece 115 from 1003. Now the number of pieces it has is 133.
+12-05-2021 01:14:09.964: Peer 1002 has downloaded the piece 1 from 1001. Now the number of pieces it has is 134.
+12-05-2021 01:14:10.013: Peer 1002 received the ‘have’ message from 1003 for the piece 4.
+12-05-2021 01:14:10.015: Peer 1002 received the ‘have’ message from 1003 for the piece 109.
+12-05-2021 01:14:10.020: Peer 1002 has downloaded the piece 82 from 1003. Now the number of pieces it has is 135.
+12-05-2021 01:14:10.028: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:10.030: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:10.032: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:10.180: Peer 1002 received the ‘have’ message from 1003 for the piece 8.
+12-05-2021 01:14:10.187: Peer 1002 has downloaded the piece 182 from 1003. Now the number of pieces it has is 136.
+12-05-2021 01:14:10.227: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:10.229: Peer 1002 has downloaded the piece 21 from 1001. Now the number of pieces it has is 137.
+12-05-2021 01:14:10.342: Peer 1002 received the ‘have’ message from 1003 for the piece 164.
+12-05-2021 01:14:10.347: Peer 1002 has downloaded the piece 4 from 1003. Now the number of pieces it has is 138.
+12-05-2021 01:14:10.459: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:10.462: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:10.465: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:10.493: Peer 1002 has downloaded the piece 32 from 1001. Now the number of pieces it has is 139.
+12-05-2021 01:14:10.506: Peer 1002 received the ‘have’ message from 1003 for the piece 14.
+12-05-2021 01:14:10.529: Peer 1002 received the ‘have’ message from 1003 for the piece 162.
+12-05-2021 01:14:10.541: Peer 1002 has downloaded the piece 146 from 1003. Now the number of pieces it has is 140.
+12-05-2021 01:14:10.683: Peer 1002 received the ‘have’ message from 1003 for the piece 59.
+12-05-2021 01:14:10.687: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:10.713: Peer 1002 received the ‘have’ message from 1003 for the piece 22.
+12-05-2021 01:14:10.714: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:10.723: Peer 1002 has downloaded the piece 90 from 1001. Now the number of pieces it has is 141.
+12-05-2021 01:14:10.725: Peer 1002 has downloaded the piece 29 from 1003. Now the number of pieces it has is 142.
+12-05-2021 01:14:10.866: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:10.868: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:10.886: Peer 1002 received the ‘have’ message from 1003 for the piece 168.
+12-05-2021 01:14:10.933: Peer 1002 has downloaded the piece 160 from 1001. Now the number of pieces it has is 143.
+12-05-2021 01:14:10.934: Peer 1002 has downloaded the piece 28 from 1003. Now the number of pieces it has is 144.
+12-05-2021 01:14:11.090: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:11.093: Peer 1002 has downloaded the piece 186 from 1001. Now the number of pieces it has is 145.
+12-05-2021 01:14:11.095: Peer 1002 received the ‘have’ message from 1003 for the piece 156.
+12-05-2021 01:14:11.096: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:11.105: Peer 1002 received the ‘have’ message from 1003 for the piece 144.
+12-05-2021 01:14:11.115: Peer 1002 has downloaded the piece 28 from 1003. Now the number of pieces it has is 145.
+12-05-2021 01:14:11.301: Peer 1002 received the ‘have’ message from 1003 for the piece 90.
+12-05-2021 01:14:11.309: Peer 1002 has downloaded the piece 126 from 1001. Now the number of pieces it has is 146.
+12-05-2021 01:14:11.310: Peer 1002 has downloaded the piece 36 from 1003. Now the number of pieces it has is 147.
+12-05-2021 01:14:11.370: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:11.510: Peer 1002 has downloaded the piece 36 from 1003. Now the number of pieces it has is 147.
+12-05-2021 01:14:11.547: Peer 1002 has downloaded the piece 178 from 1001. Now the number of pieces it has is 148.
+12-05-2021 01:14:11.597: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:11.599: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:11.707: Peer 1002 received the ‘have’ message from 1003 for the piece 75.
+12-05-2021 01:14:11.714: Peer 1002 received the ‘have’ message from 1003 for the piece 152.
+12-05-2021 01:14:11.721: Peer 1002 has downloaded the piece 8 from 1003. Now the number of pieces it has is 149.
+12-05-2021 01:14:11.767: Peer 1002 has downloaded the piece 7 from 1001. Now the number of pieces it has is 150.
+12-05-2021 01:14:11.792: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:11.794: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:11.884: Peer 1002 received the ‘have’ message from 1003 for the piece 128.
+12-05-2021 01:14:11.890: Peer 1002 received the ‘have’ message from 1003 for the piece 186.
+12-05-2021 01:14:11.897: Peer 1002 has downloaded the piece 156 from 1003. Now the number of pieces it has is 151.
+12-05-2021 01:14:12.016: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:12.020: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:12.022: Peer 1002 has downloaded the piece 118 from 1001. Now the number of pieces it has is 152.
+12-05-2021 01:14:12.031: Peer 1002 received the ‘have’ message from 1003 for the piece 141.
+12-05-2021 01:14:12.036: Peer 1002 received the ‘have’ message from 1003 for the piece 190.
+12-05-2021 01:14:12.053: Peer 1002 has downloaded the piece 156 from 1003. Now the number of pieces it has is 152.
+12-05-2021 01:14:12.202: Peer 1002 received the ‘have’ message from 1003 for the piece 187.
+12-05-2021 01:14:12.208: Peer 1002 received the ‘have’ message from 1003 for the piece 1.
+12-05-2021 01:14:12.217: Peer 1002 has downloaded the piece 128 from 1003. Now the number of pieces it has is 153.
+12-05-2021 01:14:12.258: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:12.262: Peer 1002 has downloaded the piece 116 from 1001. Now the number of pieces it has is 154.
+12-05-2021 01:14:12.381: Peer 1002 received the ‘have’ message from 1003 for the piece 184.
+12-05-2021 01:14:12.387: Peer 1002 has downloaded the piece 152 from 1003. Now the number of pieces it has is 155.
+12-05-2021 01:14:12.488: Peer 1002 has downloaded the piece 137 from 1001. Now the number of pieces it has is 156.
+12-05-2021 01:14:12.503: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:12.504: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:12.507: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:12.515: Peer 1002 received the ‘have’ message from 1003 for the piece 39.
+12-05-2021 01:14:12.520: Peer 1002 received the ‘have’ message from 1003 for the piece 94.
+12-05-2021 01:14:12.529: Peer 1002 has downloaded the piece 14 from 1003. Now the number of pieces it has is 157.
+12-05-2021 01:14:12.674: Peer 1002 has downloaded the piece 129 from 1001. Now the number of pieces it has is 158.
+12-05-2021 01:14:12.690: Peer 1002 received the ‘have’ message from 1003 for the piece 158.
+12-05-2021 01:14:12.694: Peer 1002 has downloaded the piece 138 from 1003. Now the number of pieces it has is 159.
+12-05-2021 01:14:12.696: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:12.698: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:12.834: Peer 1002 received the ‘have’ message from 1003 for the piece 170.
+12-05-2021 01:14:12.839: Peer 1002 has downloaded the piece 141 from 1003. Now the number of pieces it has is 160.
+12-05-2021 01:14:12.935: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:12.940: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:12.944: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:12.957: Peer 1002 has downloaded the piece 43 from 1001. Now the number of pieces it has is 161.
+12-05-2021 01:14:12.969: Peer 1002 received the ‘have’ message from 1003 for the piece 7.
+12-05-2021 01:14:12.974: Peer 1002 received the ‘have’ message from 1003 for the piece 95.
+12-05-2021 01:14:12.980: Peer 1002 has downloaded the piece 94 from 1003. Now the number of pieces it has is 162.
+12-05-2021 01:14:13.136: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:13.151: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:13.158: Peer 1002 received the ‘have’ message from 1003 for the piece 178.
+12-05-2021 01:14:13.163: Peer 1002 has downloaded the piece 94 from 1003. Now the number of pieces it has is 162.
+12-05-2021 01:14:13.170: Peer 1002 has downloaded the piece 148 from 1001. Now the number of pieces it has is 163.
+12-05-2021 01:14:13.344: Peer 1002 received the ‘have’ message from 1003 for the piece 43.
+12-05-2021 01:14:13.347: Peer 1002 received the ‘have’ message from 1003 for the piece 137.
+12-05-2021 01:14:13.357: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:13.365: Peer 1002 has downloaded the piece 95 from 1003. Now the number of pieces it has is 164.
+12-05-2021 01:14:13.379: Peer 1002 has downloaded the piece 119 from 1001. Now the number of pieces it has is 165.
+12-05-2021 01:14:13.555: Peer 1002 has downloaded the piece 22 from 1003. Now the number of pieces it has is 166.
+12-05-2021 01:14:13.592: Peer 1002 has downloaded the piece 155 from 1001. Now the number of pieces it has is 167.
+12-05-2021 01:14:13.594: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:13.597: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:13.736: Peer 1002 received the ‘have’ message from 1003 for the piece 32.
+12-05-2021 01:14:13.743: Peer 1002 received the ‘have’ message from 1003 for the piece 123.
+12-05-2021 01:14:13.753: Peer 1002 has downloaded the piece 184 from 1003. Now the number of pieces it has is 168.
+12-05-2021 01:14:13.765: Peer 1002 has downloaded the piece 177 from 1001. Now the number of pieces it has is 169.
+12-05-2021 01:14:13.778: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:13.780: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:13.795: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:14:13.797: Peer 1002 has the preferred neighbors 1003.
+12-05-2021 01:14:13.881: Peer 1002 received the ‘have’ message from 1003 for the piece 148.
+12-05-2021 01:14:13.889: Peer 1002 received the ‘have’ message from 1003 for the piece 79.
+12-05-2021 01:14:13.905: Peer 1002 has downloaded the piece 170 from 1003. Now the number of pieces it has is 170.
+12-05-2021 01:14:13.956: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:13.961: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:13.978: Peer 1002 has downloaded the piece 38 from 1001. Now the number of pieces it has is 171.
+12-05-2021 01:14:14.031: Peer 1002 is choked by 1003.
+12-05-2021 01:14:14.034: Peer 1002 received the ‘have’ message from 1003 for the piece 154.
+12-05-2021 01:14:14.038: Peer 1002 received the ‘have’ message from 1003 for the piece 169.
+12-05-2021 01:14:14.048: Peer 1002 has downloaded the piece 170 from 1003. Now the number of pieces it has is 171.
+12-05-2021 01:14:14.202: Peer 1002 received the ‘have’ message from 1003 for the piece 142.
+12-05-2021 01:14:14.203: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:14.207: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:14.236: Peer 1002 has downloaded the piece 79 from 1003. Now the number of pieces it has is 172.
+12-05-2021 01:14:14.241: Peer 1002 has downloaded the piece 123 from 1001. Now the number of pieces it has is 173.
+12-05-2021 01:14:14.429: Peer 1002 received the ‘have’ message from 1003 for the piece 9.
+12-05-2021 01:14:14.443: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:14.447: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:14.448: Peer 1002 received the ‘have’ message from 1003 for the piece 119.
+12-05-2021 01:14:14.451: Peer 1002 has downloaded the piece 161 from 1001. Now the number of pieces it has is 174.
+12-05-2021 01:14:14.463: Peer 1002 has downloaded the piece 123 from 1003. Now the number of pieces it has is 174.
+12-05-2021 01:14:14.641: Peer 1002 received the ‘have’ message from 1003 for the piece 177.
+12-05-2021 01:14:14.652: Peer 1002 has downloaded the piece 169 from 1003. Now the number of pieces it has is 175.
+12-05-2021 01:14:14.705: Peer 1002 has downloaded the piece 105 from 1001. Now the number of pieces it has is 176.
+12-05-2021 01:14:14.737: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:14.814: Peer 1002 received the ‘have’ message from 1003 for the piece 48.
+12-05-2021 01:14:14.821: Peer 1002 received the ‘have’ message from 1003 for the piece 126.
+12-05-2021 01:14:14.829: Peer 1002 has downloaded the piece 9 from 1003. Now the number of pieces it has is 177.
+12-05-2021 01:14:14.976: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:14.980: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:14.982: Peer 1002 has downloaded the piece 51 from 1001. Now the number of pieces it has is 178.
+12-05-2021 01:14:14.984: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:15.017: Peer 1002 received the ‘have’ message from 1003 for the piece 38.
+12-05-2021 01:14:15.024: Peer 1002 received the ‘have’ message from 1003 for the piece 118.
+12-05-2021 01:14:15.031: Peer 1002 has downloaded the piece 9 from 1003. Now the number of pieces it has is 178.
+12-05-2021 01:14:15.197: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:15.241: Peer 1002 received the ‘have’ message from 1003 for the piece 155.
+12-05-2021 01:14:15.247: Peer 1002 has downloaded the piece 48 from 1003. Now the number of pieces it has is 179.
+12-05-2021 01:14:15.272: Peer 1002 has downloaded the piece 54 from 1001. Now the number of pieces it has is 180.
+12-05-2021 01:14:15.435: Peer 1002 received the ‘have’ message from 1003 for the piece 105.
+12-05-2021 01:14:15.438: Peer 1002 received the ‘have’ message from 1003 for the piece 69.
+12-05-2021 01:14:15.445: Peer 1002 has downloaded the piece 48 from 1003. Now the number of pieces it has is 180.
+12-05-2021 01:14:15.449: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:15.453: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:15.491: Peer 1002 has downloaded the piece 150 from 1001. Now the number of pieces it has is 181.
+12-05-2021 01:14:15.591: Peer 1002 received the ‘have’ message from 1003 for the piece 116.
+12-05-2021 01:14:15.599: Peer 1002 received the ‘have’ message from 1003 for the piece 21.
+12-05-2021 01:14:15.604: Peer 1002 received the ‘have’ message from 1003 for the piece 104.
+12-05-2021 01:14:15.659: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:15.669: Peer 1002 received the ‘have’ message from 1003 for the piece 54.
+12-05-2021 01:14:15.679: Peer 1002 has downloaded the piece 104 from 1001. Now the number of pieces it has is 182.
+12-05-2021 01:14:15.722: Peer 1002 received the ‘have’ message from 1003 for the piece 176.
+12-05-2021 01:14:15.816: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:15.821: Peer 1002 received the ‘have’ message from 1003 for the piece 161.
+12-05-2021 01:14:15.858: Peer 1002 has downloaded the piece 83 from 1001. Now the number of pieces it has is 183.
+12-05-2021 01:14:15.903: Peer 1002 received the ‘have’ message from 1003 for the piece 13.
+12-05-2021 01:14:15.942: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:15.945: Peer 1002 received the ‘have’ message from 1003 for the piece 150.
+12-05-2021 01:14:16.030: Peer 1002 has downloaded the piece 68 from 1001. Now the number of pieces it has is 184.
+12-05-2021 01:14:16.101: Peer 1002 received the ‘have’ message from 1003 for the piece 37.
+12-05-2021 01:14:16.105: Peer 1002 received the ‘have’ message from 1003 for the piece 83.
+12-05-2021 01:14:16.188: Peer 1002 has downloaded the piece 159 from 1001. Now the number of pieces it has is 185.
+12-05-2021 01:14:16.250: Peer 1002 received the ‘have’ message from 1003 for the piece 136.
+12-05-2021 01:14:16.273: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:16.275: Peer 1002 received the ‘have’ message from 1003 for the piece 129.
+12-05-2021 01:14:16.278: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:16.337: Peer 1002 has downloaded the piece 112 from 1001. Now the number of pieces it has is 186.
+12-05-2021 01:14:16.414: Peer 1002 received the ‘have’ message from 1003 for the piece 112.
+12-05-2021 01:14:16.456: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:16.459: Peer 1002 received the ‘have’ message from 1003 for the piece 68.
+12-05-2021 01:14:16.525: Peer 1002 has downloaded the piece 6 from 1001. Now the number of pieces it has is 187.
+12-05-2021 01:14:16.564: Peer 1002 received the ‘have’ message from 1003 for the piece 159.
+12-05-2021 01:14:16.607: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:16.685: Peer 1002 has downloaded the piece 37 from 1001. Now the number of pieces it has is 188.
+12-05-2021 01:14:16.736: Peer 1002 received the ‘have’ message from 1003 for the piece 6.
+12-05-2021 01:14:16.865: Peer 1002 has downloaded the piece 67 from 1001. Now the number of pieces it has is 189.
+12-05-2021 01:14:16.918: Peer 1002 received the ‘have’ message from 1003 for the piece 67.
+12-05-2021 01:14:16.939: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:16.941: Peer 1002 received the ‘have’ message from 1003 for the piece 51.
+12-05-2021 01:14:16.942: Peer 1002 received the ‘interested’ message from 1003.
+12-05-2021 01:14:17.021: Peer 1002 has downloaded the piece 136 from 1001. Now the number of pieces it has is 190.
+12-05-2021 01:14:17.036: Peer 1002 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:17.262: Peer 1002 has downloaded the piece 176 from 1001. Now the number of pieces it has is 191.
+12-05-2021 01:14:17.347: Peer 1002 has downloaded the piece 13 from 1001. Now the number of pieces it has is 192.
+12-05-2021 01:14:17.348: Peer 1002 has downloaded the complete file.
+12-05-2021 01:14:17.397: Peer 1002 has downloaded the complete file.
+12-05-2021 01:14:18.787: Peer 1002 has the preferred neighbor.
+12-05-2021 01:14:18.797: Peer 1002 has the preferred neighbor.
+12-05-2021 01:14:23.787: Peer 1002 has the preferred neighbor.
+12-05-2021 01:14:23.797: Peer 1002 has the preferred neighbor.

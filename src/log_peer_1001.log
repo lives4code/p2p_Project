@@ -1,0 +1,27 @@
+12-05-2021 01:13:48.756: Peer 1001 makes a connection to Peer 1002.
+12-05-2021 01:13:48.758: Peer 1001 makes a connection to Peer 1003.
+12-05-2021 01:13:48.763: Peer 1001 has the optimistically unchoked neighbor .
+12-05-2021 01:13:48.763: Peer 1001 has the preferred neighbor.
+12-05-2021 01:13:48.763: Peer 1001 has the preferred neighbor.
+12-05-2021 01:13:49.806: Peer 1001 is connected from Peer 1003.
+12-05-2021 01:13:49.808: Peer 1001 is connected from Peer 1002.
+12-05-2021 01:13:49.810: Peer 1001 has downloaded the complete file.
+12-05-2021 01:13:49.819: Peer 1001 received the ‘interested’ message from 1003.
+12-05-2021 01:13:49.819: Peer 1001 received the ‘interested’ message from 1002.
+12-05-2021 01:13:49.828: Peer 1001 has downloaded the complete file.
+12-05-2021 01:13:53.751: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:13:53.762: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:13:58.751: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:13:58.772: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:03.753: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:03.769: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:08.754: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:08.764: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:13.752: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:13.764: Peer 1001 has the preferred neighbors 1002, 1003.
+12-05-2021 01:14:17.028: Peer 1001 received the ‘not interested’ message from 1003.
+12-05-2021 01:14:17.398: Peer 1001 received the ‘not interested’ message from 1002.
+12-05-2021 01:14:18.753: Peer 1001 has the preferred neighbor.
+12-05-2021 01:14:18.765: Peer 1001 has the preferred neighbor.
+12-05-2021 01:14:23.754: Peer 1001 has the preferred neighbor.
+12-05-2021 01:14:23.765: Peer 1001 has the preferred neighbor.
