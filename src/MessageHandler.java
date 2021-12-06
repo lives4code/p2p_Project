@@ -223,14 +223,8 @@ public class MessageHandler {
                     pieceIndexArr[i] = msg[i];
                 }
                 int pieceIndex = ByteBuffer.wrap(pieceIndexArr).getInt();
-                MyProcess.bitField.set(pieceIndex);
-                // log
-                int numPieces = 0;
-                for(int i = 0; i < MyProcess.bitField.size(); i++){
-                    if(MyProcess.bitField.get(i))
-                        numPieces++;
-                }
-                log.info("Peer " + myId + " has downloaded the piece " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
+                //MyProcess.bitField.set(pieceIndex);
+
 
                 byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
                 String st = "";
@@ -239,6 +233,15 @@ public class MessageHandler {
                 }
                 //System.out.println("with payload" + st);
                 MyProcess.writePiece(pieceIndexArr,arr);
+                
+                // log
+                int numPieces = 0;
+                for(int i = 0; i < MyProcess.bitField.size(); i++){
+                    if(MyProcess.bitField.get(i))
+                        numPieces++;
+                }
+                log.info("Peer " + myId + " has downloaded the piece " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
+
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
