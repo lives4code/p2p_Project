@@ -184,7 +184,7 @@ public class MessageHandler {
                 log.info("Peer " + myId + " received the ‘have’ message from " + clientId + " for the piece " + integer + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(integer);
                 printMessageHandlerDebug(4, clientId, myId, s);
-                if(MyProcess.bitField.get(integer) == false){
+                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)){
                     //send interested
                     return createInterestedMessage();
                 }
