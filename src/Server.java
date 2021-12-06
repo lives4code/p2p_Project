@@ -124,7 +124,9 @@ public class Server extends Thread {
                                 continue mainloop;
                             }
                         }
-                        log.info("Peer " + myId + " has downloaded the complete file.");
+                        if(MyProcess.done) {
+                            log.info("Peer " + myId + " has downloaded the complete file.");
+                        }
                         //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setDone();
                         MyProcess.done = true;
                         MyProcess.checkDone = true;

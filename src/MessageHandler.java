@@ -233,7 +233,7 @@ public class MessageHandler {
                 }
                 //System.out.println("with payload" + st);
                 MyProcess.writePiece(pieceIndexArr,arr);
-                
+
                 // log
                 int numPieces = 0;
                 for(int i = 0; i < MyProcess.bitField.size(); i++){
