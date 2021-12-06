@@ -12,6 +12,9 @@ CLASSES = \
 	Piece.java \
 	Server.java \
 	MyFormatter.java \
+	CleanRemote.java \
+	RemotePeerInfo.java \
+	StartRemotePeers.java \
 
 default: classes
 
@@ -22,4 +25,7 @@ clean:
 	rm *.txt
 	rm ../peers/1002/thefile
 	rm ../peers/1003/thefile
-	rm ../log/*.log
+	rm ../peers/1004/thefile
+	rm ../peers/1005/thefile
+	rm ../peers/1006/thefile
+	rm ../log/log*
