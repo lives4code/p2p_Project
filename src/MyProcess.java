@@ -406,6 +406,12 @@ public class MyProcess {
                     chokedIndices.add(prevIndex);
                 Random rand = new Random();
                 int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
+                // debug log
+                String s = "PEER " + myId + " DEBUG: opt unchoke random index:" + randomIndex;
+                 s += " chokedIndecesSize: " + chokedIndices.size();
+                 for(int i = 0; i < chokedIndices.size(); i++){
+                     s+= chokedIndices.get(i)  + " ";
+                 }
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
                     // Unchoke the new optimistic peer
