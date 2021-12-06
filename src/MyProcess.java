@@ -37,7 +37,7 @@ public class MyProcess {
 
     public MyProcess(int peerId) {
         myId = peerId;
-        filename = "../Files_From_Prof/project_config_file_small/project_config_file_small/" + String.valueOf(myId) + "/";
+        filename = "../peers/" + String.valueOf(myId) + "/";
         peers = new ArrayList<>();
         checkDone = false;
 
@@ -52,7 +52,7 @@ public class MyProcess {
 
         // configure logger
         try {
-            fh = new FileHandler("./log_peer_" + peerId + ".log");
+            fh = new FileHandler("../log/log_peer_" + peerId + ".log");
             MyFormatter formatter = new MyFormatter();
             fh.setFormatter(formatter);
             log.addHandler(fh);
@@ -222,7 +222,7 @@ public class MyProcess {
     public void loadPeerInfo() {
         try {
             int numPieces = (int) Math.ceil(fileSize / pieceSize);
-            File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/PeerInfo.cfg");
+            File myObj = new File("../cfg/PeerInfo.cfg");
             Scanner fileReader = new Scanner(myObj);
             while (fileReader.hasNext()) {
                 int peerId = Integer.valueOf(fileReader.next());
@@ -275,7 +275,7 @@ public class MyProcess {
 
     public void loadCommonConfig() {
         try {
-            File myObj = new File("../Files_From_Prof/project_config_file_small/project_config_file_small/Common.cfg");
+            File myObj = new File("../cfg/Common.cfg");
             Scanner fileReader = new Scanner(myObj);
             while (fileReader.hasNextLine()) {
                 // Number of Preferred Neighbors
