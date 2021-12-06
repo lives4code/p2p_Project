@@ -242,7 +242,7 @@ public class MyProcess {
             bitField = new BitSet(numPieces);
             if(this.hasFile){
                 for(int i = 0; i < bitField.size(); i++){
-                        bitField.set(i);
+                    bitField.set(i);
                 }
             }
             if(this.hasFile == false){
@@ -330,30 +330,33 @@ public class MyProcess {
                     System.out.println("Error: Num preferred neighbors is greater than num of peers");
                     cancel();
                 }
-                List<Integer> fastestIndices = new ArrayList<>();
+                List<Integer> fastestIds = new ArrayList<>();
                 // Find fastest indices
                 for (int k = 0; k < numPrefNeighbors; k++) {
-                    int minIndex = -1;
+                    int minId = -1;
                     double minRate = Double.MAX_VALUE;
                     for (int i = 0; i < peers.size(); i++) {
-                        if (peers.get(i).downloadRate <= minRate && !fastestIndices.contains(i) && peers.get(i).getIsInterested()) {
-                            minIndex = i;
+                        if (peers.get(i).downloadRate <= minRate && !fastestIds.contains(peers.get(i).getPeerId()) && peers.get(i).getIsInterested()) {
+                            minId = peers.get(i).getPeerId();
                             minRate = peers.get(i).downloadRate;
                         }
                     }
-                    if (minIndex != -1)
-                        fastestIndices.add(minIndex);
+                    if (minId!= -1)
+                        fastestIds.add(minId);
+                }
+                for (int i = 0; i< fastestIds.size(); i++){
+                    System.out.println("poop " + "my id" + myId + "fastestesindex:" + i + "fastestid:" + fastestIds.get(i) + "\n");
                 }
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
                     // Unchoke new neighbor // Choke old neighbor except optimistic
-                    if ((fastestIndices.contains(i) && peers.get(i).getIsChoked())
-                            || (!fastestIndices.contains(i) && !peers.get(i).getIsChoked() && !peers.get(i).getOptimistic())) {
+                    if ((fastestIds.contains(peers.get(i).getPeerId()) && peers.get(i).getIsChoked())
+                            || (!fastestIds.contains(peers.get(i).getPeerId()) && !peers.get(i).getIsChoked() && !peers.get(i).getOptimistic())) {
                         System.out.println("PEER " + myId + ": CHANGE CHOKE for: " + peers.get(i).getPeerId() + " current choke: " + peers.get(i).getIsChoked());
                         peers.get(i).setChangeChoke(true);
                     }
                     // None of the fastest indices should be considered optimistic
-                    if (fastestIndices.contains(i)) {
+                    if (fastestIds.contains(peers.get(i).getPeerId())) {
                         peers.get(i).setOptimistic(false);
                     }
                 }
@@ -366,7 +369,7 @@ public class MyProcess {
                 // Log
                 String msg = "Peer " + myId + " has the preferred neighbors ";
                 for (int i = 0; i < peers.size(); i++) {
-                    if (fastestIndices.contains(i)) {
+                    if (fastestIds.contains(peers.get(i).getPeerId())) {
                         msg += peers.get(i).getPeerId();
                         msg += ", ";
                     }
@@ -396,34 +399,36 @@ public class MyProcess {
                     }
                 }
                 // Randomly select optimistic neighbor
-                List<Integer> chokedIndices = new ArrayList<>();
+                List<Integer> chokedIds = new ArrayList<>();
                 for (int i = 0; i < peers.size(); i++) {
+                    Peer p = peers.get(i);
+                    System.out.println("\nmyID " + myId +" i " + i + " peerid " + p.getPeerId() +" choked " + p.getIsChoked() + " interested " + p.getIsInterested() + " unique");
                     if (peers.get(i).getIsChoked() && peers.get(i).getIsInterested()) {
-                        chokedIndices.add(i);
+                        chokedIds.add(peers.get(i).getPeerId());
                     }
                 }
+                System.out.println("chokedSize = " + chokedIds.size());
                 if (prevIndex != -1 && peers.get(prevIndex).isInterested)
-                    chokedIndices.add(prevIndex);
+                    chokedIds.add(peers.get(prevIndex).getPeerId());
                 Random rand = new Random();
-                int randomIndex = chokedIndices.size() > 0 ? chokedIndices.get(rand.nextInt(chokedIndices.size())) : -1;
-                // debug log
-                String s = "PEER " + myId + " DEBUG: opt unchoke random index:" + randomIndex;
-                 s += " chokedIndecesSize: " + chokedIndices.size();
-                 for(int i = 0; i < chokedIndices.size(); i++){
-                     s+= chokedIndices.get(i)  + " ";
-                 }
+                int randomId = chokedIds.size() > 0 ? chokedIds.get(rand.nextInt(chokedIds.size())) : -1;
+
+                //int unchokePeeerId = chokedIndices.get(randomIndex);
+                //System.out.println("unchokePeerId:" + unchokePeeerId);
+
+
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
                     // Unchoke the new optimistic peer
-                    if (randomIndex == i) {
+                    if (randomId == peers.get(i).getPeerId()) {
                         peers.get(i).setOptimistic(true);
                         if (peers.get(i).getIsChoked())
                             peers.get(i).setChangeChoke(true);
-                            System.out.println("PEER " + myId + ": new opt unchoke:" + peers.get(i));
+                        System.out.println("PEER " + myId + ": new opt unchoke:" + peers.get(i));
                     }
                 }
                 // Choke the old optimistic peer
-                if (randomIndex != prevIndex && prevIndex != -1) {
+                if (prevIndex != -1 && randomId != peers.get(prevIndex).getPeerId()) {
                     peers.get(prevIndex).setChangeChoke(true);
                     System.out.println("PEER " + myId + ": old opt choke:" + peers.get(prevIndex));
                     peers.get(prevIndex).setOptimistic(false);
@@ -437,7 +442,7 @@ public class MyProcess {
                 // Log
                 String msg = "Peer " + myId + " has the optimistically unchoked neighbor ";
                 for (int i = 0; i < peers.size(); i++) {
-                    if (i == randomIndex)
+                    if (randomId == peers.get(i).getPeerId())
                         msg += peers.get(i).getPeerId();
                 }
                 log.info(msg + ".");
