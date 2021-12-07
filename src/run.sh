@@ -16,4 +16,3 @@ echo "---peers started---"
 #echo "killing processes after sleeping" $sleepTime
 #kill $PID1
 #kill $PID2
-rm run.sh; mv Test.sh run.sh
