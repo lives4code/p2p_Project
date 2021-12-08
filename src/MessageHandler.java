@@ -1,11 +1,9 @@
 import java.io.DataOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
@@ -21,12 +19,15 @@ public class MessageHandler {
             ioException.printStackTrace();
         }
     }
+
     public static byte[] createInterestedMessage(){
         return createMsg(2, new byte[]{});
     }
+
     public static byte[] createUninterestedMessage(){
         return createMsg(3, new byte[]{});
     }
+
     public static byte[] createPieceMessage(byte[] pieceIndex){
         byte[] payload = createMsg(7, MyProcess.readPiece(pieceIndex));
         byte[] index = new byte[4];
@@ -36,9 +37,11 @@ public class MessageHandler {
         System.out.println("for piece message index is:" + ByteBuffer.wrap(index).getInt());
         return payload;
     }
+
     public static byte[] createHaveMessage(byte[] pieceIndex){
         return createMsg(4, pieceIndex);
     }
+
     public static byte[] createRequestMessage(byte[] pieceIndex){
         byte[] payload = createMsg(6, pieceIndex);
         byte[] index = new byte[4];
@@ -49,12 +52,15 @@ public class MessageHandler {
 
         return payload;
     }
+
     public static byte[] createChokeMessage(){
         return createMsg(0, new byte[]{});
     }
+
     public static byte[] createunChokeMessage(){
         return createMsg(1, new byte[]{});
     }
+
     public static byte[] createHandshake(int peerID) {
         byte[] bytes = new byte[32];
         String hexString = "P2PFILESHARINGPROJ";
@@ -65,7 +71,6 @@ public class MessageHandler {
         for (int i = 18; i < 28; i++) {
             bytes[i] = 0x00;
         }
-
         byte[] peer_id = ByteBuffer.allocate(4).putInt(peerID).array();
         for ( int i = 0; i < 4; i++){
             bytes[28 + i] = peer_id[i];
@@ -73,7 +78,7 @@ public class MessageHandler {
         return bytes;
     }
 
-    public static int validateHandshake(byte[] msg, int peerId) throws Exception {
+    public static int validateHandshake(byte[] msg) throws Exception {
         byte[] header = ("P2PFILESHARINGPROJ").getBytes();
         // Check for appropriate header
         if (!Arrays.equals(header, Arrays.copyOfRange(msg, 0, 18))) {
@@ -130,7 +135,6 @@ public class MessageHandler {
             break;
             default: operation = "invalid";
             break;
-
         }
         String clientOrServer;
         if(s == 'S' || s == 's'){
@@ -142,7 +146,6 @@ public class MessageHandler {
         System.out.println("MES HANDLER " + clientOrServer + " " + myId + ": Handling type " + type + " message operation: " + operation + " from: " + clientId);
     }
 
-    //handle message
     public static byte[] handleMessage(byte[] msg, int type, int clientId, int myId, char s, Logger log) {
         Peer peer = MyProcess.peers.get(MyProcess.getPeerIndexById(clientId));
         switch(type){
@@ -151,7 +154,6 @@ public class MessageHandler {
             case 0:
                 //choke
                 printMessageHandlerDebug(0, clientId, myId, s);
-                //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
                 log.info("Peer " + myId + " is 'choked' by " + clientId + ".");
                 return null;
             case 1:
@@ -161,8 +163,6 @@ public class MessageHandler {
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
-                //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(false);
-                //System.out.println("MES HANDLER client: " + clientId + " ischoked: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).getIsChoked());
                 return null;
             case 2:
                 //interested
@@ -185,11 +185,9 @@ public class MessageHandler {
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(integer);
                 printMessageHandlerDebug(4, clientId, myId, s);
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)){
-                    //send interested
                     return createInterestedMessage();
                 }
                 else {
-                    //send not interested
                     return createUninterestedMessage();
                 }
             case 5:
@@ -230,15 +228,9 @@ public class MessageHandler {
                     pieceIndexArr[i] = msg[i];
                 }
                 int pieceIndex = ByteBuffer.wrap(pieceIndexArr).getInt();
-                //MyProcess.bitField.set(pieceIndex);
 
-
+                // save new piece
                 byte[] arr = Arrays.copyOfRange(msg, 4, msg.length);
-                String st = "";
-                for(int j =0; j < arr.length; j++){
-                    st+= (char)arr[j];
-                }
-                //System.out.println("with payload" + st);
                 MyProcess.writePiece(pieceIndexArr,arr);
 
                 // log
@@ -249,10 +241,10 @@ public class MessageHandler {
                 }
                 log.info("Peer " + myId + " has downloaded the 'piece' " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
 
+                // send request or uninterested
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
-                //return createRequestMessage(pieceIndexArr);
                 return createUninterestedMessage();
             case 8:
                 // server complete tell client to stop
@@ -267,7 +259,6 @@ public class MessageHandler {
     }
 
     public static BitSet getComplement(BitSet input){
-        //System.out.println("complement input is " + input);
         BitSet ret = new BitSet(input.size());
         if(input.isEmpty()){
             for(int i =0; i < ret.size(); i++){
@@ -280,28 +271,23 @@ public class MessageHandler {
                 ret.flip(i);
             }
         }
-        //System.out.println("complement output is" + ret);
-
         return ret;
     }
+
     public static BitSet getNeededPieces(BitSet received, BitSet mine){
         if(mine == null || mine.isEmpty()){
-            //System.out.println("mine is null");
             mine = new BitSet(received.length());
         }
         if(received == null || received.isEmpty()){
-            //System.out.println("received is null");
             received = new BitSet(mine.length());
         }
         BitSet comp = getComplement(mine);
         comp.and(received);
-        //System.out.println("pieces Needed:" + comp);
         return comp;
     }
+
     public static boolean checkForInterest(BitSet received, BitSet mine) {
-        //System.out.println("about to check for interest mybitfield:" + mine + "incoming bitfield" + received);
         BitSet comp = getNeededPieces(received, mine);
-        //System.out.println("checking for interest" + comp);
         boolean interested = false;
         for (int i = 0; i < comp.length(); i++) {
             if (comp.get(i) == true) {
@@ -311,8 +297,8 @@ public class MessageHandler {
         }
         return interested;
     }
+
     public static int[] getIndecesOfInterest(BitSet input){
-        //System.out.println("indeces of interest inptut is " + input);
         int index = 0;
         int size = 0;
         for(int i = 0; i < input.size(); i++){
@@ -323,58 +309,24 @@ public class MessageHandler {
         int[] ret = new int[size];
         for (int i =0; i < input.size(); i++){
             if(input.get(i)){
-                //System.out.println("ret[index]: " + index + "=:" + i);
                 ret[index] = i;
                 index++;
             }
         }
-        String s = "";
-        for (int i =0; i < size; i++){
-            s+= " " + String.valueOf(ret[i]);
-        }
-        //System.out.println("indeseces of interest output is " + s);
-
         return ret;
     }
 
-
     public static byte[] getRandomPiece(BitSet received, BitSet mine){
         int randomNum;
-        //System.out.println("get random piece input recieved:"  + received);
-        //System.out.println("get random piece input mine:"  + received);
         BitSet neededPieces = getNeededPieces(received, mine);
         System.out.println("get random piece needed pieces"  + neededPieces);
         int[] neededPieceIndexes = getIndecesOfInterest(neededPieces);
-        String s = "";
-        for(int i =0; i < neededPieceIndexes.length; i++){
-            s+= " " + String.valueOf(neededPieceIndexes[i]);
-        }
-        //System.out.println("get random needed piece indexes size:" + neededPieceIndexes.length + "indexes"  + s);
-
         if(neededPieceIndexes.length == 0){
             System.out.println("don't need anymore pieces.");
         }
         randomNum = ThreadLocalRandom.current().nextInt(0, neededPieceIndexes.length);
-        //System.out.println("random piece index is:" + randomNum);
         System.out.println("get random piece  returns"  + neededPieceIndexes[randomNum]);
-
         return ByteBuffer.allocate(4).putInt(neededPieceIndexes[randomNum]).array();
-        //return ByteBuffer.allocate(4).putInt(0).array();
-    }
-
-    private static void printBitfield(byte[] bytes, String s) {
-        for (byte b : bytes) {
-            s += "0x" + Integer.toHexString(Byte.toUnsignedInt(b)).toUpperCase() + ", ";
-        }
-        System.out.println(s);
-    }
-    public static boolean isFull(BitSet input){
-        for(int i = 0; i <input.size(); i++){
-            if(input.get(i) == false){
-                return false;
-            }
-        }
-        return true;
     }
 }
 

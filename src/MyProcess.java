@@ -2,8 +2,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
@@ -11,10 +9,8 @@ import java.util.logging.*;
 public class MyProcess {
     // From Peer Info Cfg
     private static int myId;
-    // put your ip and port no
     private String myHostName;
     int port;
-
     static boolean hasFile;
     static BitSet bitField;
 
@@ -57,7 +53,7 @@ public class MyProcess {
             fh.setFormatter(formatter);
             log.addHandler(fh);
             log.setUseParentHandlers(false);
-        }catch (SecurityException e) {
+        } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,16 +64,8 @@ public class MyProcess {
         startDeterminingOptimistic();
     }
 
-
-    //wrote code to flip index.
-    //talk to nick make sure this is right.
     public static void writePiece(byte[] pieceIndex, byte[] piece){
         try {
-            String pieceRead = "";
-            for(int i = -0; i< piece.length; i++){
-                pieceRead += " " + String.valueOf(piece[i]);
-            }
-            //System.out.println("filename:" + filename);
             RandomAccessFile file = new RandomAccessFile(filename, "rw");
             int index = ByteBuffer.wrap(pieceIndex).getInt();
             int skip = (int)pieceSize * index;
@@ -86,8 +74,6 @@ public class MyProcess {
             bitField.set(index);
             System.out.println("bitfield is now" + bitField);
             file.close();
-            //System.out.println("write successful index:" + index  + " piece:" + pieceRead);
-
         }
         catch (Exception e){
             e.printStackTrace();
@@ -96,7 +82,6 @@ public class MyProcess {
     }
 
     public static byte[] readPiece(byte[] pieceIndex ){
-        //System.out.println("filename:" + filename);
         byte[] piece = new byte[(int) pieceSize];
         int numPieces = (int) Math.ceil(fileSize/pieceSize);
         byte[] pieceInd = new byte[4];
@@ -134,18 +119,9 @@ public class MyProcess {
         for(int i =4; i < ret.length; i++){
             ret[i] = piece[i - 4];
         }
-        //System.out.println("read successful");
-        String pieceRead = "";
-
-        for(int i =0; i < ret.length; i++){
-            pieceRead += String.valueOf(ret[i]) + "";
-        }
-
-        //System.out.println("read successful index:" + ByteBuffer.wrap(pieceIndex).getInt() + "size:" + ret.length +  "piece " + pieceRead);
         return ret;
     }
 
-    //does this function cause each client to start from each computer?
     public void start() throws Exception {
         System.out.println("PEER " + myId + ": Peer is running");
         // Start client
@@ -168,7 +144,6 @@ public class MyProcess {
                     System.out.println("PEER " + myId + ": Client " + clientNum + " is connected!");
                     clientNum++;
                 } catch (SocketTimeoutException e) {
-                    //System.out.println("PEER CHECK " + myId + ": socket timeout. Restart interval. done: " + done + " check done: " + checkDone);
                     String s = "PEER CHECK " + myId + ": TIMEOUT done: " + done + " print bitfield: ";
                     for (int i = 0; i < MyProcess.bitField.size(); i ++){
                         s += MyProcess.bitField.get(i) + ", ";
@@ -180,7 +155,6 @@ public class MyProcess {
                     }
                     System.out.println(s);
                 }
-
 
                 //check for children done
                 if (checkDone){
@@ -194,7 +168,6 @@ public class MyProcess {
 
                     //see if each peer is done if so quit
                     for (Peer peer: peers){
-                        //System.out.println("PEER CHECK " + myId + ": checking peer " + peer.getPeerId() + " is " + peer.getDone() + " has file " + peer.hasFile);
                         if (!peer.getDone()){
                             checkDone = false;
                             System.out.println("PEER CHECK " + myId + ": continue");
@@ -205,8 +178,6 @@ public class MyProcess {
                     System.out.println("PEER CHECK " + myId + ": break");
                     break;
                 }
-
-
             }
         } finally {
             listener.close();
@@ -214,13 +185,13 @@ public class MyProcess {
             TimeUnit.SECONDS.sleep(5);
             System.out.println("PEER CHECK " + myId + ": exit");
             System.exit(1);
-
         }
     }
 
     public void loadPeerInfo() {
         try {
             int numPieces = (int) Math.ceil(fileSize / pieceSize);
+            // load file
             File myObj = new File("../cfg/PeerInfo.cfg");
             Scanner fileReader = new Scanner(myObj);
             while (fileReader.hasNext()) {
@@ -237,6 +208,7 @@ public class MyProcess {
                 }
             }
             System.out.println("empty peers are initialized");
+
             //bitfield is initialized to false by default if the file is present set all the values to true.
             bitField = new BitSet(numPieces);
             if(this.hasFile){
@@ -271,7 +243,6 @@ public class MyProcess {
         }
     }
 
-
     public void loadCommonConfig() {
         try {
             File myObj = new File("../cfg/Common.cfg");
@@ -297,7 +268,6 @@ public class MyProcess {
                 pieceSize = Long.valueOf(fileReader.next());
             }
             fileReader.close();
-
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -313,13 +283,6 @@ public class MyProcess {
         return -1;
     }
 
-    public static String byteToHex(byte num) {
-        char[] hexDigits = new char[2];
-        hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
-        hexDigits[1] = Character.forDigit((num & 0xF), 16);
-        return new String(hexDigits);
-    }
-
     private void startDeterminingNeighbors(){
         System.out.println("starting Determining neighbors. my id is:" + myId);
         TimerTask redetermineNeighbors = new TimerTask() {
@@ -329,6 +292,7 @@ public class MyProcess {
                     System.out.println("Error: Num preferred neighbors is greater than num of peers");
                     cancel();
                 }
+
                 List<Integer> fastestIds = new ArrayList<>();
                 // Find fastest indices
                 for (int k = 0; k < numPrefNeighbors; k++) {
@@ -343,9 +307,7 @@ public class MyProcess {
                     if (minId!= -1)
                         fastestIds.add(minId);
                 }
-                for (int i = 0; i< fastestIds.size(); i++){
-                    System.out.println("poop " + "my id" + myId + "fastestesindex:" + i + "fastestid:" + fastestIds.get(i) + "\n");
-                }
+
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
                     // Unchoke new neighbor // Choke old neighbor except optimistic
@@ -389,11 +351,11 @@ public class MyProcess {
         TimerTask redetermineOptimistic = new TimerTask() {
             public void run() {
                 System.out.println("Redetermining optimistic...");
-
                 if (numPrefNeighbors + 1 > peers.size()) {
                     System.out.println("NumPrefNeighbors == num of peers => all neighbors always unchoked");
                     cancel();
                 }
+
                 // Get the previous optimistic
                 int prevIndex = -1;
                 for (int i = 0; i < peers.size(); i++) {
@@ -401,6 +363,7 @@ public class MyProcess {
                         prevIndex = i;
                     }
                 }
+
                 // Randomly select optimistic neighbor
                 List<Integer> chokedIds = new ArrayList<>();
                 for (int i = 0; i < peers.size(); i++) {
@@ -410,15 +373,10 @@ public class MyProcess {
                         chokedIds.add(peers.get(i).getPeerId());
                     }
                 }
-                System.out.println("chokedSize = " + chokedIds.size());
                 if (prevIndex != -1 && peers.get(prevIndex).isInterested)
                     chokedIds.add(peers.get(prevIndex).getPeerId());
                 Random rand = new Random();
                 int randomId = chokedIds.size() > 0 ? chokedIds.get(rand.nextInt(chokedIds.size())) : -1;
-
-                //int unchokePeeerId = chokedIndices.get(randomIndex);
-                //System.out.println("unchokePeerId:" + unchokePeeerId);
-
 
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
