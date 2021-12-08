@@ -333,7 +333,7 @@ public class MessageHandler {
             System.out.println("don't need anymore pieces.");
         }
         randomNum = ThreadLocalRandom.current().nextInt(0, neededPieceIndexes.length);
-        System.out.println("get random piece  returns"  + neededPieceIndexes[randomNum]);
+        System.out.println("get random piece returns"  + neededPieceIndexes[randomNum]);
         return ByteBuffer.allocate(4).putInt(neededPieceIndexes[randomNum]).array();
     }
 }
