@@ -46,7 +46,7 @@ public class Client extends Thread {
             in = new DataInputStream(requestSocket.getInputStream());
 
             //preform handshake here to validate connection
-            System.out.println("CLIENT " + myId + ": Creating and sending handshake to peer with ID: " + myId);
+            System.out.println("CLIENT " + myId + ": Creating and sending handshake to peer with ID: " + connectedToID);
             message = MessageHandler.createHandshake(myId);
             MessageHandler.sendMessage(out, message);
             System.out.println("CLIENT " + myId + ": sent handshake to peer");
@@ -69,6 +69,8 @@ public class Client extends Thread {
             byte[] sizeB = new byte[4];
             int type;
             int peerIndex = MyProcess.getPeerIndexById(connectedToID);
+//            Double cost;
+//            long start;
 
             while (true) {
                 System.out.println("CLIENT " + myId + ": connected to " + connectedToID + ": beginning new loop iteration");
@@ -77,14 +79,17 @@ public class Client extends Thread {
                 if(MyProcess.peers.get(peerIndex).shouldChangeChoke()){
                     if(MyProcess.peers.get(peerIndex).isPeerChoked()){
                         System.out.println("CLIENT CHOKER " + myId + ": unchoke: " + connectedToID);
+                        log.info("Peer " + myId + " sending a unchoke to " + connectedToID);
                         message = MessageHandler.createunChokeMessage();
                         MyProcess.peers.get(peerIndex).unchokePeer();
                     }
                     else {
                         System.out.println("CLIENT CHOKER " + myId + ": choke: " + connectedToID);
+                        log.info("Peer " + myId + " sending a choke to " + connectedToID);
                         message = MessageHandler.createChokeMessage();
                         MyProcess.peers.get(peerIndex).chokePeer();
                     }
+                    System.out.println("CLIENT " + myId + ": sending type " + message[4] + " to " + connectedToID + " from choke");
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).changeChokeOfPeer(false);
                 }
@@ -101,17 +106,26 @@ public class Client extends Thread {
                         ByteBuffer bb = ByteBuffer.allocate(4);
                         bb.putInt(temp);
                         msg = MessageHandler.createHaveMessage(bb.array());
-                        MessageHandler.sendMessage(out, msg);
+                        System.out.println("CLIENT " + myId + ": sending type " + message[4] + " to " + connectedToID + " from have");
+                        MessageHandler.sendMessage(out, msg, myId);
                     }
                 }
 
                 if(in.available() > 0 ) {
                     System.out.println("CLIENT " + myId + ": new input");
+//                    start = System.nanoTime();
                     in.read(sizeB);
                     int size = ByteBuffer.wrap(sizeB).getInt();
                     msg = new byte[size];
                     type = in.read();
                     in.read(msg);
+
+//                    cost = (double)(System.nanoTime() - start);
+
+//                    if (type == 7) { // Only record download rate if receiving a piece
+//                        MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate = cost != 0 ? (double)size / cost : (double)size / 0.0000001; // bytes per ms
+//                        System.out.println("CLIENT " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(connectedToID)).downloadRate);
+//                    }
                     message = MessageHandler.handleMessage(msg, type, connectedToID, myId, 'C', log);
                     if (type == 8){
                         //the peer who i am connected to is now done
@@ -128,6 +142,7 @@ public class Client extends Thread {
 
                     // send messages
                     if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7)) {
+                        System.out.println("CLIENT " + myId + ": sending type " + message[4] + " to " + connectedToID + " at end");
                         MessageHandler.sendMessage(out, message);
                     }
                 }

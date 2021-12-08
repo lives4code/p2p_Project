@@ -20,6 +20,17 @@ public class MessageHandler {
         }
     }
 
+    public static void sendMessage(DataOutputStream out, byte[] msg, int myId) {
+        try{
+            out.write(msg, 0, msg.length);
+            out.flush();
+        } catch (SocketException e){
+            System.out.println("ERROR MES HANDLER SEND MESSAGE " + myId + ": SocketException. likely broken pipe");
+        } catch(IOException ioException){
+            ioException.printStackTrace();
+        }
+    }
+
     public static byte[] createInterestedMessage(){
         return createMsg(2, new byte[]{});
     }
@@ -151,11 +162,12 @@ public class MessageHandler {
         switch(type){
             case -1:
                 //break;
+                return null;
             case 0:
                 //choke
                 peer.chokeSelf();
                 printMessageHandlerDebug(0, clientId, myId, s);
-                log.info("Peer " + myId + " is 'choked' by " + clientId + ".");
+                log.info("Peer " + myId + " is 'choked' by " + clientId + ". " + s);
                 return null;
             case 1:
                 //unchoke
@@ -243,9 +255,13 @@ public class MessageHandler {
                 }
                 log.info("Peer " + myId + " has downloaded the 'piece' " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
 
+//<<<<<<< Updated upstream
                 // keeping sending requests if still unchoked and interested
                 boolean shouldBeInterested = MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField);
                 if(!peer.amIChoked() && shouldBeInterested) {
+//=======
+//                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField) ) {
+//>>>>>>> Stashed changes
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
                 // no longer interested

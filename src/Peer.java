@@ -59,6 +59,7 @@ public class Peer {
     public void setOptimistic(boolean val) {this.optimistic = val;}
     public boolean getDone(){return this.done;}
     public void setDone(){this.done = true;}
+    public double getDownloadRate(){return this.downloadRate;}
     
     @Override
     public String toString(){

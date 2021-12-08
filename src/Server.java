@@ -54,7 +54,7 @@ public class Server extends Thread {
                 byte[] sizeB = new byte[4];
                 int type = -1;
                 int size;
-                long cost;
+                double cost;
                 long start;
 
                 s = "SERVER " + myId + " received msg: ";
@@ -66,17 +66,21 @@ public class Server extends Thread {
                     if (in.available() > 0) {
                         //handle incoming messages
                         System.out.println("SERVER " + myId + ": new input");
+
                         // calculate download rate
+
                         start = System.nanoTime();
                         in.read(sizeB);
                         size = ByteBuffer.wrap(sizeB).getInt();
                         msg = new byte[size];
                         type = in.read();
                         in.read(msg);
+                        System.out.println("SERVER " + myId + ": msg type:  " + type );
                         cost = System.nanoTime() - start;
                         if (type == 7) { // record download rate if receiving a piece
-                            MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = cost != 0 ? (double)size / (double)cost : size / 0.0000001; // bytes per ms
+                            MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate = cost != 0 ? (double)size / cost : size / 0.01; // bytes per ms
                             System.out.println("SERVER " + myId + ": new rate: " + MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).downloadRate);
+
                         }
 
                         // handle messages
