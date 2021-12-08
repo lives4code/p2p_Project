@@ -115,13 +115,11 @@ public class Client extends Thread {
                         System.out.println("CLIENT CHOKER " + myId + ": unchoke: " + connectedToID);
                         MyProcess.peers.get(peerIndex).setChoked(false);
                         message = MessageHandler.createunChokeMessage();
-                        MyProcess.peers.get(peerIndex).setChoked(false);
                     }
                     else {
                         System.out.println("CLIENT CHOKER " + myId + ": choke: " + connectedToID);
                         MyProcess.peers.get(peerIndex).setChoked(true);
                         message = MessageHandler.createChokeMessage();
-                        MyProcess.peers.get(peerIndex).setChoked(true);
                     }
                     MessageHandler.sendMessage(out, message);
                     MyProcess.peers.get(peerIndex).setChangeChoke(false);

@@ -152,12 +152,12 @@ public class MessageHandler {
                 //choke
                 printMessageHandlerDebug(0, clientId, myId, s);
                 //MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setChoked(true);
-                log.info("Peer " + myId + " is choked by " + clientId + ".");
+                log.info("Peer " + myId + " is 'choked' by " + clientId + ".");
                 return null;
             case 1:
                 //unchoke
                 printMessageHandlerDebug(1, clientId, myId, s);
-                log.info("Peer " + myId + " is unchoked by " + clientId + ".");
+                log.info("Peer " + myId + " is 'unchoked' by " + clientId + ".");
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
@@ -167,13 +167,13 @@ public class MessageHandler {
             case 2:
                 //interested
                 printMessageHandlerDebug(2, clientId, myId, s);
-                log.info("Peer " + myId + " received the ‘interested’ message from " + clientId + ".");
+                log.info("Peer " + myId + " received the 'interested' message from " + clientId + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(true);
                 return null;
             case 3:
                 //not intrested
                 printMessageHandlerDebug(3, clientId, myId, s);
-                log.info("Peer " + myId + " received the ‘not interested’ message from " + clientId + ".");
+                log.info("Peer " + myId + " received the 'not interested' message from " + clientId + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).setInterested(false);
                 return null;
             case 4:
@@ -181,7 +181,7 @@ public class MessageHandler {
                 //first update the bitfield to reflect the new piece.
                 //then return either an interested or not interested method after comparison.
                 int integer = ByteBuffer.wrap(msg).getInt();
-                log.info("Peer " + myId + " received the ‘have’ message from " + clientId + " for the piece " + integer + ".");
+                log.info("Peer " + myId + " received the 'have' message from " + clientId + " for the piece " + integer + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(integer);
                 printMessageHandlerDebug(4, clientId, myId, s);
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)){
@@ -195,6 +195,7 @@ public class MessageHandler {
             case 5:
                 //bitfield
                 printMessageHandlerDebug(5, clientId, myId, s);
+                log.info("Peer " + myId + " received 'bitfield' from " + clientId + ".");
                 if(msg.length == 0){
                     System.out.println("bitfield is empty.");
                     BitSet b = new BitSet(MyProcess.bitField.size());
@@ -214,6 +215,12 @@ public class MessageHandler {
             case 6:
                 //request
                 printMessageHandlerDebug(6, clientId, myId, s);
+                byte[] pieceIndexArray = new byte[4];
+                for( int i =0; i < 4; i++){
+                    pieceIndexArray[i] = msg[i];
+                }
+                int pieceInd = ByteBuffer.wrap(pieceIndexArray).getInt();
+                log.info("Peer " + myId + " received a 'request' from " + clientId + " for piece " + pieceInd + ".");
                 return createPieceMessage(msg);
             case 7:
                 //piece
@@ -240,7 +247,7 @@ public class MessageHandler {
                     if(MyProcess.bitField.get(i))
                         numPieces++;
                 }
-                log.info("Peer " + myId + " has downloaded the piece " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
+                log.info("Peer " + myId + " has downloaded the 'piece' " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
 
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));

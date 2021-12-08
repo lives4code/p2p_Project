@@ -155,7 +155,6 @@ public class MyProcess {
                 log.info("Peer " + myId + " makes a connection to Peer " + peer.getPeerId() + ".");
             }
         }
-        startDeterminingNeighbors();
 
         // Start Server
         ServerSocket listener = new ServerSocket(port);
@@ -367,15 +366,19 @@ public class MyProcess {
                 }
 
                 // Log
-                String msg = "Peer " + myId + " has the preferred neighbors ";
-                for (int i = 0; i < peers.size(); i++) {
-                    if (fastestIds.contains(peers.get(i).getPeerId())) {
-                        msg += peers.get(i).getPeerId();
-                        msg += ", ";
+                if (fastestIds.size() == 0)
+                    log.info("Peer " + myId + " has no preferred neighbors.");
+                else {
+                    String msg = "Peer " + myId + " has the preferred neighbors ";
+                    for (int i = 0; i < peers.size(); i++) {
+                        if (fastestIds.contains(peers.get(i).getPeerId())) {
+                            msg += peers.get(i).getPeerId();
+                            msg += ", ";
+                        }
                     }
+                    msg = msg.substring(0, msg.length() - 2);
+                    log.info(msg + ".");
                 }
-                msg = msg.substring(0, msg.length() - 2);
-                log.info(msg + ".");
             }
         };
         Timer timer = new Timer();
@@ -440,12 +443,16 @@ public class MyProcess {
                 }
 
                 // Log
-                String msg = "Peer " + myId + " has the optimistically unchoked neighbor ";
-                for (int i = 0; i < peers.size(); i++) {
-                    if (randomId == peers.get(i).getPeerId())
-                        msg += peers.get(i).getPeerId();
+                if (randomId == -1)
+                    log.info("Peer " + myId + " has no optimistically unchoked neighbors.");
+                else {
+                    String msg = "Peer " + myId + " has the optimistically unchoked neighbor ";
+                    for (int i = 0; i < peers.size(); i++) {
+                        if (randomId == peers.get(i).getPeerId())
+                            msg += peers.get(i).getPeerId();
+                    }
+                    log.info(msg + ".");
                 }
-                log.info(msg + ".");
             }
         };
         Timer timer = new Timer();
