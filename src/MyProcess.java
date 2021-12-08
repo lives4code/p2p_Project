@@ -311,10 +311,10 @@ public class MyProcess {
                 // Set new neighbors
                 for (int i = 0; i < peers.size(); i++) {
                     // Unchoke new neighbor // Choke old neighbor except optimistic
-                    if ((fastestIds.contains(peers.get(i).getPeerId()) && peers.get(i).getIsChoked())
-                            || (!fastestIds.contains(peers.get(i).getPeerId()) && !peers.get(i).getIsChoked() && !peers.get(i).getOptimistic())) {
-                        System.out.println("PEER " + myId + ": CHANGE CHOKE for: " + peers.get(i).getPeerId() + " current choke: " + peers.get(i).getIsChoked());
-                        peers.get(i).setChangeChoke(true);
+                    if ((fastestIds.contains(peers.get(i).getPeerId()) && peers.get(i).isPeerChoked())
+                            || (!fastestIds.contains(peers.get(i).getPeerId()) && !peers.get(i).isPeerChoked() && !peers.get(i).getOptimistic())) {
+                        System.out.println("PEER " + myId + ": CHANGE CHOKE for: " + peers.get(i).getPeerId() + " current choke: " + peers.get(i).isPeerChoked());
+                        peers.get(i).changeChokeOfPeer(true);
                     }
                     // None of the fastest indices should be considered optimistic
                     if (fastestIds.contains(peers.get(i).getPeerId())) {
@@ -368,8 +368,8 @@ public class MyProcess {
                 List<Integer> chokedIds = new ArrayList<>();
                 for (int i = 0; i < peers.size(); i++) {
                     Peer p = peers.get(i);
-                    System.out.println("\nmyID " + myId +" i " + i + " peerid " + p.getPeerId() +" choked " + p.getIsChoked() + " interested " + p.getIsInterested() + " unique");
-                    if (peers.get(i).getIsChoked() && peers.get(i).getIsInterested()) {
+                    System.out.println("\nmyID " + myId +" i " + i + " peerid " + p.getPeerId() +" choked " + p.isPeerChoked() + " interested " + p.getIsInterested() + " unique");
+                    if (peers.get(i).isPeerChoked() && peers.get(i).getIsInterested()) {
                         chokedIds.add(peers.get(i).getPeerId());
                     }
                 }
@@ -383,14 +383,14 @@ public class MyProcess {
                     // Unchoke the new optimistic peer
                     if (randomId == peers.get(i).getPeerId()) {
                         peers.get(i).setOptimistic(true);
-                        if (peers.get(i).getIsChoked())
-                            peers.get(i).setChangeChoke(true);
+                        if (peers.get(i).isPeerChoked())
+                            peers.get(i).changeChokeOfPeer(true);
                         System.out.println("PEER " + myId + ": new opt unchoke:" + peers.get(i));
                     }
                 }
                 // Choke the old optimistic peer
                 if (prevIndex != -1 && randomId != peers.get(prevIndex).getPeerId()) {
-                    peers.get(prevIndex).setChangeChoke(true);
+                    peers.get(prevIndex).changeChokeOfPeer(true);
                     System.out.println("PEER " + myId + ": old opt choke:" + peers.get(prevIndex));
                     peers.get(prevIndex).setOptimistic(false);
                 }

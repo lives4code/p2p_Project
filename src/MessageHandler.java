@@ -153,11 +153,13 @@ public class MessageHandler {
                 //break;
             case 0:
                 //choke
+                peer.chokeSelf();
                 printMessageHandlerDebug(0, clientId, myId, s);
                 log.info("Peer " + myId + " is 'choked' by " + clientId + ".");
                 return null;
             case 1:
                 //unchoke
+                peer.unchokeSelf();
                 printMessageHandlerDebug(1, clientId, myId, s);
                 log.info("Peer " + myId + " is 'unchoked' by " + clientId + ".");
                 if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
@@ -241,11 +243,17 @@ public class MessageHandler {
                 }
                 log.info("Peer " + myId + " has downloaded the 'piece' " + pieceIndex + " from " + clientId + ". Now the number of pieces it has is " + numPieces + ".");
 
-                // send request or uninterested
-                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
+                // keeping sending requests if still unchoked and interested
+                boolean shouldBeInterested = MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField);
+                if(!peer.amIChoked() && shouldBeInterested) {
                     return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
                 }
-                return createUninterestedMessage();
+                // no longer interested
+                else if (!shouldBeInterested) {
+                    return createUninterestedMessage();
+                }
+                // do nothing if choked
+                return null;
             case 8:
                 // server complete tell client to stop
                 System.out.println("CLIENT " + myId + ": received kill request");
