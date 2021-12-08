@@ -158,24 +158,24 @@ public class MessageHandler {
     }
 
     public static byte[] handleMessage(byte[] msg, int type, int clientId, int myId, char s, Logger log) {
-        Peer peer = MyProcess.peers.get(MyProcess.getPeerIndexById(clientId));
+        //Peer peer = MyProcess.peers.get(MyProcess.getPeerIndexById(clientId));
         switch(type){
             case -1:
                 //break;
                 return null;
             case 0:
                 //choke
-                peer.chokeSelf();
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).chokeSelf();
                 printMessageHandlerDebug(0, clientId, myId, s);
                 log.info("Peer " + myId + " is 'choked' by " + clientId + ". " + s);
                 return null;
             case 1:
                 //unchoke
-                peer.unchokeSelf();
+                MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).unchokeSelf();
                 printMessageHandlerDebug(1, clientId, myId, s);
                 log.info("Peer " + myId + " is 'unchoked' by " + clientId + ".");
-                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)) {
-                    return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                if(MessageHandler.checkForInterest(MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField, MyProcess.bitField)) {
+                    return createRequestMessage(MessageHandler.getRandomPiece(MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField, MyProcess.bitField));
                 }
                 return null;
             case 2:
@@ -198,7 +198,7 @@ public class MessageHandler {
                 log.info("Peer " + myId + " received the 'have' message from " + clientId + " for the piece " + integer + ".");
                 MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField.set(integer);
                 printMessageHandlerDebug(4, clientId, myId, s);
-                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField)){
+                if(MessageHandler.checkForInterest(MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField, MyProcess.bitField)){
                     return createInterestedMessage();
                 }
                 else {
@@ -257,12 +257,12 @@ public class MessageHandler {
 
 //<<<<<<< Updated upstream
                 // keeping sending requests if still unchoked and interested
-                boolean shouldBeInterested = MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField);
-                if(!peer.amIChoked() && shouldBeInterested) {
+                boolean shouldBeInterested = MessageHandler.checkForInterest(MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField, MyProcess.bitField);
+                if(!MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).amIChoked() && shouldBeInterested) {
 //=======
 //                if(MessageHandler.checkForInterest(peer.bitField, MyProcess.bitField) ) {
 //>>>>>>> Stashed changes
-                    return createRequestMessage(MessageHandler.getRandomPiece(peer.bitField, MyProcess.bitField));
+                    return createRequestMessage(MessageHandler.getRandomPiece(MyProcess.peers.get(MyProcess.getPeerIndexById(clientId)).bitField, MyProcess.bitField));
                 }
                 // no longer interested
                 else if (!shouldBeInterested) {

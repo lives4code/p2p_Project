@@ -106,7 +106,7 @@ public class Client extends Thread {
                         ByteBuffer bb = ByteBuffer.allocate(4);
                         bb.putInt(temp);
                         msg = MessageHandler.createHaveMessage(bb.array());
-                        System.out.println("CLIENT " + myId + ": sending type " + message[4] + " to " + connectedToID + " from have");
+                        System.out.println("CLIENT " + myId + ": sending type " + msg[4] + " to " + connectedToID + " from have");
                         MessageHandler.sendMessage(out, msg, myId);
                     }
                 }

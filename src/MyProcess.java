@@ -14,6 +14,7 @@ public class MyProcess {
     int port;
     static boolean hasFile;
     static BitSet bitField;
+    private static int optUnchokeId;
 
 
     // Handle peers
@@ -335,7 +336,7 @@ public class MyProcess {
                         }
                     }
                     else {
-                        if(!p.isPeerChoked()){
+                        if(!p.isPeerChoked() && (p.getPeerId() != optUnchokeId)) {
                             p.changeChokeOfPeer(true);
                         }
                     }
@@ -351,10 +352,11 @@ public class MyProcess {
                     log.info("Peer " + myId + " has no preferred neighbors.");
                 else {
                     String msg = "Peer " + myId + " has the preferred neighbors ";
-                    for(int i = 0; i < numPrefNeighbors; i++){
-                        //Map.Entry m = (Map.Entry)k.next();
-                        msg += down.get(i)[0];
-                        msg += ",";
+                    if(numPrefNeighbors < down.size()){
+                        for(int i = 0; i < numPrefNeighbors; i++) {
+                            msg += down.get(i)[0];
+
+                        }
                     }
                     msg = msg.substring(0, msg.length() - 2);
                     log.info(msg + ".");
@@ -380,23 +382,25 @@ public class MyProcess {
                         candidates.add(p);
                     }
                 }
-                int randomId = rand.nextInt(candidates.size());
-                System.out.println("PEER " + myId + ": random id " + randomId);
-                int randomPeerId = candidates.get(randomId).getPeerId();
-                System.out.println("PEER " + myId + ": random peer " + randomPeerId);
-                candidates.get(randomId).changeChokeOfPeer(true);
-                // Debug
-                for (int i = 0; i < candidates.size(); i++) {
-                    System.out.println("PEER " + myId + ": candidate " + candidates.get(i).getPeerId());
-                }
-
-                // Log
-                if (randomId == -1)
+                if(candidates.size() < 1){
+                    System.out.println("Process:" + myId + " not enough inteerested choked neighbors to do random unchoke");
                     log.info("Peer " + myId + " has no optimistically unchoked neighbors.");
+                }
                 else {
+                    int randomId = 0;
+                    rand.nextInt(candidates.size());
+                    System.out.println("PEER " + myId + ": random id " + randomId);
+                    int randomPeerId = candidates.get(randomId).getPeerId();
+                    System.out.println("PEER " + myId + ": random peer " + randomPeerId);
+                    candidates.get(randomId).changeChokeOfPeer(true);
+                    optUnchokeId = randomPeerId;
                     String msg = "Peer " + myId + " has the optimistically unchoked neighbor ";
                     msg += randomPeerId;
                     log.info(msg + ".");
+                }
+                // Debug
+                for (int i = 0; i < candidates.size(); i++) {
+                    System.out.println("PEER " + myId + ": candidate " + candidates.get(i).getPeerId());
                 }
             }
         };
