@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -63,7 +64,7 @@ public class Server extends Thread {
                 while (true) {
                     System.out.println("SERVER " + myId + ": connected to " + clientId + ": beginning new loop iteration");
 
-                    if (in.available() > 0) {
+                    if (in.available() > 4) {
                         //handle incoming messages
                         System.out.println("SERVER " + myId + ": new input");
 
@@ -72,9 +73,13 @@ public class Server extends Thread {
                         start = System.nanoTime();
                         in.read(sizeB);
                         size = ByteBuffer.wrap(sizeB).getInt();
+                        log.info("size is " + size);
                         msg = new byte[size];
                         type = in.read();
+                        if(in.available() > 1) log.info("SERVER " + myId + ": in available true");
+                        log.info("type is " + type);
                         in.read(msg);
+
                         System.out.println("SERVER " + myId + ": msg type:  " + type );
                         cost = System.nanoTime() - start;
                         if (type == 7) { // record download rate if receiving a piece
@@ -83,7 +88,13 @@ public class Server extends Thread {
 
                         }
 
+                        String debug = "";
                         // handle messages
+                        for(byte b: msg){
+                            debug += String.valueOf(b) + " ";
+                        }
+                        log.info("Server, MSGTYPE: " + type + " myID " + myId + " size " + size + " msg: " + debug);
+
                         message = MessageHandler.handleMessage(msg, type, clientId, myId, 'S', log);
                         if (message != null && (message[4] == 2 || message[4] == 3 || message[4] == 7 || message[4] == 6)) {
                             System.out.println("SERVER " + myId + ": sending type " + message[4] + " to " + clientId);
@@ -138,4 +149,3 @@ public class Server extends Thread {
         }
     }
 }
-

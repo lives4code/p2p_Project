@@ -125,6 +125,7 @@ public class MessageHandler {
         }
         return bytes;
     }
+
     public static void printMessageHandlerDebug(int type, int clientId, int myId, char s){
         String operation;
         switch (type){
